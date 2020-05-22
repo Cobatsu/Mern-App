@@ -36,7 +36,6 @@ app.use(function(req, res, next) { //this is always going to be called
 }); 
 
 routes(app);
-app.use(express.static(path.join(__dirname, 'client/build')));
 
 if(process.env.NODE_ENV === 'production')
 {
