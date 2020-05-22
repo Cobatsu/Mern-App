@@ -1,0 +1,162 @@
+.Container{
+    width:100%;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+}
+.Inner-Register{
+    width:55%;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-around; 
+    padding-bottom: 20px;
+}
+a{
+    text-decoration: none;
+}
+.Item{
+    width:100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.Fields{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content:space-around;
+    align-content:space-between ;
+    width:100%;
+    flex:1;
+    margin-top: 10px;
+}
+.warning{
+    position: absolute;
+    color:red;
+    top:60%;
+    right:5px;
+}
+input[type='submit']:hover
+{
+    cursor: pointer;
+}
+.fa-times:hover{
+    cursor: pointer;
+ 
+}
+a:hover:not(.responsiveLink)
+{
+  color:white !important;
+}
+.responsiveLink:hover{
+   color:#007bff;
+}
+a:hover i:not(.responsiveLink i){
+    color:white   !important;
+}
+.Fields div{
+    display: flex;
+    flex-direction: column;
+    width: 48%;
+    justify-content: flex-start;
+    margin-top: 10px;
+    position: relative;
+}
+
+
+
+label{
+    font-size: 15px;
+    padding-left: 3px;
+    margin-bottom: 2px;
+    font-weight: 470;
+}
+
+div > input,div > select
+{
+    width:100%;
+    border-radius: 5px;
+    outline: none;
+    border:none;
+    padding:5px;
+    padding-left: 10px;
+   
+}
+
+
+
+.warning-text{
+    border:1px solid red !important;
+    box-shadow:0 0 3px red !important;
+}
+h1{
+    font-size: 20px;
+    margin: 0;
+    padding: 0;
+    flex:1;
+    color:rgb(255, 0, 98)
+}
+
+
+.upload-btn-wrapper {
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0px -1px 7px rgb(129, 129, 129);
+    border-radius: 8px;  
+    text-align: center;
+    line-height: 25px;
+}
+.upload-btn-wrapper i{
+    color: rgb(255, 0, 0);
+    font-size: 20px;
+}
+
+.btn
+{
+
+    position: relative;
+    color: rgb(255, 255, 255);
+    background-color: rgb(2, 160, 134);
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+ul{
+    list-style: none;
+}
+
+.btn i{
+    margin-right: 15px;
+    color: rgb(255, 255, 255);
+}  
+
+
+.upload-btn-wrapper input[type=file] {
+    font-size: 100px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    z-index: 0;
+    border: none;
+   
+
+  }
+
+@media screen and (max-width: 900px){
+
+    .Inner-Register{
+        width:90%;
+    }
+    .Fields div{
+        width:100%;
+    }
+    .submit{
+        width: 60% !important;
+    }
+}
+
