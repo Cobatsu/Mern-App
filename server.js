@@ -36,17 +36,16 @@ app.use(function(req, res, next) { //this is always going to be called
 }); 
 
 routes(app);
+app.use(express.static(path.join(__dirname, 'client/build')));
 
-console.log(__dirname)
 if(process.env.NODE_ENV === 'production')
 {
   app.use(express.static(path.join(__dirname, 'client/build')));
+
   app.get('*', function(_, res) {
-
     res.sendFile(path.join(__dirname, 'client','build','index.html'));
-
-  })}
-
+  })
+}
 
 app.listen(PORT,()=>{
  console.log('Server Is Listening ...');
