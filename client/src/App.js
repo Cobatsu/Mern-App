@@ -19,7 +19,12 @@ class  App extends React.Component{
               <Route path='/' exact component={Login} />
               <Route path='/register' exact component={Register} />
               <Route path='/home'  component={Home} /> 
+               <h1>hamit</h1>
      </BrowserRouter> 
+
+          
+
+     
     )
     
   }
