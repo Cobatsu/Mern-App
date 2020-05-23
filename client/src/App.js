@@ -10,11 +10,17 @@ import Circle from './UI/Circle';
 
 class  App extends React.Component{
   //ercan
+  
+  
+  
+  //deneme2
   render()
   { 
    
     return (
-     <BrowserRouter>  
+     <BrowserRouter> 
+      
+       <h1>emre</h1>
               <Route path='/' exact component={Login} />
               <Route path='/register' exact component={Register} />
               <Route path='/home'  component={Home} /> 
