@@ -15,7 +15,11 @@ class  App extends React.Component{
     return (
      <BrowserRouter>  
 <<<<<<< HEAD
+<<<<<<< HEAD
               <h1>:)</h1>
+=======
+                <h1>edited github</h1>
+>>>>>>> 6ef46f2d8030639bd6022bd20a5d26c5679d92e9
 =======
                 <h1>edited github</h1>
 >>>>>>> 6ef46f2d8030639bd6022bd20a5d26c5679d92e9
