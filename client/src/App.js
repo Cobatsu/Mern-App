@@ -9,7 +9,6 @@ import {UpdateLoggedin} from './Containers/isLoggedin/action'
 import Circle from './UI/Circle';
 
 class  App extends React.Component{
-//asdasd
   render()
   { 
    
@@ -20,7 +19,7 @@ class  App extends React.Component{
               <Route path='/' exact component={Login} />
               <Route path='/register' exact component={Register} />
               <Route path='/home'  component={Home} /> 
-               <h1>hamit</h1>
+               
      </BrowserRouter> 
 
     )
