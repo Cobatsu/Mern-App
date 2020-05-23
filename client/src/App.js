@@ -9,18 +9,16 @@ import {UpdateLoggedin} from './Containers/isLoggedin/action'
 import Circle from './UI/Circle';
 
 class  App extends React.Component{
-//asdasd
   render()
   { 
    
     return (
      <BrowserRouter> 
       
-       <h1>emre</h1>
               <Route path='/' exact component={Login} />
               <Route path='/register' exact component={Register} />
               <Route path='/home'  component={Home} /> 
-              
+               <h1>bok</h1>
      </BrowserRouter> 
 
     )
