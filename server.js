@@ -37,7 +37,7 @@ app.use(function(req, res, next) { //this is always going to be called
 
 routes(app);
 
-if(process.env.NODE_ENV === 'production')
+if(process.env.NODE_ENV === 'production' || false)
 {
   app.use(express.static(path.join(__dirname, 'client/build')));
 
