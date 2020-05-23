@@ -18,6 +18,7 @@ class  App extends React.Component{
      <BrowserRouter> 
       
               <h1> kablo2 </h1>
+      <h1>asdasd</h1>
               <Route path='/' exact component={Login} />
               <Route path='/register' exact component={Register} />
               <Route path='/home'  component={Home} /> 
