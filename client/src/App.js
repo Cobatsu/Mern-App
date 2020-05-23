@@ -23,9 +23,6 @@ class  App extends React.Component{
                <h1>hamit</h1>
      </BrowserRouter> 
 
-          
-
-     
     )
     
   }
