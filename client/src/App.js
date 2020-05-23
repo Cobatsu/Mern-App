@@ -11,13 +11,15 @@ import Circle from './UI/Circle';
 class  App extends React.Component{
   render()
   { 
+   
     return (
-     <BrowserRouter>          
+     <BrowserRouter>        
               <Route path='/' exact component={Login} />
               <Route path='/register' exact component={Register} />
               <Route path='/home'  component={Home} /> 
      </BrowserRouter> 
     )
+    
   }
 }
 

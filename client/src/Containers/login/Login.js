@@ -153,12 +153,12 @@ class Login  extends React.Component {
             {
                 ({Loading})=>(
                     <Container>     
-                    <Fields onSubmit={this.submitHandler}>
+                     <Fields onSubmit={this.submitHandler}>
                      
                         <Circle Load={Loading} top={10} left={42}/>
                       
                         <ImageWrapper>
-                            <img style={{width:'100%'}} alt="ercan" src='cropped-kanada-lisediploması.png' ></img>
+                            <img style={{width:'100%'}} alt="ercan" src='/public/cropped-kanada-lisediploması.png' ></img>
                         </ImageWrapper>
                         
                         <Inner_Fields>
