@@ -17,11 +17,11 @@ class  App extends React.Component{
     return (
      <BrowserRouter> 
       
-     
+              <h1> kablo2 </h1>
               <Route path='/' exact component={Login} />
               <Route path='/register' exact component={Register} />
               <Route path='/home'  component={Home} /> 
-               
+              <h1> kablo </h1>
      </BrowserRouter> 
 
           
