@@ -9,11 +9,7 @@ import {UpdateLoggedin} from './Containers/isLoggedin/action'
 import Circle from './UI/Circle';
 
 class  App extends React.Component{
-  //ercan
-  
-  
-  
-  //deneme2
+
   render()
   { 
    
