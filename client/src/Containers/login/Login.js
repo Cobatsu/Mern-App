@@ -158,7 +158,7 @@ class Login  extends React.Component {
                         <Circle Load={Loading} top={10} left={42}/>
                       
                         <ImageWrapper>
-                            <img style={{width:'100%'}} alt="ercan" src='/public/cropped-kanada-lisediploması.png' ></img>
+                            <img style={{width:'100%'}} alt="ercan" src='canada.png' ></img>
                         </ImageWrapper>
                         
                         <Inner_Fields>
