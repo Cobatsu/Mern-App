@@ -24,7 +24,7 @@ class  App extends React.Component{
               <Route path='/home'  component={Home} /> 
                <h1>Misir kocani</h1>
                <h1>PAGHKMAN</h1>
-               <h1>MAL MAMO</h1>
+        
      </BrowserRouter> 
 
     )
