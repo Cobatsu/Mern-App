@@ -14,7 +14,7 @@ class  App extends React.Component{
    
     return (
      <BrowserRouter>  
-                
+                <h1>edited github</h1>
               <Route path='/' exact component={Login} />
               <Route path='/register' exact component={Register} />
               <Route path='/home'  component={Home} /> 
