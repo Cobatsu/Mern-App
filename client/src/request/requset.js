@@ -8,7 +8,7 @@ import axios from 'axios';
 
 export const makeRequest = (Type,Body,fileInputs,activeCircle,backStage)=>{
         activeCircle(true)
-    axios[Type]('http://localhost:3001/api/register',Body)
+    axios[Type]('/api/register',Body)
     .then((data)=>{   
           var formData = new FormData();
           for (const key in fileInputs) { 
@@ -26,7 +26,7 @@ export const makeRequest = (Type,Body,fileInputs,activeCircle,backStage)=>{
 
 export const makePersonelRequest = (type,setPersonels,setLoading)=>{
   setLoading(true);
-  axios[type]('http://localhost:3001/api/user/get')
+  axios[type]('/api/user/get')
   .then((res)=>{
        
         const {personels} =  res.data; 
@@ -42,7 +42,7 @@ export const makePersonelRequest = (type,setPersonels,setLoading)=>{
 }
 
 export const makeAddUserRequest = (Type,Body,alreadyInUse,setModal,setLoggedin)=>{
-  axios[Type]('http://localhost:3001/api/user',Body,{
+  axios[Type]('/api/user',Body,{
     headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}}).then((res)=>{
     if(res.data.error && !res.data.isLoggedin)
     {
@@ -66,7 +66,7 @@ export const makeAddUserRequest = (Type,Body,alreadyInUse,setModal,setLoggedin)=
 
 
 export const makeFileRequest = (Type,FormData,activeCircle,backStage)=>{
-    axios[Type]('http://localhost:3001/api/register', FormData).then((res)=>{
+    axios[Type]('/api/register', FormData).then((res)=>{
      
         activeCircle(false);
         backStage(true);
@@ -74,7 +74,7 @@ export const makeFileRequest = (Type,FormData,activeCircle,backStage)=>{
 }
 
 export const makeSpecificUserRequest = (Type,id,setLoading,setStudent)=>{
- axios[Type]('http://localhost:3001/api/register/'+id).then((res)=>{
+ axios[Type]('/api/register/'+id).then((res)=>{
      const {specificStudent,error} = res.data;    
    if(error)
    {
@@ -93,7 +93,7 @@ export const makeSpecificUserRequest = (Type,id,setLoading,setStudent)=>{
 }
 
 export const makeLogoutRequest = (Type,Body,setLoggedin,setLoading)=>{
-  axios[Type]('http://localhost:3001/api/logout',Body,  {
+  axios[Type]('/api/logout',Body,  {
     headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}}).then((res)=>{
     const {isLoggedin} = res.data;
 
@@ -109,7 +109,7 @@ export const makeLogoutRequest = (Type,Body,setLoggedin,setLoading)=>{
 
 export const makeCurrentUserRequest = (Type,Body,setCurrentUser,setLoggedin,setLoading)=>{
   
-  axios[Type]('http://localhost:3001/api/getUser',Body).then((res)=>{
+  axios[Type]('/api/getUser',Body).then((res)=>{
    
      setCurrentUser(res.data.user)
      setLoggedin(true);
@@ -123,7 +123,7 @@ export const makeCurrentUserRequest = (Type,Body,setCurrentUser,setLoggedin,setL
 
 export const makeStudentRequest = (type,setStudent,setLoading)=>{
   setLoading(true);
-  axios[type]('http://localhost:3001/api/register')
+  axios[type]('/api/register')
   .then((res)=>{
 
         const {students} =  res.data; 
@@ -140,7 +140,7 @@ export const makeStudentRequest = (type,setStudent,setLoading)=>{
 
 export const makeVerifyRequest = (Type,setUser,setLoggedin,setLoading )=>{
 
-  axios[Type]('http://localhost:3001/api/verify',
+  axios[Type]('/api/verify',
   {
     headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}}).then((res)=>{
         const {user,isLoggedin} = res.data;
@@ -157,7 +157,7 @@ export const makeVerifyRequest = (Type,setUser,setLoggedin,setLoading )=>{
 
 export const makeAuthenticationRequest = (Type,Body,redirectTo,setContext)=>{
    setContext.setLoadingf(true);
-   axios[Type]('http://localhost:3001/api/login',Body).then((res)=>{
+   axios[Type]('/api/login',Body).then((res)=>{
     if(res.data.user)
     {
       const isLoggedState = {isLoggedin:true}
@@ -190,7 +190,7 @@ export const makeAuthenticationRequest = (Type,Body,redirectTo,setContext)=>{
 
 export const makePermissionRequest = (Type,setPermission)=>{
  
-  axios[Type]('http://localhost:3001/api/user/permission')
+  axios[Type]('/api/user/permission')
   .then((res)=>{
     console.log(res);
     const {permissionsList} = res.data;
@@ -205,7 +205,7 @@ export const makeSpecificPersonRequest = (Type,person_id,setLoading,setPerson,se
 
   setLoading(true);
 
-  axios[Type]('http://localhost:3001/api/user/'+person_id)
+  axios[Type]('/api/user/'+person_id)
   .then((res)=>{
     const {person,error} = res.data;
     const {permissions}  = person; 
@@ -232,7 +232,7 @@ export const makeSpecificPersonRequest = (Type,person_id,setLoading,setPerson,se
 
 export const makeUpdateUserRequest = (Type,id,Body,setLoggedin,alreadyInUse,setModal,setreuseUser,setrePermissions,setDisable,setUserInformations)=>{
   
-  axios[Type]('http://localhost:3001/api/user/'+id,Body,{
+  axios[Type]('/api/user/'+id,Body,{
 
     headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}}).then((res)=>{
   
@@ -263,7 +263,7 @@ export const makeUpdateUserRequest = (Type,id,Body,setLoggedin,alreadyInUse,setM
 }
 
 export const makeRemoveUserRequest = (Type,id,setLoggedin,_,setIsDeleted)=>{
-  axios[Type]('http://localhost:3001/api/user/'+id,{
+  axios[Type]('/api/user/'+id,{
     headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}}).then((res)=>{
     if(res.data.error && !res.data.isLoggedin)
     {
@@ -280,7 +280,7 @@ export const makeRemoveUserRequest = (Type,id,setLoggedin,_,setIsDeleted)=>{
 }
 
 export const makeChangeProfiePasswordRequest = (Type,id,setLoggedin,setChangedPopUp,setIsOldPasswordTrue,Body,resetPassword)=>{
-  axios[Type]('http://localhost:3001/api/profile/'+id,Body,{
+  axios[Type]('/api/profile/'+id,Body,{
 
     headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}
 
@@ -312,7 +312,7 @@ export const makeChangeProfiePasswordRequest = (Type,id,setLoggedin,setChangedPo
 }
 
 export const makeAddReportRequest = (Type,Body,setReportAdded,setLoggedin,reportType,State)=>{
-  axios[Type]('http://localhost:3001/api/profile/report/add',{...Body,reportType},{
+  axios[Type]('/api/profile/report/add',{...Body,reportType},{
     headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`} 
   })
   .then((res)=>{
@@ -336,7 +336,7 @@ export const makeAddReportRequest = (Type,Body,setReportAdded,setLoggedin,report
 
 export const makeReportsRequest = (Type,setReports,setLoading)=>{
 
-  axios[Type]('http://localhost:3001/api/profile/report/',{
+  axios[Type]('/api/profile/report/',{
     headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`} 
   })
   .then((res)=>{
@@ -356,7 +356,7 @@ export const makeReportsRequest = (Type,setReports,setLoading)=>{
 
 export const makeSpecificReportRequest = (Type,id,setLoading,setInitialReport,reIsetInitalReport)=>{
 
-  axios[Type]('http://localhost:3001/api/profile/report/'+id)
+  axios[Type]('/api/profile/report/'+id)
   .then((res)=>{
 
     const {specificReport} =res.data;
@@ -372,7 +372,7 @@ export const makeSpecificReportRequest = (Type,id,setLoading,setInitialReport,re
 }
 
 export const makeUpdateReportRequest = (Type,id,updatedData,setLoggedin,setInitalReportState,reIsetInitalReportState,setUpdatedModal,setDisable)=>{
-  axios[Type]('http://localhost:3001/api/profile/report/'+id,updatedData,{
+  axios[Type]('/api/profile/report/'+id,updatedData,{
     headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}})
     .then((res)=>{  
 
@@ -398,7 +398,7 @@ export const makeUpdateReportRequest = (Type,id,updatedData,setLoggedin,setInita
 
 export const makeDeleteReportRequest =(Type,id,setLoggedin,setDeleted)=>{
 
-  axios[Type]('http://localhost:3001/api/profile/report/'+id,{
+  axios[Type]('/api/profile/report/'+id,{
     headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}}).then((res)=>{
     if(res.data.error && !res.data.isLoggedin)
     {
@@ -415,7 +415,7 @@ export const makeDeleteReportRequest =(Type,id,setLoggedin,setDeleted)=>{
 }
 
 export const makeReportSearchRequest = (Type,searchData,setLoggedin , setReport , close , setCount , setLoading , setNotFound  )=>{
-  axios[Type]('http://localhost:3001/api/profile/report_search',searchData,{
+  axios[Type]('/api/profile/report_search',searchData,{
     headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`} 
   })
   .then((res)=>{
@@ -455,7 +455,7 @@ export const makeReportSearchRequest = (Type,searchData,setLoggedin , setReport 
 }
 
 export const makePersonSearchRequest = (Type,searchData,setLoggedin , setReport , close , setCount , setLoading , setNotFound )=>{
-  axios[Type]('http://localhost:3001/api/user/person_search',searchData,{
+  axios[Type]('/api/user/person_search',searchData,{
     headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`} 
   })
   .then((res)=>{
@@ -502,7 +502,7 @@ export const makePersonSearchRequest = (Type,searchData,setLoggedin , setReport 
 
 export const makeSubBranchRequest = (Type,id,setSubBranches)=>{
   
-  axios[Type]('http://localhost:3001/api/user/subBranch/'+id, { headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`} })
+  axios[Type]('/api/user/subBranch/'+id, { headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`} })
   .then((res)=>{    
     
     const {subBranches} = res.data;
@@ -517,7 +517,7 @@ export const makeSubBranchRequest = (Type,id,setSubBranches)=>{
 export const makeRelatedAgencyRequest = (Type,id,setLoading,setRelatedAgency,setLoggedin)=>{
 
   setLoading(true)
- axios[Type]('http://localhost:3001/api/user/relatedAgency/'+id,{
+ axios[Type]('/api/user/relatedAgency/'+id,{
   headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`} 
  })
  .then((res)=>{
