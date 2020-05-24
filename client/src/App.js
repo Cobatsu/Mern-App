@@ -9,11 +9,6 @@ import {UpdateLoggedin} from './Containers/isLoggedin/action'
 import Circle from './UI/Circle';
 
 class  App extends React.Component{
-<<<<<<< HEAD
-//asdas
-=======
-
->>>>>>> 5590ca64831bbc10ee4205a1bf19bae39cec6ac7
 
   render()
   { 
