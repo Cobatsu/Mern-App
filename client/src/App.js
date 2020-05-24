@@ -20,8 +20,13 @@ class  App extends React.Component{
               <Route path='/' exact component={Login} />
               <Route path='/register' exact component={Register} />
               <Route path='/home'  component={Home} /> 
+<<<<<<< HEAD
                
               
+=======
+               <h1>vcc kocani</h1>
+               <h1>yeter be</h1>
+>>>>>>> a3709573ff1252b2486f9d7c40bc492b57c88541
         
      </BrowserRouter> 
 
