@@ -22,7 +22,7 @@ class  App extends React.Component{
               <Route path='/' exact component={Login} />
               <Route path='/register' exact component={Register} />
               <Route path='/home'  component={Home} /> 
-               <h1>Misir kocani</h1>
+               <h1>vcc kocani</h1>
                <h1>yeter be</h1>
         
      </BrowserRouter> 
