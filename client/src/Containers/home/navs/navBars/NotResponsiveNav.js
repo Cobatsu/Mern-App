@@ -109,7 +109,7 @@ const NotResponsiveNav = ({logoutHandler,subMenu,user,setSubLeave,setSubEnter,ma
             <InnerItemLink style={{padding:0 ,flex:1}}>
                 
                 <Link to='/home'  style={{textDecoration:'none',display:'flex',alignItems:'center',justifyContent:'center',color:'black',width:'100%',height:'100%'}}>
-                <i className="fas fa-home" style={{marginRight:5,color:'rgb(125, 140, 157)'}}></i>
+                <i className="fas fa-home" style={{marginRight:5}}></i>
                     Ana Sayfa
                 </Link>
             

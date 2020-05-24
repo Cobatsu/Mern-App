@@ -11,6 +11,8 @@
     justify-content: space-around; 
     padding-bottom: 20px;
 }
+
+
 a{
     text-decoration: none;
 }
@@ -53,6 +55,16 @@ a:hover:not(.responsiveLink)
 .responsiveLink:hover{
    color:#007bff;
 }
+
+.fas.fa-home{
+    color:rgb(125, 140, 157);
+}
+
+a:hover .fas.fa-home
+{
+    color:white !important;   
+}
+
 a:hover i:not(.responsiveLink i){
     color:white   !important;
 }
