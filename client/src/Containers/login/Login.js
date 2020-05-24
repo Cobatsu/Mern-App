@@ -16,8 +16,8 @@ flex-direction: column;
 align-items: center;
 `
 const Fields  = styled.form`
-margin-top:30px;
 max-width:350px;
+height:100%;
 padding:120px 30px 120px 30px ;
 display:flex;
 flex-direction: column;
@@ -25,8 +25,8 @@ align-items: center;
 justify-content: center;
 background:#fff;
 position:relative;
-@media (max-width: 1030px) {
-    margin-top:0;
+@media (max-width: 600px) {
+    max-width:100%;
 }
 
 `
