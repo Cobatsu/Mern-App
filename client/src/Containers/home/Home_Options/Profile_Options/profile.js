@@ -92,10 +92,11 @@ margin-right:10px;
 `
 const UserMenuElement = styled.li`
 font-size:14px;
-margin-top:4px;
+margin-top:3px;
+opacity:${({selected})=>selected ? 1 : 0.5};
 border-radius:3px;
 &:hover{
-  background:#ff6363
+  opacity:1;
 }
 `
 
@@ -317,14 +318,13 @@ const Profile = ({match,...rest})=>{
                        <UserMenuContainer>
                             {
                               UserMenuLinks.map((item,index)=>{
-                                return subMenuIndex === item.desc.split(' ').join('_').toLowerCase() ?   
-                                <UserMenuElement style={{background:'#ff6363'}} key={index} >
-                                  <Link style={{padding:5,textDecoration:'none' , display:'block' , width:'100%' , height:'100%',color:'white'}}  to={'/home/profil/' + item.desc.split(' ').join('_').toLowerCase() }>{item.Icon} {item.desc}</Link>
-                               </UserMenuElement>
-                               :
-                               <UserMenuElement key={index}>
-                                  <Link style={{padding:5,textDecoration:'none' , display:'block' , width:'100%' , height:'100%'}}  to={'/home/profil/' + item.desc.split(' ').join('_').toLowerCase()}>{item.Icon} {item.desc}</Link>
-                               </UserMenuElement>                 
+                                 return  <UserMenuElement key={index} selected={subMenuIndex === item.desc.split(' ').join('_').toLowerCase()} >
+
+                                  <Link   className='responsiveLink' style={{padding:5,textDecoration:'none' , display:'block'  , width:'100%' , height:'100%'}}  to={'/home/profil/' + item.desc.split(' ').join('_').toLowerCase()}>
+                                        {item.Icon} {item.desc} 
+                                  </Link>
+
+                               </UserMenuElement>               
                                })
                             }           
                        </UserMenuContainer>

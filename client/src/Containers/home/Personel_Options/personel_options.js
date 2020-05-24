@@ -382,7 +382,6 @@ const General_User_Info = ({match,...rest})=>{
         const {permissions,...rest} =userInformations;  //here we seperates two obejects
         const {role}= userInformations;
 
-        //__v comes from db
         e.preventDefault();
         for (const key in rest) 
         {  
@@ -490,8 +489,8 @@ const General_User_Info = ({match,...rest})=>{
            <Modal backStage={isDeleted} closeModal={closeModal_5} type='DELETED'/>
 
                     
-                   
                      {
+
                          UserMenuLinks.map((item)=>{
                                  return item.desc.toLowerCase() === subMenuIndex.split('_').join(' ').toLowerCase() 
                                  ? 
@@ -502,6 +501,7 @@ const General_User_Info = ({match,...rest})=>{
                                  :
                                  null
                          })
+
                      }
         
            <InnerItems>  
