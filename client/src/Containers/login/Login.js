@@ -14,10 +14,13 @@ background:#f3f5f9;
 display:flex;
 flex-direction: column;
 align-items: center;
+justify-content:center;
+@media (max-width: 600px) {
+    background:#fff;
+}
 `
 const Fields  = styled.form`
 max-width:350px;
-height:100%;
 padding:120px 30px 120px 30px ;
 display:flex;
 flex-direction: column;
@@ -25,9 +28,7 @@ align-items: center;
 justify-content: center;
 background:#fff;
 position:relative;
-@media (max-width: 600px) {
-    max-width:100%;
-}
+
 
 `
 const Input = styled.input`
