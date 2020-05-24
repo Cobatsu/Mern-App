@@ -16,16 +16,12 @@ class  App extends React.Component{
    
     return (
      <BrowserRouter> 
-      
-       <h1>emre</h1>
-                 
-              <h6>test1</h6>
-              <h7>test3</h7>
+   
               <Route path='/' exact component={Login} />
               <Route path='/register' exact component={Register} />
               <Route path='/home'  component={Home} /> 
-               <h1>Misir kocani</h1>
-               <h1>yeter be</h1>
+               
+              
         
      </BrowserRouter> 
 
