@@ -9,28 +9,29 @@ import {UpdateLoggedin} from './Containers/isLoggedin/action'
 import Circle from './UI/Circle';
 
 class  App extends React.Component{
+<<<<<<< HEAD
 //asdasd
 //asdasd
+=======
+>>>>>>> Updates
   render()
   { 
    
     return (
      <BrowserRouter> 
       
-              <h1> kablo2 </h1>
-      <h1>asdasd</h1>
-
-      <h1>mamoooo</h1>
-      <h1>mamoooo</h1>
+       <h1>emre</h1>
+                 
+              <h6>test1</h6>
+              <h7>test3</h7>
               <Route path='/' exact component={Login} />
               <Route path='/register' exact component={Register} />
               <Route path='/home'  component={Home} /> 
-              <h1> kablo </h1>
+               <h1>Misir kocani</h1>
+               <h1>PAGHKdrtdrtaadsddddddddddddddds</h1>
+        
      </BrowserRouter> 
 
-          
-
-     
     )
     
   }
