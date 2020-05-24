@@ -10,7 +10,7 @@ import Circle from './UI/Circle';
 
 class  App extends React.Component{
 //asdasd
-//asdasd
+
   render()
   { 
    
@@ -20,7 +20,6 @@ class  App extends React.Component{
               <Route path='/' exact component={Login} />
               <Route path='/register' exact component={Register} />
               <Route path='/home'  component={Home} /> 
-               <h1>vcc kocani</h1>
               
         
      </BrowserRouter> 
