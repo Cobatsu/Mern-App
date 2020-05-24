@@ -9,6 +9,7 @@ import {UpdateLoggedin} from '../isLoggedin/action'
 
 const Container = styled.div`
 width:100%;
+height:100%;
 background:#f3f5f9;
 display:flex;
 flex-direction: column;
