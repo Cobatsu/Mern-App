@@ -143,13 +143,11 @@ const SideBar  = ({sideBarStatus,subMenu,match,setSideBarStatus,logOutHandler})=
     const [subLinks , setSubLinks ] = useState([]);
      
      const onClickSubLink  = (index)=>{
-
         subLinks.includes(index) 
         ? 
         setSubLinks((prevState)=>prevState.filter((item)=>item !== index)) 
         :
         setSubLinks((prevState)=>prevState.concat(index));
-
      } 
 
      useEffect(()=>{
