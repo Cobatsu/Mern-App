@@ -39,6 +39,7 @@ export const UpdateLoggedin = ({page,children,history,isLoggedin,location,match}
         
         break ; 
 
+        case 'PERSONEL_LİST':
         case 'ADD_USER':      // this is how I control  whether user is allowed to go into  the page or not
 
         if(Loggedin || Loading)
@@ -66,28 +67,7 @@ export const UpdateLoggedin = ({page,children,history,isLoggedin,location,match}
 
         break;
 
-        case 'PERSONEL_LİST':
-        
-            if(Loggedin || Loading)
-            {  
 
-                if(!Loading)
-                {
-                    if(user.role !== 'Admin')
-                    {
-                        history.push('/home');
-                    }
-                    else
-                    {
-                        return children(Loading,user);
-                    }
-                }
-              
-            }    
-            else
-            {
-                history.push('/');
-            }
             
         default:
             

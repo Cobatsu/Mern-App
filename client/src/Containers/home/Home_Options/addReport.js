@@ -160,9 +160,15 @@ export const  AddReport = React.memo((props)=>{
                     if (key !== 'meetingDate') initialReportState[key] = initialReportState[key].trim();
                   }    
               }
+               
+              if(reportType === 'schoolReport')  setinitialReportState(initialReportStates);
+              else if (reportType === 'studentReport') setinitialReportState(initialReportStates2);   
 
-              makeAddReportRequest('post',initialReportState,setReportAdded,isLoggedinf,reportType);       
+              makeAddReportRequest('post',initialReportState,setReportAdded,isLoggedinf,reportType);     
+
     } 
+
+    console.log(initialReportState)
      
     return <UpdateLoggedin {...props} >
     {

@@ -117,7 +117,7 @@ const NotResponsiveNav = ({logoutHandler,subMenu,user,setSubLeave,setSubEnter,ma
 
      </Item>
  
- <Item style={{flex:0.4}}>
+ <Item style={{flex:0.2}}>
 
      {
          subMenu.map((item,index)=>{

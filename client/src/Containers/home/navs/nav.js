@@ -9,21 +9,6 @@ import {Admin,Bayi,Temsilci} from './roleBars/roleBars'
 import NotResponsive  from './navBars/NotResponsiveNav';
 import Responsive  from './navBars/ResponsiveNav';
 
-const NavWrapper = styled.div`
-display:flex;
-background:white;
-width:100%;
-justify-content:space-between;
-box-shadow: 0 10px 6px -6px #dcd6f7;
-min-height:45px;
-`
-
-const statePermission = [
-  'Kayıt_Görüşmeleri',
-  'Personel_Maaşları',
-  'Öğrenci_Bilgileri',
-  'Kayıt_Bilgileri',
-]
 
 export const Nav = ({isLoggedinf,setLoadingf,user,location,match,...rest})=>{
     

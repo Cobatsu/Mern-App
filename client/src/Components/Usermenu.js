@@ -48,7 +48,7 @@ const UserImage = styled.img`
 max-width:110px;
 `
 
-const Usermenu = ( { role , firstName , lastName , UserMenuLinks , match , subMenuIndex  } )=> <UserMenu>
+const Usermenu = ( { role , firstName , lastName , UserMenuLinks , match , subMenuIndex , page  } )=> <UserMenu>
                        
 <Capsule style={{position:'absolute',left:0,top:0,margin:0,borderRadius:0,fontSize:11.4,background:'#2fc4b2'}}>
    {role}
@@ -71,9 +71,21 @@ const Usermenu = ( { role , firstName , lastName , UserMenuLinks , match , subMe
 
          return  <UserMenuElement key={index} selected={subMenuIndex === item.desc.split(' ').join('_').toLowerCase()} >
 
-           <Link   className='responsiveLink' style={{padding:5,textDecoration:'none' , display:'block'  , width:'100%' , height:'100%'}}  to={'/home/personel_listesi/' + item.desc.split(' ').join('_').toLowerCase() + '/' + match.params.id}>
-                 {item.Icon} {item.desc} 
-           </Link>
+        {
+            page === 'Profile' 
+            ?
+
+            <Link   className='responsiveLink' style={{padding:5,textDecoration:'none' , display:'block'  , width:'100%' , height:'100%'}}  to={'/home/profil/' + item.desc.split(' ').join('_').toLowerCase() }>
+               {item.Icon} {item.desc} 
+            </Link>
+
+            :
+            <Link   className='responsiveLink' style={{padding:5,textDecoration:'none' , display:'block'  , width:'100%' , height:'100%'}}  to={'/home/personel_listesi/' + item.desc.split(' ').join('_').toLowerCase() + '/' + match.params.id}>
+               {item.Icon} {item.desc} 
+            </Link>
+        }
+
+        
 
         </UserMenuElement>
         

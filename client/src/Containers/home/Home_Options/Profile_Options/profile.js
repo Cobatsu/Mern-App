@@ -284,7 +284,8 @@ const Profile = ({match,...rest})=>{
                       UserMenuLinks= { UserMenuLinks }  
                       subMenuIndex = { subMenuIndex  }
                       match={match}
-                      
+                      page='Profile'
+
                     />
                     
                    <MuiPickersUtilsProvider utils={DateFnsUtils}>

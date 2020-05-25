@@ -5,6 +5,7 @@ import {makeReportSearchRequest}  from '../../request/requset'
 import {Context} from '../../Context/Context';
 import DateFnsUtils from '@date-io/date-fns';
 import {MuiPickersUtilsProvider,KeyboardDatePicker} from '@material-ui/pickers'
+import {useViewport} from '../../Containers/home/navs/customHooks/viewPortHook'
 
 const SearchModalContainer = styled.form`
 position:fixed;
@@ -12,24 +13,22 @@ display:flex;
 justify-content:space-around;
 align-items:center;
 flex-flow:column;
-width:50%;
-height:70%;
+max-width:600px;
+min-height:400px;
 margin:0 auto;
 left:0;
 right:0;
 border-radius:6px;
 padding:15px;
 box-sizing:border-box;
-top:12%;
+top:auto;
 z-index:7;
 background:white;
 box-shadow: 0 1px 6px -1px rgba(0, 0, 0,0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
-
-@media (max-width: 600px) {
-    width:95%;
-    height:60%;
+@media (max-width: 1030px) {
+    max-width:300px;
+    min-height:300px;
 }
-
 `
 const CloseIcon = styled.div`
 position:absolute;
@@ -44,24 +43,34 @@ color:#f57170;
 
 const SearchFields = styled.div`
 display:flex;
-flex-wrap:wrap;
+flex-flow:wrap;
 padding:5px;
 width:100%;
 flex:1;
-align-content:space-evenly;
-justify-content:space-around;
+align-items:center;
+justify-content:space-between;
+
+@media (max-width: 1030px) {
+    flex-flow:column;
+    justify-content:center;
+}
 `
 
 const SubmitButton = styled.button`
 outline:none; 
 background:#00bdaa;
 border:none;
-align-self:flex-end;
 color:white;
 border-radius:5px;
+text-align:center;
 padding:7px 13px ;
+align-self:flex-end;
 &:hover{
     cursor:pointer;
+}
+@media (max-width: 1030px) {
+   align-self:center;
+   width:90%;
 }
 `
 const initialSearchState = {
@@ -88,8 +97,9 @@ export const  SearchReportModal =React.memo(({isOpen,close,role,closeModalOnly,s
     const [searchData,setSearchData] = useState (null);
     const [date,setDate] = useState(null);
     const [date2,setDate2] = useState(null);
-    const {isLoggedinf}  = useContext(Context); 
-    
+    const {isLoggedinf}  = useContext(Context);
+    const { width }  = useViewport(); 
+    const breakPoint = 1030 ;
 
     useEffect(()=>{ 
         role === 'Admin' ? setSearchData(initialSearchState2) : setSearchData(initialSearchState);   
@@ -132,23 +142,23 @@ export const  SearchReportModal =React.memo(({isOpen,close,role,closeModalOnly,s
            <i class="fas fa-times"></i>
         </CloseIcon>
 
-        <SearchFields>
+        <SearchFields className='SearchFields'>
 
-            <TextField style={{width:'45%',fontSize:14}} inputProps={{style:{fontSize:14}}}  InputLabelProps={{style:{fontSize:14}}}    value={searchData['reportType']}  onChange={submitChangeHandler('reportType')}  id="select" label="Görüşme Tipi"  select>
+            <TextField style={{width: width<breakPoint ? '90%' : '48%' , margin:'10px 0  0 5px ',fontSize:14}} inputProps={{style:{fontSize:14}}}  InputLabelProps={{style:{fontSize:14}}}    value={searchData['reportType']}  onChange={submitChangeHandler('reportType')}  id="select" label="Görüşme Tipi"  select>
                         <MenuItem value="schoolReport">Okul Görüşmesi</MenuItem>
                         <MenuItem value="studentReport">Veli/Öğrenci Görüşmesi</MenuItem>
             </TextField>
 
             
             {
-                role === 'Admin' ?  <TextField  InputLabelProps={{style:{fontSize:14}}} inputProps={{style:{fontSize:14}}}   style={{width:'45%'}} value={searchData['whoseDocument']}  onChange={submitChangeHandler('whoseDocument')}  id="standard-basic" label="Gönderen  Kişi"/> : null 
+                role === 'Admin' ?  <TextField  InputLabelProps={{style:{fontSize:14}}} inputProps={{style:{fontSize:14}}}   style={{width:width<breakPoint ? '90%' : '48%' , margin:'10px 0  0 5px '}} value={searchData['whoseDocument']}  onChange={submitChangeHandler('whoseDocument')}  id="standard-basic" label="Gönderen  Kişi"/> : null 
             }
       
-            <TextField   style={{width:'45%'}}  inputProps={{style:{fontSize:14}}}  InputLabelProps={{style:{fontSize:14}}} value={searchData['relatedPersonName']}  onChange={submitChangeHandler('relatedPersonName')}  id="standard-basic" label="Görüşülen Kişi" />
+            <TextField   style={{width:width<breakPoint ? '90%' : '48%' , margin:'10px 0  0 5px '}}  inputProps={{style:{fontSize:14}}}  InputLabelProps={{style:{fontSize:14}}} value={searchData['relatedPersonName']}  onChange={submitChangeHandler('relatedPersonName')}  id="standard-basic" label="Görüşülen Kişi" />
 
-            <TextField   style={{width:'45%'}}  inputProps={{style:{fontSize:14}}} InputLabelProps={{style:{fontSize:14}}} value={searchData['relatedPersonPhoneNumber']}  onChange={submitChangeHandler('relatedPersonPhoneNumber')}  id="standard-basic" label="Görüşülen Kişinin Telefon Numarası" />
+            <TextField   style={{width:width<breakPoint ? '90%' : '48%' , margin:'10px 0  0 5px '}}  inputProps={{style:{fontSize:14}}} InputLabelProps={{style:{fontSize:14}}} value={searchData['relatedPersonPhoneNumber']}  onChange={submitChangeHandler('relatedPersonPhoneNumber')}  id="standard-basic" label="Görüşülen Kişinin Telefon Numarası" />
 
-            <TextField   style={{width:'45%'}}   inputProps={{style:{fontSize:14}}} InputLabelProps={{style:{fontSize:14}}} value={searchData['schoolName']}  onChange={submitChangeHandler('schoolName')}  id="standard-basic" label="Okul İsmi" />
+            <TextField   style={{width:width<breakPoint ? '90%' : '48%' , margin:'10px 0  0 5px '}}   inputProps={{style:{fontSize:14}}} InputLabelProps={{style:{fontSize:14}}} value={searchData['schoolName']}  onChange={submitChangeHandler('schoolName')}  id="standard-basic" label="Okul İsmi" />
 
         
          <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -163,7 +173,7 @@ export const  SearchReportModal =React.memo(({isOpen,close,role,closeModalOnly,s
           label="Başlangıç Tarih"   
           value={searchData['dateIntervalStart']} 
           onChange={setDate} 
-          style={{width:'45%',margin:'10px 0'}}/>
+          style={{width:width<breakPoint ? '90%' : '48%' , margin:'10px 0  0 5px '}}/>
 
         <KeyboardDatePicker disableToolbar
         inputProps={{style:{fontSize:14}}}
@@ -175,7 +185,7 @@ export const  SearchReportModal =React.memo(({isOpen,close,role,closeModalOnly,s
           label="Son Tarih"   
           value={searchData['dateIntervalEnd']} 
           onChange={setDate2} 
-          style={{width:'45%',margin:'10px 0'}}/>
+          style={{width:width<breakPoint ? '90%' : '48%' , margin:'10px 0  0 5px '}}/>
 
          </MuiPickersUtilsProvider>
 

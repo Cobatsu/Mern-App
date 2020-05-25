@@ -488,6 +488,7 @@ const General_User_Info = ({match,...rest})=>{
                      UserMenuLinks={ UserMenuLinks } 
                      match={match}
                      subMenuIndex = { subMenuIndex  }
+                     page = 'Personel Detail'
           />             
 
           <Switch>
@@ -501,10 +502,12 @@ const General_User_Info = ({match,...rest})=>{
                                  <InnerPermission>
                                    <span style={{flex:0.6}}></span>
                                      <RadioWrapper style={{fontSize:'14px'}}>
+
                                              <PermissionTopSpan >Silme</PermissionTopSpan >
                                              <PermissionTopSpan >Düzenleme</PermissionTopSpan>
                                              <PermissionTopSpan >Yazma</PermissionTopSpan>
                                              <PermissionTopSpan >Okuma</PermissionTopSpan >
+
                                      </RadioWrapper>
                                  </InnerPermission>
                                :
