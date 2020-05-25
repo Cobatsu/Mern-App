@@ -5,7 +5,7 @@ const bcyrpt = require('bcryptjs');
 
 module.exports.addUser = async (req,res,next)=>{
     
-    const {password,...rest} = req.body; 
+    const { password , ...rest } = req.body; 
     const currentUser = req.user ;
 
   
@@ -20,12 +20,19 @@ module.exports.addUser = async (req,res,next)=>{
    }
 
     bcyrpt.hash(password,10,async (err,hash)=>{
-        
+
+        let  newUser = null ;
+
         if(rest.role  === 'Bayi' )
         {       
-            var  newUser = new User({...rest,relatedAgencyID:currentUser._id,password:hash});
+            newUser = new User({...rest,relatedAgencyID:currentUser._id,password:hash});
+        }
+        else
+        {
+            newUser = new User({...rest,password:hash});
         }
       
+
         if(err)
         {
             return res.json({message:'Server Error'}) 
@@ -52,10 +59,12 @@ module.exports.addUser = async (req,res,next)=>{
 
 module.exports.getPermission = async (req,res,next)=>{
     try {
+
         const permissionsList  = await Permission.findOne({_id:"5ea5ea1421f697326c0c53f0"}).select('-__v');
-        res.json({permissionsList});
+        res.json({ permissionsList });
+
     } catch (error) {
-        res.json({error});         
+        res.json({ error });         
     }  
 
 } 
