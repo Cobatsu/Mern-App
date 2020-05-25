@@ -14,6 +14,7 @@ import Stage from '../../../../UI/backStage';
 import {Checkbox,TextField,Tab,Tabs,Paper,InputLabel,MenuItem,Selec} from '@material-ui/core'
 import {makeChangeProfiePasswordRequest,makeRelatedAgencyRequest}  from '../../../../request/requset'
 import  {Admin,Bayi,Acenta}  from './statusArrays/statusArray'
+import  UserMenu from '../../../../Components/Usermenu'
 
 const MainWrapper = styled.form`
 display:flex;
@@ -51,24 +52,7 @@ align-items:flex-start;
   flex-flow:column;
 }
 `
-const UserMenu = styled.div`
-flex:0.2;
-flex-flow:column;
-display:flex;
-justify-content:center;
-align-items:center;
-padding: 15px 5px;
-box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-margin-bottom:10px;
-`
-const UserMenuContainer = styled.ul`
-min-width:175px;
-padding:0;
-margin:0;
-display:flex;
-flex-flow:column;
-margin-top:10px;
-`
+
 
 const InputsWrapper = styled.div`
 flex:0.7;
@@ -79,30 +63,8 @@ padding: 15px 5px;
 box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
 margin-bottom:5px;
 `
-const Icon = styled.div`
-border-radius:5px;
-padding:5px 10px;
-color:white;
-background:#0779e4;
-font-size:15px;
-margin-right:10px;
-&:hover{
-    cursor:pointer;
-}
-`
-const UserMenuElement = styled.li`
-font-size:14px;
-margin-top:3px;
-opacity:${({selected})=>selected ? 1 : 0.5};
-border-radius:3px;
-&:hover{
-  opacity:1;
-}
-`
 
-const UserImage = styled.img`
-max-width:110px;
-`
+
 //--------------------------------------
 
 const ChangePasswordContainer = styled.div`
@@ -124,6 +86,15 @@ padding:10px 20px ;
 &:hover{
     cursor:pointer;
 }
+`
+
+const Capsule = styled.div`
+border-radius:4px;
+margin-top:10px;
+background:#f57170;
+color:white;
+padding:5px 8px;
+font-size:12.5px;
 `
 
 
@@ -305,31 +276,16 @@ const Profile = ({match,...rest})=>{
                      }
                   <InnerContainer>
 
-                     <UserMenu>
-                       <UserImage  src={'/user.jpg'}></UserImage> 
+                   <UserMenu
 
-                       <div style={{width:'100%',padding:'10px 0 0  0 ', color:'#363062',fontSize:14 , display:'flex' , justifyContent:'center'}}>
-
-                            <span style={{marginRight:5}}>{userInformations.firstName}</span> 
-                            <span>{userInformations.lastName}</span>
+                      role = { userInformations.role } 
+                      firstName = { userInformations.firstName } 
+                      lastName = {userInformations.lastName}
+                      UserMenuLinks= { UserMenuLinks }  
+                      subMenuIndex = { subMenuIndex  }
+                      match={match}
                       
-                      </div>
-
-                       <UserMenuContainer>
-                            {
-                              UserMenuLinks.map((item,index)=>{
-                                 return  <UserMenuElement key={index} selected={subMenuIndex === item.desc.split(' ').join('_').toLowerCase()} >
-
-                                  <Link   className='responsiveLink' style={{padding:5,textDecoration:'none' , display:'block'  , width:'100%' , height:'100%'}}  to={'/home/profil/' + item.desc.split(' ').join('_').toLowerCase()}>
-                                        {item.Icon} {item.desc} 
-                                  </Link>
-
-                               </UserMenuElement>               
-                               })
-                            }           
-                       </UserMenuContainer>
-                       
-                   </UserMenu> 
+                    />
                     
                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
                      

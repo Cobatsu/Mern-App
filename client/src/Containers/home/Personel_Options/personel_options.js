@@ -17,6 +17,7 @@ import {Redirect}  from 'react-router-dom'
 import {ReportList} from '../Home_Options/myReports'
 import {Admin,Temsilci,Bayi} from './statusArrays/statusArray'
 import {_PersonelList} from  './personelList'
+import UserMenu from '../../../Components/Usermenu'
 
 const MainWrapper = styled.form`
 display:flex;
@@ -164,40 +165,7 @@ margin-right:10px;
 `
 //--------------------------------------
 
-const UserMenu = styled.div`
-flex:0.2;
-flex-flow:column;
-display:flex;
-justify-content:center;
-position:relative;
-align-items:center;
-padding: 15px 5px;
-box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-margin-bottom:10px;
-`
-const UserMenuContainer = styled.ul`
-min-width:200px;
-padding:0;
-margin:0;
-display:flex;
-flex-flow:column;
-margin-top:10px;
-`
-const UserMenuElement = styled.li`
-font-size:14px;
-margin-top:3px;
-opacity:${({selected})=>selected ? 1 : 0.5};
-border-radius:3px;
-&:hover{
-  opacity:1;
-}
-`
 
-
-
-const UserImage = styled.img`
-max-width:110px;
-`
 //-------------------------------------
 const SubPagesContainer = styled.div`
 display:flex;
@@ -225,14 +193,7 @@ cursor:pointer;
 }
 `
 
-const Capsule = styled.div`
-border-radius:4px;
-margin-top:10px;
-background:#f57170;
-color:white;
-padding:5px 8px;
-font-size:12.5px;
-`
+
 
 //---------------------------------
 
@@ -519,42 +480,15 @@ const General_User_Info = ({match,...rest})=>{
 
          <InnerContainer>
                         
-                   <UserMenu>
-                       
-                       <Capsule style={{position:'absolute',left:0,top:0,margin:0,borderRadius:0,fontSize:11.4,background:'#2fc4b2'}}>
-                          {userInformations.role}
-                       </Capsule>
-
-                       <UserImage  src={'/user.jpg'}></UserImage>
-
-                       <Capsule>
-
-                            <span style={{marginRight:5}}>{userInformations.firstName}</span> 
-                            <span>{userInformations.lastName}</span>
-                      
-                       </Capsule>
-
-                       <UserMenuContainer>
-
-                            {
-                              UserMenuLinks.map((item,index)=>{
-
-
-                                return  <UserMenuElement key={index} selected={subMenuIndex === item.desc.split(' ').join('_').toLowerCase()} >
-
-                                  <Link   className='responsiveLink' style={{padding:5,textDecoration:'none' , display:'block'  , width:'100%' , height:'100%'}}  to={'/home/personel_listesi/' + item.desc.split(' ').join('_').toLowerCase() + '/' + match.params.id}>
-                                        {item.Icon} {item.desc} 
-                                  </Link>
-
-                               </UserMenuElement>
-                               
-
-                               })
-
-                            }       
-                                
-                       </UserMenuContainer>
-                   </UserMenu>     
+         <UserMenu 
+            
+                     role = { userInformations.role } 
+                     firstName = { userInformations.firstName } 
+                     lastName = {userInformations.lastName}
+                     UserMenuLinks={ UserMenuLinks } 
+                     match={match}
+                     subMenuIndex = { subMenuIndex  }
+          />             
 
           <Switch>
               
