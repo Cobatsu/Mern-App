@@ -335,13 +335,14 @@ const General_User_Info = ({match,...rest})=>{
         makeRemoveUserRequest('delete',person_id,context.isLoggedinf,setDeletePopUP,setIsDeleted);
     }
 
+    console.log(userInformations)
 
     const submitHandler =(e)=>{  
         
         setbackStageOpen(true);
-        console.log(userInformations)
+  
         const {permissions,...rest} =userInformations;  //here we seperates two obejects
-        const {role}= userInformations;
+        const { role }= userInformations;
 
         e.preventDefault();
         for (const key in rest) 

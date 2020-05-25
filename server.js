@@ -11,6 +11,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 const _Url = process.env.DATABASE_URL;
 console.log(PORT);
+
 app.use(express.json({
     inflate: true,
     limit: '100kb',
@@ -19,6 +20,7 @@ app.use(express.json({
     type: 'application/json',
     verify: undefined,
 }))
+
 app.use('/uploads',express.static('uploads'))
 
 mongoose.connect(_Url,{ useUnifiedTopology: true,useNewUrlParser: true })

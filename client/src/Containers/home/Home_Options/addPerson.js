@@ -189,10 +189,7 @@ const UserInformations = [
 ]
 
 const UserPermissions = {
-Personel:['Kayıt Görüşmeleri','Personel Maaşları','Öğrenci Bilgileri'],
-Öğrenci:['Öğrenci Bilgileri','Ödemeler','Veli Bilgileri','Kayıt Bilgileri'],
-Muhasebe:['Ödemeler','Maaşlar','Gelir','Gider'],
-Okul:['Okul Bilgileri','Bayi Bilgileri'],
+Personel:['Personel Bilgileri'],
 }
 // -----------------------------
 
@@ -287,7 +284,7 @@ const AddPerson  = React.memo((props)=>{
   const textChangeHandler = React.useCallback((Type) => event => {
 
     let value = event.target.value;
-    const oldState = {...userInformations};
+    const oldState = { ...userInformations };
     oldState[Type]=value 
 
     if(Type=='region') //whenever we want to change region , we have to assign unf value to township
@@ -353,14 +350,18 @@ const AddPerson  = React.memo((props)=>{
 
  
   const submitHandler =(e)=>{
-      setBackStage(true);
-
-      const {relatedAgency,role} = userInformations;
 
       e.preventDefault();
+      setBackStage(true);
 
+      let mainState = { ...userInformations , permissions }  ;
+
+      const { relatedAgency , role } = userInformations;
+      
+       
       for (const key in userInformations) 
       {
+
         if (userInformations.hasOwnProperty(key)) {
 
           const element = userInformations[key];
@@ -369,7 +370,7 @@ const AddPerson  = React.memo((props)=>{
           {  
              if(!element && key !== 'relatedAgency' )
              {
-              return setwarningPopUp(true);
+               return setwarningPopUp(true);
              }  
           }
           else if (role === 'Admin')
@@ -389,7 +390,8 @@ const AddPerson  = React.memo((props)=>{
            
         }
       }
-      makeAddUserRequest('post',{...userInformations,permissions},setAlreadyInUse,setmodalShow,isLoggedinf);
+
+      makeAddUserRequest('post',mainState,setAlreadyInUse,setmodalShow,isLoggedinf);
   }
   
   if(userInformations.region && userInformations['role'] === 'Bayi')
@@ -424,40 +426,49 @@ const AddPerson  = React.memo((props)=>{
                                                
                 </InputsWrapper>
 
-
+                
+              {
+                    
+                User.role === 'Admin' ?
+               
                 <PermissionsWrapper>
 
-                <span style={{textAlign:'center',color:'#fb7b6b',fontSize:20,marginBottom:'7px',flex:0.2}}>YETKİLER</span>
-              
-                 <div style={{width:'100%',padding:'3px',flex:1}}>
+                    <span style={{textAlign:'center',color:'#fb7b6b',fontSize:20,marginBottom:'7px',flex:0.2}}>YETKİLER</span>
+                  
+                    <div style={{width:'100%',padding:'3px',flex:1}}>
 
-                 <PermissionsTabs value={tabShow} handler={tabsHandle} />  
+                    <PermissionsTabs value={tabShow} handler={tabsHandle} />  
 
-                     {
-                        userInformations['role'] ? 
-                        <InnerPermission>
-                          <span style={{flex:0.6}}></span>
-                            <RadioWrapper style={{fontSize:'14px'}}>
-                                    <PermissionTopSpan >Silme</PermissionTopSpan >
-                                    <PermissionTopSpan >Düzenleme</PermissionTopSpan>
-                                    <PermissionTopSpan >Yazma</PermissionTopSpan>
-                                    <PermissionTopSpan >Okuma</PermissionTopSpan >
-                            </RadioWrapper>
-                        </InnerPermission>
-      
-                      :
+                        {
+                            userInformations['role'] ? 
+                            <InnerPermission>
+                              <span style={{flex:0.6}}></span>
+                                <RadioWrapper style={{fontSize:'14px'}}>
+                                        <PermissionTopSpan >Silme</PermissionTopSpan >
+                                        <PermissionTopSpan >Düzenleme</PermissionTopSpan>
+                                        <PermissionTopSpan >Yazma</PermissionTopSpan>
+                                        <PermissionTopSpan >Okuma</PermissionTopSpan >
+                                </RadioWrapper>
+                            </InnerPermission>
+          
+                          :
 
-                      <h6 style={{textAlign:'center',color:'#00909e',marginBottom:'7px',flex:0.2}}>LÜTFEN ROL SEÇİNİZ</h6>
-                      
-                     }  
+                          <h6 style={{textAlign:'center',color:'#00909e',marginBottom:'7px',flex:0.2}}>LÜTFEN ROL SEÇİNİZ</h6>
+                          
+                        }  
 
-                     {
-                           <ChecBoxes permissions={permissions} handler={permissionHandler} tabShow={tabShow}/>                  
-                     }
-                  </div> 
+                        {
+                              <ChecBoxes permissions={permissions} handler={permissionHandler} tabShow={tabShow}/>                  
+                        }
+                      </div> 
 
                 </PermissionsWrapper>
 
+                :
+
+                null
+             }
+              
         </InnerContainer>   
             
 
@@ -524,14 +535,14 @@ export const UserInputs = React.memo(({userInformations,townships,textChangeHand
             }
             
             var Statuses =  DetailStatuses.map((statu , index)=>{ 
-              return <MenuItem key={index}  value={statu}>{statu}</MenuItem> 
+                 return <MenuItem key={index}  value={statu}>{statu}</MenuItem> 
             })
 
           }
           else
           {
             var Statuses =  AddPersonStatuses.map((statu , index)=>{ 
-              return <MenuItem key={index}  value={statu}>{statu}</MenuItem> 
+                  return <MenuItem key={index}  value={statu}>{statu}</MenuItem> 
             })
 
           }

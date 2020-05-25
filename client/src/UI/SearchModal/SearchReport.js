@@ -144,7 +144,8 @@ export const  SearchReportModal =React.memo(({isOpen,close,role,closeModalOnly,s
 
         <SearchFields className='SearchFields'>
 
-            <TextField style={{width: width<breakPoint ? '90%' : '48%' , margin:'10px 0  0 5px ',fontSize:14}} inputProps={{style:{fontSize:14}}}  InputLabelProps={{style:{fontSize:14}}}    value={searchData['reportType']}  onChange={submitChangeHandler('reportType')}  id="select" label="Görüşme Tipi"  select>
+            <TextField style={{width: width < breakPoint ? '90%' : '48%' , margin:'10px 0  0 5px ',fontSize:14}} inputProps={{style:{fontSize:14}}}  InputLabelProps={{style:{fontSize:14}}}    value={searchData['reportType']}  onChange={submitChangeHandler('reportType')}  id="select" label="Görüşme Tipi"  select>
+                        <MenuItem value="" selected><em>Görüşme Tipi</em></MenuItem>
                         <MenuItem value="schoolReport">Okul Görüşmesi</MenuItem>
                         <MenuItem value="studentReport">Veli/Öğrenci Görüşmesi</MenuItem>
             </TextField>
@@ -164,8 +165,8 @@ export const  SearchReportModal =React.memo(({isOpen,close,role,closeModalOnly,s
          <MuiPickersUtilsProvider utils={DateFnsUtils}>
 
          <KeyboardDatePicker disableToolbar
-         inputProps={{style:{fontSize:14}}}
-         InputLabelProps={{style:{fontSize:14}}}
+          inputProps={{style:{fontSize:14}}}
+          InputLabelProps={{style:{fontSize:14}}}
           variant="inline"
           format="dd/MM/yyyy"
           margin="normal"

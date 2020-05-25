@@ -37,7 +37,7 @@ const User = mongoose.Schema({
     },
     permissions:{
          type:Object,
-         required:true
+         required:false
     },
     contractDate : {
          type:Date,

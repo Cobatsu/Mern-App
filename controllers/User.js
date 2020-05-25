@@ -3,23 +3,58 @@ const Permission = require('../models/permission');
 require('dotenv').config();
 const bcyrpt = require('bcryptjs');
 
+const isPermissionsAreSame = async (permissions)=>{
+     
+
+    const originalPermissions = await Permission.findOne({ _id : process.env.PERMİSSİON_İD }) 
+
+    var  { subBranchDefault } = originalPermissions;
+
+    for (const key in permissions) {
+        
+       if(Object.keys(subBranchDefault).includes(key))
+       {
+
+           let isSame  =  permissions[key].every((value,index)=> value === subBranchDefault[key][index] );
+                
+              return  isSame  ;  
+
+       }
+       else
+       {
+
+            return  false ;
+
+       }
+        
+    }
+
+}
+
 module.exports.addUser = async (req,res,next)=>{
     
     const { password , ...rest } = req.body; 
+    const { permissions } = rest;
     const currentUser = req.user ;
 
   
    if(currentUser.role === 'Bayi')
    {
-       return res.json({error:'Server Error '});
+       return res.json({ error:'Server Error' });
    }
 
-   if(currentUser.role ==='Temsilci' && rest.role !== 'Bayi')
+   if(currentUser.role === 'Temsilci' && rest.role !== 'Bayi')
    {
-       return res.json({error:'Server Error'});
+       return res.json({ error:'Server Error' });
    }
 
-    bcyrpt.hash(password,10,async (err,hash)=>{
+
+   if(currentUser.role !== 'Admin')
+   {
+        if(!isPermissionsAreSame(permissions)) return res.json({error:'Server Error'});
+   }
+    
+   bcyrpt.hash(password,10,async (err,hash)=>{
 
         let  newUser = null ;
 
@@ -29,7 +64,7 @@ module.exports.addUser = async (req,res,next)=>{
         }
         else
         {
-            newUser = new User({...rest,password:hash});
+            newUser = new User({ ...rest , password:hash });
         }
       
 
