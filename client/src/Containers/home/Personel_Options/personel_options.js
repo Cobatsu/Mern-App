@@ -129,7 +129,7 @@ border-radius:10px;
 
 const RadioWrapper = styled.div`
 display:flex;
-justify-content:space-between;
+justify-content:space-evenly;
 flex:1;
 `
 
@@ -527,7 +527,7 @@ const General_User_Info = ({match,...rest})=>{
                                {
                                 
                                  <InnerPermission>
-                                   <span style={{flex:0.6}}></span>
+                                   <span style={{flex:0.4 , textAlign:'center'}}></span>
                                      <RadioWrapper style={{fontSize:'14px'}}>
 
                                              <PermissionTopSpan >Silme</PermissionTopSpan >

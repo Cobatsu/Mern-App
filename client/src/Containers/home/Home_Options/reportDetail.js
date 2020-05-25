@@ -213,7 +213,7 @@ const ReportDetail  = ({match,...rest })=>{
                         {
                            user.permissions.Rapor_Bilgileri.includes(PermissionsNumbers.UPDATE) 
                            ? 
-                           <Icon onClick={()=>setDisable(false)}>Düzenle <i className="fas fa-edit"/></Icon>
+                           <Icon onClick= { ()=>setDisable(false)}>Düzenle <i className="fas fa-edit"/></Icon>
                            :
                            null
                         }

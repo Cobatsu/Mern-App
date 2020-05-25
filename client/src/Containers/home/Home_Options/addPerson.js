@@ -108,7 +108,7 @@ border-radius:10px;
 
 const RadioWrapper = styled.div`
 display:flex;
-justify-content:space-between;
+justify-content:space-evenly;
 flex:1;
 `
 
@@ -441,15 +441,20 @@ const AddPerson  = React.memo((props)=>{
                     <PermissionsTabs value={tabShow} handler={tabsHandle} />  
 
                         {
-                            userInformations['role'] ? 
+                            userInformations['role'] 
+                            
+                            ?
+
                             <InnerPermission>
-                              <span style={{flex:0.6}}></span>
+
+                                <span style={{flex:0.4}}></span>
                                 <RadioWrapper style={{fontSize:'14px'}}>
                                         <PermissionTopSpan >Silme</PermissionTopSpan >
                                         <PermissionTopSpan >Düzenleme</PermissionTopSpan>
                                         <PermissionTopSpan >Yazma</PermissionTopSpan>
                                         <PermissionTopSpan >Okuma</PermissionTopSpan >
                                 </RadioWrapper>
+                                
                             </InnerPermission>
           
                           :
@@ -461,7 +466,8 @@ const AddPerson  = React.memo((props)=>{
                         {
                               <ChecBoxes permissions={permissions} handler={permissionHandler} tabShow={tabShow}/>                  
                         }
-                      </div> 
+
+                    </div> 
 
                 </PermissionsWrapper>
 
@@ -725,7 +731,7 @@ export const ChecBoxes = React.memo(({permissions,handler,tabShow,disabled})=>{
        return mainItem === item.split(' ').join('_')  ?  
          <InnerPermission key={item}>
 
-           <span style={{flex:0.6,fontSize:'14px'}}>{item}</span>
+           <span style={{flex:0.4,fontSize:'14px',textAlign:'center',position:'relative'}}> <i style={{color:'#d4f8e8',position:'absolute',left:0,top:'5px',fontSize:10}} class="fas fa-circle"></i> {item}</span>
           
         <RadioWrapper >  
           {
@@ -748,7 +754,7 @@ export const ChecBoxes = React.memo(({permissions,handler,tabShow,disabled})=>{
 
 export const PermissionsTabs=React.memo(({handler,value})=>{
   return (
-    <Paper style={{width:'100%',marginBottom:'40px'}}  square>
+    <Paper style={{minWidth:'600px',marginBottom:'40px'}}  square>
       <Tabs
         style={{width:'100%'}} 
         value={value}
