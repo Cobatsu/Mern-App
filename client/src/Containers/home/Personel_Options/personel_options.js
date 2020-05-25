@@ -197,6 +197,12 @@ cursor:pointer;
 
 //---------------------------------
 
+export const PermissionsNumbers = {
+  REMOVE: 1,
+  UPDATE: 2,
+  ADD: 3,
+  READ: 4,
+}
 
 
 
@@ -249,13 +255,22 @@ const General_User_Info = ({match,...rest})=>{
               break;
 
               case 'Temsilci':
-
+                 
                 return Temsilci();
 
               break;
 
               case 'Bayi':
-                return Bayi();
+                 
+                if(context.user.role === 'Temsilci')
+                {
+                   return Bayi().filter(( menuItem , index ) => menuItem.desc !== 'Yetkiler'  );
+                }
+                else
+                {
+                   return Bayi();
+                }
+                
               break;
 
               default : 
@@ -360,7 +375,7 @@ const General_User_Info = ({match,...rest})=>{
           }
           else if (role === 'Admin')
           {
-              if(!element && key !== 'region' && key !=='township' )
+              if(!element && key !== 'region' && key !=='township'  && key !=='relatedAgencyID' )
               {
                 return setwarningPopUp(true);
               }
@@ -389,7 +404,7 @@ const General_User_Info = ({match,...rest})=>{
           oldState['township']='';
         }
 
-        if(value==='Admin' || value==='Temsilci' || value==='Bayi')
+        if( value==='Admin' || value==='Temsilci' || value==='Bayi' )
         {
           oldState['township']='';
           oldState['region']='';
@@ -466,15 +481,26 @@ const General_User_Info = ({match,...rest})=>{
 
                      }
         
-           <InnerItems>  
-               <Icon onClick={()=>{setDisable((prev)=>false)}}>Düzenle <i className="fas fa-edit"/></Icon>
+           <InnerItems>
 
+              
                {
-                 user.role === 'Admin' 
+                  user.permissions.Personel_Bilgileri.includes(PermissionsNumbers.UPDATE) 
+                  ?  
+                  <Icon onClick={()=>{setDisable(false)}}>Düzenle <i className="fas fa-edit"/></Icon>
+                  :
+                  null 
+               } 
+                
+                      
+               {
+
+                  user.permissions.Personel_Bilgileri.includes(PermissionsNumbers.REMOVE) 
                   ?  
                   <Icon style={{background:'#c70039'}} onClick={openModal}> Kullanıcıyı Sil <i className="fas fa-trash-alt"></i></Icon>
                   :
-                  null 
+                  null
+
                }
              
             </InnerItems>
@@ -499,7 +525,7 @@ const General_User_Info = ({match,...rest})=>{
                            <div style={{width:'100%',padding:'3px',flex:1}}>
                            <PermissionsTabs value={tabShow} handler={tabsHandle} />  
                                {
-                                 userInformations['role'] ? 
+                                
                                  <InnerPermission>
                                    <span style={{flex:0.6}}></span>
                                      <RadioWrapper style={{fontSize:'14px'}}>
@@ -511,8 +537,7 @@ const General_User_Info = ({match,...rest})=>{
 
                                      </RadioWrapper>
                                  </InnerPermission>
-                               :
-                               <h6 style={{textAlign:'center',color:'#00909e',marginBottom:'7px',flex:0.2}}>LÜTFEN ROL SEÇİNİZ</h6>
+                              
                                }  
  
  

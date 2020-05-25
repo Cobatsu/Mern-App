@@ -12,16 +12,14 @@ const isPermissionSame = async (permissions)=>{
 
     for (const key in permissions) {
         
-       if(Object.keys(subBranchDefault).includes(key))
-       {
+       if(Object.keys(subBranchDefault).includes( key )) {
 
-           let isSame  =  permissions[key].every((value,index)=> value === subBranchDefault[key][index] );
+            let isSame  =  permissions[ key ].every( ( value,index)=> value === subBranchDefault[key][index] );
                 
-              return  isSame  ;  
+            return  isSame  ;  
 
        }
-       else
-       {
+       else {
 
             return  false ;
 
@@ -49,7 +47,7 @@ module.exports.addUser = async (req,res,next)=>{
    }
 
 
-   if(currentUser.role !== 'Admin')
+   if(currentUser.role !== 'Admin') // we must check permissions 
    {
         if(!isPermissionSame(permissions)) return res.json({error:'Server Error'});
    }

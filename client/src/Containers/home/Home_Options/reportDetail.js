@@ -80,6 +80,12 @@ flex-flow:column;
 align-items:center;
 `
 
+export const PermissionsNumbers = {
+    REMOVE: 1,
+    UPDATE: 2,
+    ADD: 3,
+    READ: 4,
+}
 
 
 
@@ -203,13 +209,19 @@ const ReportDetail  = ({match,...rest })=>{
                    }
                    
                    <InnerItems>
-
-                        <Icon onClick={()=>setDisable(false)}>Düzenle <i className="fas fa-edit"/></Icon>
-
+                         
                         {
-                           user.role === 'Admin' 
+                           user.permissions.Rapor_Bilgileri.includes(PermissionsNumbers.UPDATE) 
+                           ? 
+                           <Icon onClick={()=>setDisable(false)}>Düzenle <i className="fas fa-edit"/></Icon>
+                           :
+                           null
+                        }
+                        
+                        {
+                           user.permissions.Rapor_Bilgileri.includes(PermissionsNumbers.REMOVE) 
                            ?  
-                           <Icon style={{background:'#d9455f'}} onClick={()=>{setDeleteModal(true); setbackStageOpen(true)}} >Raporu  Sil <i className="fas fa-trash-alt"></i></Icon>
+                           <Icon style={{background:'#d9455f'}} onClick={()=>{setDeleteModal(true); setbackStageOpen(true)}} > Raporu  Sil <i className="fas fa-trash-alt"></i></Icon>
                            :
                            null
                         }
