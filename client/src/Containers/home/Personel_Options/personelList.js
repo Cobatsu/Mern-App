@@ -40,15 +40,16 @@ max-width:${({width})=> width ? width+'px' : '900px'};
 const PersonelListItemInnerWrapper = styled.div`
 display:flex;
 width:50%;
+justify-content:space-between;
 `
 
 const PersonelListIconWrapper = styled.div`
 &:hover{
   cursor:pointer;
-  background:#b9ebcc;
+  background:#ffa41b;
 }
 font-size:8px;
-flex:1;
+flex:0.2;
 `
 const IconInnerSpan = styled.span`
 display:flex;
@@ -193,10 +194,9 @@ const TopRows  =  [
 
 const PersonelOptions = [
   {desc:'Genel Bilgiler',Icon:<i className="fas fa-user-friends"></i>},
-  {desc:'Ödemeler',Icon:<i className="fas fa-money-bill-wave"></i>},
-  {desc:'Sözleşme',Icon:<i className="fas fa-user-edit"></i>},
-  {desc:'Özel Bilgiler',Icon: <i className="far fa-address-card"></i>},
-  {}
+  {desc:'Bayiler',Icon:<i className="fas fa-money-bill-wave"></i>},
+  {desc:'Raporlar',Icon:<i className="fas fa-user-edit"></i>},
+  {desc:'Yetkiler',Icon: <i className="far fa-address-card"></i>},
 ]
 
 
@@ -358,54 +358,66 @@ export const _PersonelList = ({personels,notFound,SwitchRow,refs,width,role})=>{
       {
 
       personels.map((item,index)=>{
+
       return  <PersonelListItem style={{background:index%2==0 ? '#ececec' : '#fcf8f3'}}   key={item._id} ref={refs.current[index]}>
 
-      <PersonelListItemInnerWrapper>
+          <PersonelListItemInnerWrapper>
 
-          <InnerSpan>{item.firstName}</InnerSpan>
-          <InnerSpan>{item.lastName}</InnerSpan> 
-          <InnerSpan>{item.role}</InnerSpan>
-          <InnerSpan>{item.region}</InnerSpan>
-          <InnerSpan>{item.contractDate}</InnerSpan>
+              <InnerSpan>{item.firstName}</InnerSpan>
 
-          <IconInnerSpan style={{flex:'0.1'}} onClick={SwitchRow(-50,refs.current[index])}>
+              <InnerSpan>{item.lastName}</InnerSpan> 
 
-            <SwitchButton >
-              <i className="fas fa-arrow-circle-left"></i>
-            </SwitchButton>
+              <InnerSpan>{item.role}</InnerSpan>
 
+              <InnerSpan>{ item.region || '—'  }</InnerSpan>
+
+              <InnerSpan>{item.contractDate}</InnerSpan>
+
+              <IconInnerSpan style={{flex:'0.1'}} onClick={SwitchRow(-50,refs.current[index])}>
+
+                <SwitchButton >
+                  <i className="fas fa-arrow-circle-left"></i>
+                </SwitchButton>
+
+              </IconInnerSpan>
+
+          </PersonelListItemInnerWrapper>    
+
+
+      <PersonelListItemInnerWrapper style={{backgroundColor:'#63b7af'}}> 
+
+       <div style={{display:'flex',flex:1}}>
+
+            {
+                PersonelOptions.map((subItem,Mainindex)=>{
+                
+                  if(item.role !== 'Temsilci' && subItem.desc === 'Bayiler' ) return ;
+                  if(item.role === 'Admin' && subItem.desc === 'Raporlar' ) return ;
+            
+              
+                  return <PersonelListIconWrapper key={Mainindex}>
+                            
+                      <Link  to={'/home/personel_listesi/'+ subItem.desc.split(' ').join('_').toLowerCase() +'/'+ item._id} style={{display:'flex',flexFlow:'column',justifyContent:'center',alignItems:'center',padding:'6px',fontSize:'12px',color:'white', textDecoration:'none'}}>
+                          {subItem.Icon}
+                          <span>{subItem.desc}</span>
+                      </Link>
+                      
+                  </PersonelListIconWrapper> 
+
+                          
+                })
+
+            }
+
+        </div>
+
+
+          <IconInnerSpan  onClick={SwitchRow(0,refs.current[index])}   style={{flex:'0.1'}}>
+                    <SwitchButton>
+                        <i className="fas fa-arrow-circle-right"></i>
+                    </SwitchButton>  
           </IconInnerSpan>
 
-      </PersonelListItemInnerWrapper>    
-
-
-      <PersonelListItemInnerWrapper style={{backgroundColor:'#a6b1e1'}}> 
-      {
-
-          PersonelOptions.map((subItem,Mainindex)=>{
-
-          return  Mainindex === PersonelOptions.length-1  
-
-          ?
-
-            <IconInnerSpan key={Mainindex} onClick={SwitchRow(0,refs.current[index])}   style={{flex:'0.1'}}>
-                <SwitchButton>
-                    <i className="fas fa-arrow-circle-right"></i>
-                </SwitchButton>  
-            </IconInnerSpan>
-
-            :  
-            <PersonelListIconWrapper key={Mainindex}>
-                    
-              <Link  to={'/home/personel_listesi/'+ subItem.desc.split(' ').join('_').toLowerCase() +'/'+ item._id} style={{display:'flex',flexFlow:'column',justifyContent:'center',alignItems:'center',padding:'6px',fontSize:'12px',color:'white', textDecoration:'none'}}>
-                  {subItem.Icon}
-                  <span>{subItem.desc}</span>
-              </Link>
-              
-            </PersonelListIconWrapper> 
-          
-          })                      
-      } 
       </PersonelListItemInnerWrapper>
 
 
