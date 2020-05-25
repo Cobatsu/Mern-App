@@ -3,7 +3,7 @@ const Permission = require('../models/permission');
 require('dotenv').config();
 const bcyrpt = require('bcryptjs');
 
-const isPermissionsAreSame = async (permissions)=>{
+const isPermissionSame = async (permissions)=>{
      
 
     const originalPermissions = await Permission.findOne({ _id : process.env.PERMİSSİON_İD }) 
@@ -51,7 +51,7 @@ module.exports.addUser = async (req,res,next)=>{
 
    if(currentUser.role !== 'Admin')
    {
-        if(!isPermissionsAreSame(permissions)) return res.json({error:'Server Error'});
+        if(!isPermissionSame(permissions)) return res.json({error:'Server Error'});
    }
     
    bcyrpt.hash(password,10,async (err,hash)=>{
