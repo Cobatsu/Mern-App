@@ -46,7 +46,7 @@ justify-content:space-between;
 const PersonelListIconWrapper = styled.div`
 &:hover{
   cursor:pointer;
-  background:#ffa41b;
+  background:#ff6363;
 }
 font-size:8px;
 flex:0.2;
@@ -194,9 +194,9 @@ const TopRows  =  [
 
 const PersonelOptions = [
   {desc:'Genel Bilgiler',Icon:<i className="fas fa-user-friends"></i>},
-  {desc:'Bayiler',Icon:<i className="fas fa-money-bill-wave"></i>},
-  {desc:'Raporlar',Icon:<i className="fas fa-user-edit"></i>},
-  {desc:'Yetkiler',Icon: <i className="far fa-address-card"></i>},
+  {desc:'Bayiler',Icon:<i    className="fas fa-code-branch"/>},
+  {desc:'Raporlar',Icon:<i   className="fas fa-sticky-note"></i>},
+  {desc:'Yetkiler',Icon: <i  className="fas fa-unlock"></i>},
 ]
 
 
@@ -307,7 +307,7 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
                     </SearchBox>
 
                       
-                    <_PersonelList personels={personels} notFound={notFound} SwitchRow={SwitchRow} refs={refs} />
+                    <_PersonelList currentRole = {user.role}  personels={personels} notFound={notFound} SwitchRow={SwitchRow} refs={refs} />
 
         <SubPagesContainer>
               {
@@ -330,9 +330,9 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
     </UpdateLoggedin>
 }
 
-export const _PersonelList = ({ personels,notFound,SwitchRow,refs,width,role,isProfil })=>{
+export const _PersonelList = ({ personels,notFound,SwitchRow,refs,width,role,isProfil,currentRole})=>{
            
-      
+       
         if( role && !isProfil )
         {
 
@@ -404,16 +404,16 @@ export const _PersonelList = ({ personels,notFound,SwitchRow,refs,width,role,isP
           </PersonelListItemInnerWrapper>    
 
 
-      <PersonelListItemInnerWrapper style={{backgroundColor:'#63b7af'}}> 
+      <PersonelListItemInnerWrapper style={{backgroundColor:'#204051'}}> 
 
        <div style={{display:'flex',flex:1}}>
 
             {
                 PersonelOptions.map((subItem,Mainindex)=>{
                 
-                  if( item.role !== 'Temsilci' && subItem.desc === 'Bayiler' ) return ;
-                  if( item.role === 'Admin' && subItem.desc === 'Raporlar' ) return ;
-                  if( role !==  'Admin' && subItem.desc === 'Yetkiler' ) return ;
+                  if( item.role !== 'Temsilci' && subItem.desc === 'Bayiler' ) return null ;
+                  if( item.role === 'Admin' && subItem.desc === 'Raporlar' ) return null;
+                  if( currentRole !==  'Admin' && subItem.desc === 'Yetkiler' ) return null ;
                    
               
                   return <PersonelListIconWrapper key={Mainindex}>

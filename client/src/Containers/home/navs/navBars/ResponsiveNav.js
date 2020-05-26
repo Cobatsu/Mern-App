@@ -75,7 +75,7 @@ margin-bottom:10px;
 const SubLinks = styled.ul`
 height: ${({selected,factor})=> selected ? (factor*38) + 'px' : '0' };
 transition:300ms;
-background:#363636;
+background:#204051;
 margin-botttom:5px;
 overflow:hidden;
 margin:0;
@@ -84,7 +84,7 @@ padding:0;
 
 const SubLinkItem = styled.li`
 &:hover{
-    background:#3b6978;
+    background:#ff6363;
 }
 `
 const IconDropDown = styled.span`

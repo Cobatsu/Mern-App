@@ -62,11 +62,11 @@ const ButtonStyle = {
 const completedModalTexts = {
 UPDATED_REPORT:'Raporunuz Güncellenmiştir.',
 REPORT_ADDED :'Raporunuz Gönderilmiştir.',
-CHANGED_PASSWORD:'Şifre Değiştirilmiştir',
-DELETED : 'Personel Başarıyla Silinmiştir',
-DELETED_REPORT:'Raporunuz Başarıyla Silinmiştir',
-UPDATE_PERSONEL:'Personel Başarıyla Güncellenmiştir!',
-ADD_PERSONEL:'Yeni Personel Başarıyla Eklenmiştir',
+CHANGED_PASSWORD:'Şifreniz Değiştirilmiştir.',
+DELETED : 'Personel Başarıyla Silinmiştir.',
+DELETED_REPORT:'Raporunuz Başarıyla Silinmiştir.',
+UPDATE_PERSONEL:'Personel Başarıyla Güncellenmiştir!.',
+ADD_PERSONEL:'Yeni Personel Başarıyla Eklenmiştir.',
 }
 
 const deletedModalTexts = {

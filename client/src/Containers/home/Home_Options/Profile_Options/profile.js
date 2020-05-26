@@ -60,7 +60,7 @@ const InputsWrapper = styled.div`
 flex:0.7;
 display:flex;
 align-items:center;
-justify-content:center;
+justify-content:flex-start;
 flex-flow:column;
 padding: 15px 5px;
 box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.03);

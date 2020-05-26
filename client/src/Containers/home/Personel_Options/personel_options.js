@@ -225,15 +225,20 @@ const General_User_Info = ({match,...rest})=>{
     const [relatedAgency , setRelatedAgency] = useState({});
     const [spanWiths , setSpanWiths] = useState([]);
     
-    var topItems =  document.querySelectorAll('.TopSpans span') ;
-
     useEffect(()=>{
-        
-        var spanWithsLast = [...topItems].map( ( item )=>{ return item.offsetWidth });
 
-        setSpanWiths(spanWithsLast)   
-    
-    },[width,topItems.length]); 
+        var topItems =  document.querySelectorAll('.TopSpans span') ;
+        
+        if(topItems) {
+
+          var spanWithsLast = [...topItems].map( ( item )=>{ return item.offsetWidth });
+          setSpanWiths(spanWithsLast)
+
+        }
+
+    },[ width , userInformations.permissions , rest.history.location.pathname]); 
+
+  
 
     const context =  useContext(Context);
 

@@ -80,10 +80,10 @@ width:50%;
 const StudentListIconWrapper = styled.div`
 &:hover{
   cursor:pointer;
-  background:#b9ebcc;
+  background:#ff6363;
 }
 font-size:8px;
-flex:1;
+flex:0.2;
 `
 
 //-------------------------
@@ -199,10 +199,6 @@ const TopRows = [
 const reportOptions = [
   {
     desc: 'Görüşme Bilgileri',
-    Icon: <i className="fas fa-user-friends"></i>
-  },
-  {
-    desc: 'Sözleşme Durumu',
     Icon: <i className="fas fa-user-friends"></i>
   },
 ]
@@ -425,44 +421,32 @@ export const ReportList = ({reports,notFound,refs,SwitchRow,width,role,isProfil}
           
        </StudentListItemInnerWrapper>    
 
-       <StudentListItemInnerWrapper style={{
-       backgroundColor: '#a6b1e1'
-     }}> 
+       <StudentListItemInnerWrapper style={{ backgroundColor: '#204051'}}> 
+                <div style={{display:'flex',flex:1}}>
 
-         {
-     reportOptions.map((item, Mainindex) => {
+                      {
+                            reportOptions.map((item, Mainindex) => {
 
-       return Mainindex === reportOptions.length - 1
-         ?
-         <IconInnerSpan key={Mainindex} onClick={SwitchRow(0, refs.current[index])}   style={{
-           flex: '0.1'
-         }}>
+                              return <StudentListIconWrapper key={Mainindex}>
+                                              
+                                      <Link  to={'/home/raporlar/'+ reportItem._id} style={{display:'flex',flexFlow:'column',justifyContent:'center',alignItems:'center',padding:'6px',fontSize:'12px',color:'white', textDecoration:'none'}}>
+                                          {item.Icon}
+                                          <span>{item.desc}</span>
+                                        </Link>
+                                                    
+                              </StudentListIconWrapper>
+                                                      
+                                    
+                            })
+                      }  
+
+                </div>
+
+           <IconInnerSpan  onClick={SwitchRow(0, refs.current[index])}   style={{flex: '0.1'}}>
                <SwitchButton>
                    <i className="fas fa-arrow-circle-right"></i>
                </SwitchButton>  
-               </IconInnerSpan>
-
-         :
-         <StudentListIconWrapper key={Mainindex}>
-                       
-                 <Link  to={'/home/raporlar/'+ reportItem._id} style={{
-                 display: 'flex',
-                 flexFlow: 'column',
-                 justifyContent: 'center',
-                 alignItems: 'center',
-                 padding: '6px',
-                 fontSize: '12px',
-                 color: 'white',
-                 textDecoration: 'none'
-             }}>
-                     {item.Icon}
-                     <span>{item.desc}</span>
-                  </Link>
-                               
-             </StudentListIconWrapper>
-
-     })
-     }      
+          </IconInnerSpan>   
          
        </StudentListItemInnerWrapper>
 
