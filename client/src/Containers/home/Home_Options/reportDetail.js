@@ -211,19 +211,11 @@ const ReportDetail  = ({match,...rest })=>{
                    <InnerItems>
                          
                         {
-                           user.permissions.Rapor_Bilgileri.includes(PermissionsNumbers.UPDATE) 
-                           ? 
-                           <Icon onClick= { ()=>setDisable(false)}>Düzenle <i className="fas fa-edit"/></Icon>
-                           :
-                           null
+                           user.permissions.Rapor_Bilgileri.includes(PermissionsNumbers.UPDATE) && <Icon onClick= { ()=>setDisable(false)}>Düzenle <i className="fas fa-edit"/></Icon>
                         }
                         
                         {
-                           user.permissions.Rapor_Bilgileri.includes(PermissionsNumbers.REMOVE) 
-                           ?  
-                           <Icon style={{background:'#d9455f'}} onClick={()=>{setDeleteModal(true); setbackStageOpen(true)}} > Raporu  Sil <i className="fas fa-trash-alt"></i></Icon>
-                           :
-                           null
+                           user.permissions.Rapor_Bilgileri.includes(PermissionsNumbers.REMOVE) &&  <Icon style={{background:'#d9455f'}} onClick={()=>{setDeleteModal(true); setbackStageOpen(true)}} > Raporu  Sil <i className="fas fa-trash-alt"></i></Icon>
                         }
 
                    </InnerItems>

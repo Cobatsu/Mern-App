@@ -21,7 +21,8 @@ justify-content:center;
 `
 const Fields  = styled.form`
 max-width:350px;
-padding:120px 30px 120px 30px ;
+min-height:100%;
+padding:0 20px;
 display:flex;
 flex-direction: column;
 align-items: center;
@@ -53,15 +54,15 @@ justify-content: center;
 
 
 const Submit = styled.button`
-align-self:flex-end;
 background-color:#00bdaa;
 color:white;
-width:100%;
+width:86%;
 border-radius:3px;
 text-align:center;
 box-shadow:0 0 5px  rgb(112, 112, 112);
 border:none;
 margin-top:10px;
+out-line:none;
 padding:5px;
 display:flex;
 align-items: center;
@@ -69,24 +70,28 @@ justify-content: center;
 &:hover{
     cursor:pointer;
 }
+
+&:focus{
+    outline:none;
+}
 `
 const InputWrapper = styled.div`
-width:100%;
+width:86%;
 position:relative
 `
 const ImageWrapper = styled.div`
-width:100%;
+width:86%;
 `
 
 const SubButtons = styled.button`
 padding:0;
-width:98%;
+width:82%;
+margin-top:3px;
 out-line:none;
 box-shadow:0 0 5px  rgb(112, 112, 112);
 border:none;
 color:white;
 border-radius:3px;
-margin-top:10px;
 background-color:#1eb2a6;
 font-weight:400;
 &:hover{
@@ -98,7 +103,7 @@ background-color:#F3565D;
 display:flex;
 align-items: center;
 justify-content:center;
-width:100%;
+width:86%;
 padding:5px; 
 color:white;
 border-radius: 4px;
@@ -157,7 +162,7 @@ class Login  extends React.Component {
                     <Container>     
                      <Fields onSubmit={this.submitHandler}>
                      
-                        <Circle Load={Loading} top={10} left={42}/>
+                        <Circle Load={Loading} top={10} />
                       
                         <ImageWrapper>
                             <img style={{width:'100%'}} alt="ercan" src='canada.png' ></img>
@@ -179,7 +184,7 @@ class Login  extends React.Component {
    
                          </Inner_Fields>
    
-                         <SubButtons><Link style={{width:'100%',padding:5,display:'block',height:'100%',textDecoration:'none',color:'white'}} className='loginLink'  to='/register'><i style={{marginRight:10}} className="fas fa-file-alt"></i>Ön Kayıt Başvurusu</Link></SubButtons>
+                         <SubButtons><Link style={{width:'100%',padding:'5px 0',display:'block',textDecoration:'none',color:'white'}} className='loginLink'  to='/register'><i style={{marginRight:10}} className="fas fa-file-alt"></i>Ön Kayıt Başvurusu</Link></SubButtons>
                     </Fields>
    
                </Container>

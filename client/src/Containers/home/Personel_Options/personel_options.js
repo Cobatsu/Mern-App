@@ -18,6 +18,7 @@ import {ReportList} from '../Home_Options/myReports'
 import {Admin,Temsilci,Bayi} from './statusArrays/statusArray'
 import {_PersonelList} from  './personelList'
 import UserMenu from '../../../Components/Usermenu'
+import {useViewport} from '../../home/navs/customHooks/viewPortHook'
 
 const MainWrapper = styled.form`
 display:flex;
@@ -112,26 +113,6 @@ box-shadow: 0 2px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.03
 margin-bottom:10px;
 `
 
-const InnerPermission  = styled.div`
-width:100%;
-padding:3px;
-display:flex;
-align-items:center;
-justify-content:space-evenly;
-`
-
-const PermissionTopSpan = styled.span `
-padding:3px;
-color:black;
-box-shadow: 0 1px 6px -1px rgba(0, 0, 0,0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
-border-radius:10px;
-`
-
-const RadioWrapper = styled.div`
-display:flex;
-justify-content:space-evenly;
-flex:1;
-`
 
 //-------------------------------
 const SubmitButton  = styled.button`
@@ -223,6 +204,8 @@ const  initialUserInformations = {
 
 const General_User_Info = ({match,...rest})=>{
 
+    const { width } = useViewport();
+
     const [userInformations , setUserInformations ] = useState(initialUserInformations);
     const [reuseUser , setreuseUser ] = useState({});
     const [rePermissions , setrePermissions ] = useState({});
@@ -239,8 +222,17 @@ const General_User_Info = ({match,...rest})=>{
     const [backStageOpen ,setbackStageOpen] = useState(false);
     const [relatedAgencyLoading , setrelatedAgencyLoading]= useState(false);
     const [relatedAgency , setRelatedAgency] = useState({});
+    const [spanWiths , setSpanWiths] = useState([]);
     
-  
+    var topItems =  document.querySelectorAll('.TopSpans span') ;
+
+    useEffect(()=>{
+     
+      setSpanWiths( [...topItems].map( ( item )=>{ return item.offsetWidth }) ) ;
+
+    },[width,topItems.length]); 
+
+    console.log(spanWiths);
 
     const context =  useContext(Context);
 
@@ -350,8 +342,6 @@ const General_User_Info = ({match,...rest})=>{
         makeRemoveUserRequest('delete',person_id,context.isLoggedinf,setDeletePopUP,setIsDeleted);
     }
 
-    console.log(userInformations)
-
     const submitHandler =(e)=>{  
         
         setbackStageOpen(true);
@@ -414,6 +404,7 @@ const General_User_Info = ({match,...rest})=>{
     },[userInformations]);
 
     const permissionHandler =React.useCallback((Type,value)=>event=>{
+
         const oldPermissions = {...permissionsState}; //we need to keep updated state;
         oldPermissions[Type]=[...oldPermissions[Type]];
         if(!event.target.checked)
@@ -425,6 +416,7 @@ const General_User_Info = ({match,...rest})=>{
           oldPermissions[Type].push(value);
         }
         setPermissions(oldPermissions);
+
     },[permissionsState])
   
 
@@ -485,22 +477,11 @@ const General_User_Info = ({match,...rest})=>{
 
               
                {
-                  user.permissions.Personel_Bilgileri.includes(PermissionsNumbers.UPDATE) 
-                  ?  
-                  <Icon onClick={()=>{setDisable(false)}}>Düzenle <i className="fas fa-edit"/></Icon>
-                  :
-                  null 
+                  user.permissions.Personel_Bilgileri.includes(PermissionsNumbers.UPDATE) &&  <Icon onClick={()=>{setDisable(false)}}>Düzenle <i className="fas fa-edit"/></Icon>     
                } 
-                
-                      
+                       
                {
-
-                  user.permissions.Personel_Bilgileri.includes(PermissionsNumbers.REMOVE) 
-                  ?  
-                  <Icon style={{background:'#c70039'}} onClick={openModal}> Kullanıcıyı Sil <i className="fas fa-trash-alt"></i></Icon>
-                  :
-                  null
-
+                  user.permissions.Personel_Bilgileri.includes(PermissionsNumbers.REMOVE) &&   <Icon style={{background:'#c70039'}} onClick={openModal}> Kullanıcıyı Sil <i className="fas fa-trash-alt"></i></Icon>
                }
              
             </InnerItems>
@@ -522,29 +503,13 @@ const General_User_Info = ({match,...rest})=>{
               
                    <Route path='/home/personel_listesi/yetkiler/:id' exact render={()=> <PermissionsWrapper>
                          <span style={{textAlign:'center',color:'#fb7b6b',fontSize:20,marginBottom:'7px',flex:0.2}}>YETKİLER</span>
+
                            <div style={{width:'100%',padding:'3px',flex:1}}>
+
                            <PermissionsTabs value={tabShow} handler={tabsHandle} />  
-                               {
-                                
-                                 <InnerPermission>
-                                   <span style={{flex:0.4 , textAlign:'center'}}></span>
-                                     <RadioWrapper style={{fontSize:'14px'}}>
 
-                                             <PermissionTopSpan >Silme</PermissionTopSpan >
-                                             <PermissionTopSpan >Düzenleme</PermissionTopSpan>
-                                             <PermissionTopSpan >Yazma</PermissionTopSpan>
-                                             <PermissionTopSpan >Okuma</PermissionTopSpan >
-
-                                     </RadioWrapper>
-                                 </InnerPermission>
+                           <ChecBoxes disabled={disable} spanWiths={spanWiths}  permissions={permissionsState} handler={permissionHandler} tabShow={tabShow}/>                  
                               
-                               }  
- 
- 
-                               {
-                                     <ChecBoxes disabled={disable}  permissions={permissionsState} handler={permissionHandler} tabShow={tabShow}/>                  
-                               }
-                               
                            </div> 
                          </PermissionsWrapper>
                    }

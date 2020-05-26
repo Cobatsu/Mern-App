@@ -1,4 +1,4 @@
-import React, {useEffect,useState,useContext} from 'react';
+import React, {useEffect,useState,useContext,useMemo} from 'react';
 import Generator  from 'generate-password';
 import {UpdateLoggedin} from '../../isLoggedin/action'
 import styled from 'styled-components';
@@ -13,7 +13,7 @@ import {Link} from 'react-router-dom'
 import {Regions}  from '../../../Regions/regions'
 import {makePermissionRequest} from '../../../request/requset'
 import Circle from '../../../UI/Circle';
-
+import  {useViewport} from '../../home/navs/customHooks/viewPortHook'
 
 const MainWrapper = styled.form`
 display:flex;
@@ -47,7 +47,7 @@ align-items:flex-start;
 //-------------------------------
 
 const InputsWrapper = styled.div`
-flex:0.5;
+flex:0.45;
 flex-flow:column;
 display:flex;
 justify-content:center;
@@ -76,7 +76,7 @@ display:flex;
 
 
 const PermissionsWrapper = styled.div`
-flex:0.4;
+flex:0.48;
 display:flex;
 flex-flow:column;
 padding: 15px 8px;
@@ -92,6 +92,7 @@ box-shadow: 0 2px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.03
 const InnerPermission  = styled.div`
 width:100%;
 padding:3px;
+margin-top:10px;
 display:flex;
 align-items:center;
 justify-content:space-evenly;
@@ -101,7 +102,10 @@ const PermissionTopSpan = styled.span `
 padding:3px;
 color:black;
 box-shadow: 0 1px 6px -1px rgba(0, 0, 0,0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
-border-radius:10px;
+border-radius:6px;
+@media (max-width: 1030px) {
+  font-size:10px;
+}
 `
 
 
@@ -109,7 +113,8 @@ border-radius:10px;
 const RadioWrapper = styled.div`
 display:flex;
 justify-content:space-evenly;
-flex:1;
+flex:0.8;
+font-size:14px;
 `
 
 
@@ -152,6 +157,12 @@ margin-top:10px;
   justify-content:flex-start;
   flex-flow:column;
 }
+`
+const WidthCapsules = styled.div`
+width:${({ width })=> width + 'px' };
+display:flex;
+justify-content:center;
+align-items:center;
 `
 
 const Icon = styled.div`
@@ -233,6 +244,8 @@ const AddPersonStatuses = [
 
 const AddPerson  = React.memo((props)=>{
   
+  const { width } = useViewport();
+
   const [userInformations , setUserInformations ] = useState(initialState);
    
   const {isLoggedinf , user:currentUser} =  useContext(Context);
@@ -247,7 +260,17 @@ const AddPerson  = React.memo((props)=>{
   const [date , setDate] = useState(new Date(Date.now()));
   const [warning,setwarningPopUp]   = useState();
   const [BackStage,setBackStage]  = useState(false);
+  const [spanWiths , setSpanWiths] = useState([]);
+   
+    var topItems =  document.querySelectorAll('.TopSpans span') ;
 
+    useEffect(()=>{
+     
+      setSpanWiths( [...topItems].map( ( item )=>{ return item.offsetWidth }) ) ;
+
+    },[width,topItems.length]); 
+
+  
   const tabsHandle = (event, newValue) => {
     setTabShow(newValue);
   };
@@ -440,7 +463,7 @@ const AddPerson  = React.memo((props)=>{
 
                     <PermissionsTabs value={tabShow} handler={tabsHandle} />  
 
-                        {
+                        {/* {
                             userInformations['role'] 
                             
                             ?
@@ -461,10 +484,10 @@ const AddPerson  = React.memo((props)=>{
 
                           <h6 style={{textAlign:'center',color:'#00909e',marginBottom:'7px',flex:0.2}}>LÜTFEN ROL SEÇİNİZ</h6>
                           
-                        }  
+                        }   */}
 
                         {
-                              <ChecBoxes permissions={permissions} handler={permissionHandler} tabShow={tabShow}/>                  
+                          userInformations['role']  ? <ChecBoxes spanWiths={spanWiths}  permissions={permissions} handler={permissionHandler} tabShow={tabShow}/>  : <h6 style={{textAlign:'center',color:'#00909e',marginBottom:'7px',flex:0.2}}>LÜTFEN ROL SEÇİNİZ</h6>
                         }
 
                     </div> 
@@ -724,37 +747,73 @@ export const UserInputs = React.memo(({userInformations,townships,textChangeHand
     })
 })
 
-export const ChecBoxes = React.memo(({permissions,handler,tabShow,disabled})=>{
-  return   Object.keys(permissions).map((mainItem,index)=>{      
+export const ChecBoxes = ({permissions,handler,tabShow,disabled,spanWiths})=>{
 
-    return UserPermissions[Object.keys( UserPermissions)[tabShow]].map((item)=>{
-       return mainItem === item.split(' ').join('_')  ?  
-         <InnerPermission key={item}>
+  
+  var checkBoxes = ( mainItem , item ) => spanWiths.map( ( width , index )=>{
 
-           <span style={{flex:0.4,fontSize:'14px',textAlign:'center',position:'relative'}}> <i style={{color:'#d4f8e8',position:'absolute',left:0,top:'5px',fontSize:10}} class="fas fa-circle"></i> {item}</span>
-          
-        <RadioWrapper >  
-          {
-            Array(4).fill().map((_,index)=>{
-                  return  <Checkbox disabled={disabled}  size='small' onChange={handler(item.split(' ').join('_'),index+1)} checked = {permissions[mainItem].indexOf(index+1)>=0} value="checkedA"  color='primary' inputProps={{ 'aria-label': 'Checkbox A' }} />
-            })
-          }                                     
-        </RadioWrapper>
+    return <WidthCapsules width={ width } >
 
-   </InnerPermission> 
+               <Checkbox disabled={ disabled } style={ { padding:'0' } }  size='small' onChange={handler(item.split(' ').join('_'),index+1)} checked = {permissions[mainItem].indexOf(index+1)>=0} value="checkedA"  color='primary' inputProps={{ 'aria-label': 'Checkbox A' }} />
 
-   : 
-   null
+         </WidthCapsules>
+  })
 
-    })
+  
 
-})
+  return <React.Fragment>
 
-})
+      <InnerPermission>
+
+          <span style={{flex:0.2}}></span>
+
+          <RadioWrapper style={{fontSize:'14px'}} className ='TopSpans' >
+
+                  <PermissionTopSpan >Silme</PermissionTopSpan >
+                  <PermissionTopSpan >Düzenleme</PermissionTopSpan>
+                  <PermissionTopSpan >Yazma</PermissionTopSpan>
+                  <PermissionTopSpan >Okuma</PermissionTopSpan >
+                  
+          </RadioWrapper>
+
+      </InnerPermission>
+
+    { 
+          Object.keys(permissions).map((mainItem,index)=>{      
+
+          return UserPermissions[Object.keys( UserPermissions)[tabShow]].map((item)=>{
+            return mainItem === item.split(' ').join('_')  ?  
+              <InnerPermission key={item}>
+
+              <span style={{flex:0.2,fontSize:'14px',textAlign:'center'}}> {item}</span>
+                
+              <RadioWrapper >  
+
+                {
+
+                  checkBoxes(mainItem,item)
+                  
+                }  
+
+              </RadioWrapper>
+
+        </InnerPermission> 
+
+        : 
+        null
+
+          })
+
+        })
+  }
+
+  </React.Fragment>
+
+}
 
 export const PermissionsTabs=React.memo(({handler,value})=>{
   return (
-    <Paper style={{minWidth:'600px',marginBottom:'40px'}}  square>
+    <Paper style={{marginBottom:'40px'}}  square>
       <Tabs
         style={{width:'100%'}} 
         value={value}
