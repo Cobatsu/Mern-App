@@ -205,6 +205,7 @@ const  initialUserInformations = {
 const General_User_Info = ({match,...rest})=>{
 
     const { width } = useViewport();
+    const breakPoint = 1030;
 
     const [userInformations , setUserInformations ] = useState(initialUserInformations);
     const [reuseUser , setreuseUser ] = useState({});
@@ -227,9 +228,11 @@ const General_User_Info = ({match,...rest})=>{
     var topItems =  document.querySelectorAll('.TopSpans span') ;
 
     useEffect(()=>{
-     
-      setSpanWiths( [...topItems].map( ( item )=>{ return item.offsetWidth }) ) ;
+        
+        var spanWithsLast = [...topItems].map( ( item )=>{ return item.offsetWidth });
 
+        setSpanWiths(spanWithsLast)   
+    
     },[width,topItems.length]); 
 
     const context =  useContext(Context);
