@@ -22,9 +22,10 @@ margin:0 auto;
 align-items:center;
 justify-content:center;
 margin-top:2%;
+box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
 padding:30px;
 @media (max-width: 1030px) {
-  padding:10px;
+  padding:10px 0 30px 0 ;
   width:90%;
 }
 border-radius:3px;
@@ -69,7 +70,7 @@ outline:none;
 box-shadow:0 0 2px black;
 @media (max-width: 1030px) {
   width:80%;
-  min-height:400px;
+  min-height:300px;
   margin-top:20px;
 }
 `
@@ -213,10 +214,10 @@ export const Report = ({SubmitOnChange,State,setBackStage,setDate,disable,type,r
 
           <ReportTextFields>
                   
-                {reportType === 'schoolReport' ? <TextField value={State['schoolName']}   InputLabelProps={{style:{zIndex:50}}}  disabled={disable}   onChange = {SubmitOnChange('schoolName')}   label='Okul İsmi'  style={{width:'85%',padding:'10px 0',marginBottom:5}}  inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}} /> : null }
-                <TextField value={State['relatedPersonName']}   InputLabelProps={{style:{zIndex:50}}}  disabled={disable}   onChange = {SubmitOnChange('relatedPersonName')}   label='Görüşülen Kişinin İsmi'  style={{width:'85%',padding:'10px 0',marginBottom:5}} inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}   />
-                <TextField value={State['relatedPersonPhoneNumber']}   InputLabelProps={{style:{zIndex:50}}}  disabled={disable}   onChange = {SubmitOnChange('relatedPersonPhoneNumber')}   label='Görüşülen Kişinin Telefon Numarası'  style={{width:'85%',padding:'10px 0'}}  inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}  />
-                <TextField value={State['relatedPersonEmail']}   InputLabelProps={{style:{zIndex:50}}}  disabled={disable}   onChange = {SubmitOnChange('relatedPersonEmail')}   label='Görüşülen Kişinin Mail Adresi'  style={{width:'85%',padding:'10px 0'}} inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}   />
+                {reportType === 'schoolReport' ? <TextField value={State['schoolName']}   InputLabelProps={{style:{zIndex:1}}}  disabled={disable}   onChange = {SubmitOnChange('schoolName')}   label='Okul İsmi'  style={{width:'85%',padding:'10px 0',marginBottom:5}}  inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}} /> : null }
+                <TextField value={State['relatedPersonName']}   InputLabelProps={{style:{zIndex:1}}}  disabled={disable}   onChange = {SubmitOnChange('relatedPersonName')}   label='Görüşülen Kişinin İsmi'  style={{width:'85%',padding:'10px 0',marginBottom:5}} inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}   />
+                <TextField value={State['relatedPersonPhoneNumber']}   InputLabelProps={{style:{zIndex:1}}}  disabled={disable}   onChange = {SubmitOnChange('relatedPersonPhoneNumber')}   label='Görüşülen Kişinin Telefon Numarası'  style={{width:'85%',padding:'10px 0'}}  inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}  />
+                <TextField value={State['relatedPersonEmail']}   InputLabelProps={{style:{zIndex:1}}}  disabled={disable}   onChange = {SubmitOnChange('relatedPersonEmail')}   label='Görüşülen Kişinin Mail Adresi'  style={{width:'85%',padding:'10px 0'}} inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}   />
 
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
 

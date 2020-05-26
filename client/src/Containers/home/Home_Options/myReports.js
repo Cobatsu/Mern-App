@@ -17,8 +17,10 @@ align-items:center;
 background:white;
 width:80%;
 margin:0 auto;
+padding:0 0 20px 0;
 margin-top:2%;
 border-radius:3px;
+box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
 position:relative;
 @media (max-width: 1000px) {
    width:100%;
@@ -168,11 +170,11 @@ padding:10px 0;
 const SubPageItem = styled.div`
 
 margin-right:8px;
-border-radius:100%;
+border-radius:2px;
 display:flex;
-width:20px;
-height:20px;
-padding:14px;
+width:5px;
+height:5px;
+padding:11px;
 color:${({selected}) => selected ? 'white' : 'grey'};
 align-items:center;
 justify-content:center;

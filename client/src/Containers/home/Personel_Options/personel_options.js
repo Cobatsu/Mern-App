@@ -448,7 +448,7 @@ const General_User_Info = ({match,...rest})=>{
      //
     return <UpdateLoggedin page='PERSONEL_GENERAL_INFO'  {...rest}>
         {
-           (Loading,user)=>Loading ? null : loading 
+           ( Loading , user )=>Loading ? null : loading 
            ?  
            <Circle  Load={loading} position='static' marginTop={50}/>
            :
@@ -544,14 +544,14 @@ const General_User_Info = ({match,...rest})=>{
                    } />
 
                   <Route path='/home/personel_listesi/raporlar/:id' exact render={()=><InputsWrapper style={{alignSelf:'stretch',justifyContent:'flex-start'}}>  
-                            <PersonelReports role={userInformations.role} id={match.params.id} setLoggedin={context.isLoggedinf} />                
+                            <PersonelReports role={userInformations.role}   id={match.params.id} setLoggedin={context.isLoggedinf} />                
                    </InputsWrapper> 
                   }
                   />
 
 
                   <Route path='/home/personel_listesi/bayiler/:id' exact render={()=><InputsWrapper style={{alignSelf:'stretch',justifyContent:'flex-start'}}>  
-                            <PersonelSubBranches role={userInformations.role} id={match.params.id} setLoggedin={context.isLoggedinf} />                
+                            <PersonelSubBranches role={userInformations.role} currentRole={user.role} id={match.params.id} setLoggedin={context.isLoggedinf} />                
                    </InputsWrapper> 
                   }
                   />
@@ -653,7 +653,7 @@ export const PersonelReports = ({id,setLoggedin,role,isProfil})=>{
 }
 
 
-export const PersonelSubBranches = ({id,setLoggedin,role,isProfil})=>{
+export const PersonelSubBranches = ({id,setLoggedin,role,isProfil,currentRole})=>{
     
 
   const [subBranches, setSubBranches] = useState([]);
@@ -707,7 +707,7 @@ export const PersonelSubBranches = ({id,setLoggedin,role,isProfil})=>{
 
      {!notFound ? <h1 style={{marginBottom:20,color:'lightblue',fontSize:16,color:'#52de97'}}>({subPagesCount}) Sonuç Bulundu </h1> : null}
     
-    <_PersonelList  width={775} refs={refs} role={role} personels={subBranches} isProfil={isProfil}  notFound={notFound} SwitchRow={SwitchRow} userProfile={true}  />
+    <_PersonelList currentRole={currentRole}  width={775} refs={refs} role={role} personels={subBranches} isProfil={isProfil}  notFound={notFound} SwitchRow={SwitchRow} userProfile={true}  />
 
     <SubPagesContainer>
       

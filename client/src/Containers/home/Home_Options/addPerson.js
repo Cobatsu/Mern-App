@@ -440,7 +440,7 @@ const AddPerson  = React.memo((props)=>{
         <Modal backStage={alreadyInUse} closeModal={closeModal_2} type='NOT_UNİQUE'/>
         <Modal backStage={warning} closeModal={closeModal_3} type='EMPTY_FİELD'/>
         
-        <h1 style={{width:'100%',textAlign:'center' , color:'#4cbbb9',fontWeight:'bolder'}}><i style={{marginRight:10}}className="fas fa-user-plus"></i>YENİ KULLANICI</h1>
+        <h1 style={{width:'100%',textAlign:'center' , color:'#4cbbb9',fontWeight:'bolder'}}><i style={{marginRight:10}}className="fas fa-user-plus"></i>YENİ PERSONEL</h1>
       <InnerContainer>
 
                 <InputsWrapper> 

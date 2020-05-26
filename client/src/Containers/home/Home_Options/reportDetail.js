@@ -26,7 +26,7 @@ margin-top:2%;
 padding:30px;
 @media (max-width: 1030px) {
   width:90%;
-  padding:10px;
+  padding:10px 0 30px 0 ;
 }
 border-radius:3px;
 flex-flow:column;
