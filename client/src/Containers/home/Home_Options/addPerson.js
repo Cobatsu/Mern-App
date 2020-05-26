@@ -415,6 +415,7 @@ const AddPerson  = React.memo((props)=>{
         }
       }
 
+      setUserInformations(initialState);
       makeAddUserRequest('post',mainState,setAlreadyInUse,setmodalShow,isLoggedinf);
   }
   

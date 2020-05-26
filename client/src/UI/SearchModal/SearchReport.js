@@ -69,6 +69,7 @@ align-self:flex-end;
     cursor:pointer;
 }
 @media (max-width: 1030px) {
+   margin-top:10px;
    align-self:center;
    width:90%;
 }

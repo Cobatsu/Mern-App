@@ -68,7 +68,8 @@ border:none;
 outline:none;
 box-shadow:0 0 2px black;
 @media (max-width: 1030px) {
-  width:75%;
+  width:80%;
+  min-height:400px;
   margin-top:20px;
 }
 `

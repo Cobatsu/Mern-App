@@ -15,10 +15,11 @@ export const Bayi = ()=>{
       ]
 }
 
-export const Acenta = ()=>{
+export const Temsilci = ()=>{
     return [
         {desc:'Genel Bilgiler',Icon:<i style={{marginRight:8}} className="fas fa-user-friends"></i>},
         {desc:'Bayiler',Icon:<i style={{marginRight:8}}  className="fas fa-code-branch"></i>},
-        {desc:'Şifre Değiştir',Icon:<i style={{marginRight:8}}  className="fas fa-key"></i>},          
+        {desc:'Şifre Değiştir',Icon:<i style={{marginRight:8}}  className="fas fa-key"></i>},  
+        {desc:'Raporlar',Icon:<i style={{marginRight:8}} className="fas fa-sticky-note"></i>},        
       ]
 }

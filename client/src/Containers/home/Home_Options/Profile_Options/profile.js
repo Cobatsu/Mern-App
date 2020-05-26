@@ -13,8 +13,10 @@ import Modal from '../../../../UI/sentModal';
 import Stage from '../../../../UI/backStage';
 import {Checkbox,TextField,Tab,Tabs,Paper,InputLabel,MenuItem,Selec} from '@material-ui/core'
 import {makeChangeProfiePasswordRequest,makeRelatedAgencyRequest}  from '../../../../request/requset'
-import  {Admin,Bayi,Acenta}  from './statusArrays/statusArray'
+import  {Admin,Bayi,Temsilci}  from './statusArrays/statusArray'
 import  UserMenu from '../../../../Components/Usermenu'
+import {PersonelSubBranches} from '../../Personel_Options/personel_options'
+import {PersonelReports} from '../../Personel_Options/personel_options'
 
 const MainWrapper = styled.form`
 display:flex;
@@ -56,11 +58,19 @@ align-items:flex-start;
 
 const InputsWrapper = styled.div`
 flex:0.7;
-flex-flow:column;
-align-items:center;
 display:flex;
+align-items:center;
+justify-content:center;
+flex-flow:column;
 padding: 15px 5px;
 box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+@media (max-width: 1030px) {
+  width:100%;
+  overflow-x: scroll;
+  overflow-y: scroll;
+  min-height:500px;
+}
+position:relative;
 margin-bottom:5px;
 `
 
@@ -144,7 +154,7 @@ const Profile = ({match,...rest})=>{
 
             case 'Temsilci':
 
-              return Acenta();
+              return Temsilci();
 
             break;
 
@@ -312,6 +322,20 @@ const Profile = ({match,...rest})=>{
                                 <ChangePassword passwordChangeHandler={passwordChangeHandler} password={password}  passwordSubmitHandler={passwordSubmitHandler}/>
 
                           </InputsWrapper>
+                          } />
+
+                          <Route path='/home/profil/bayiler' exact   render={()=><InputsWrapper> 
+                          
+                               <PersonelSubBranches id={user._id} role={user.role} setLoggedin={restContext.isLoggedinf} isProfil={true}  />
+
+                            </InputsWrapper>
+                           } />
+
+                          <Route path='/home/profil/raporlar' exact   render={()=><InputsWrapper> 
+                          
+                               <PersonelReports  id={user._id}   role={user.role} setLoggedin={restContext.isLoggedinf} isProfil={true}  />
+
+                            </InputsWrapper>
                           } />
 
 

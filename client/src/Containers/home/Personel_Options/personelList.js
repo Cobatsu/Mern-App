@@ -330,8 +330,28 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
     </UpdateLoggedin>
 }
 
-export const _PersonelList = ({personels,notFound,SwitchRow,refs,width,role})=>{
- 
+export const _PersonelList = ({ personels,notFound,SwitchRow,refs,width,role,isProfil })=>{
+           
+      
+        if( role && !isProfil )
+        {
+
+           var notFoundText = `Henüz , Bu ${role}ye Bağlı  Bir Bayi  Bulunmamaktadır.`
+
+        }
+        else if( isProfil )
+        {
+
+           var notFoundText = `Henüz , Size  Bağlı  Bir Bayi  Bulunmamaktadır.`
+
+        }
+        else
+        {
+
+            var notFoundText = `Herhangi Bir Sonuç Bulunamadı.`
+
+        }
+
         return  <PersonelList_ width={width}>
 
         <PersonelListItem>  
@@ -347,7 +367,7 @@ export const _PersonelList = ({personels,notFound,SwitchRow,refs,width,role})=>{
         </PersonelListItem>
 
         {
-            personels.length <= 0  && notFound ? <h1 style={{textAlign:'center' , padding:20,letterSpacing:1 , fontSize:17 , color:'#00909e'}}>{ role ? `Henüz , Bu ${role}ye Bağlı  Bir Bayi  Bulunmamaktadır.` : 'Herhangi Bir Sonuç Bulunamadı .'}</h1> : null
+            personels.length <= 0  && notFound ? <h1 style={{textAlign:'center' , padding:20,letterSpacing:1 , fontSize:17 , color:'#00909e'}}>{ notFoundText }</h1> : null
         }
 
         { 
@@ -391,9 +411,10 @@ export const _PersonelList = ({personels,notFound,SwitchRow,refs,width,role})=>{
             {
                 PersonelOptions.map((subItem,Mainindex)=>{
                 
-                  if(item.role !== 'Temsilci' && subItem.desc === 'Bayiler' ) return ;
-                  if(item.role === 'Admin' && subItem.desc === 'Raporlar' ) return ;
-            
+                  if( item.role !== 'Temsilci' && subItem.desc === 'Bayiler' ) return ;
+                  if( item.role === 'Admin' && subItem.desc === 'Raporlar' ) return ;
+                  if( role !==  'Admin' && subItem.desc === 'Yetkiler' ) return ;
+                   
               
                   return <PersonelListIconWrapper key={Mainindex}>
                             

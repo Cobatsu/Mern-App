@@ -58,7 +58,6 @@ const StudentListItem = styled.li`
 width:200%;
 display:flex;
 transition:280ms;
-
 `
 
 const SwitchButton = styled.div`
@@ -314,7 +313,7 @@ const Student = (props) => {
         :
         <React.Fragment>
         
-            <ReportList reports={reports} user={user} notFound={notFound} refs={refs} SwitchRow={SwitchRow}/>
+            <ReportList reports={reports}  notFound={notFound} refs={refs} SwitchRow={SwitchRow}/>
       
        <SubPagesContainer>
 
@@ -341,7 +340,28 @@ const Student = (props) => {
   </UpdateLoggedin>
 }
 
-export const ReportList = ({user,reports,notFound,refs,SwitchRow,width,userProfile,role})=>{
+export const ReportList = ({reports,notFound,refs,SwitchRow,width,role,isProfil})=>{
+  
+
+  if( role && !isProfil )
+  {
+
+     var notFoundText = ` Henüz , Bu ${role} ye Ait   Bir Rapor  Bulunmamaktadır.`
+
+  }
+  else if( isProfil )
+  {
+
+     var notFoundText = ` Henüz , Bir  Raporunuz  Bulunmamaktadır .`
+
+  }
+  else
+  {
+
+      var notFoundText = ` Herhangi Bir Sonuç Bulunamadı. `
+ 
+  }
+
   
   return <StudentList width={width}> 
 
@@ -352,7 +372,7 @@ export const ReportList = ({user,reports,notFound,refs,SwitchRow,width,userProfi
                {
                  TopRows.map((item) => {
 
-                   if(user.role !== 'Admin' && item === 'Gönderen Kişi')
+                   if(role !== 'Admin' && item === 'Gönderen Kişi')
                    {
                      return null ;
                    }
@@ -370,7 +390,7 @@ export const ReportList = ({user,reports,notFound,refs,SwitchRow,width,userProfi
     </StudentListItem>   
 
      {
-        reports.length <= 0  && notFound ? <h1 style={{textAlign:'center' , padding:20,letterSpacing:1 , fontSize:17 , color:'#00909e'}}>{ role ? `Henüz , Bu ${role}ye Ait Bir Rapor Bulunmamaktadır.` : 'Herhangi Bir Sonuç Bulunamadı .'} </h1> : null
+        reports.length <= 0  && notFound ? <h1 style={{textAlign:'center' , padding:20,letterSpacing:1 , fontSize:17 , color:'#00909e'}}>{notFoundText} </h1> : null
      }
 
      {
@@ -391,7 +411,7 @@ export const ReportList = ({user,reports,notFound,refs,SwitchRow,width,userProfi
            <InnerSpan>{reportItem.reportType === 'studentReport' ? 'Öğrenci Görüşmesi' : 'Okul Görüşmesi' }</InnerSpan>
            <InnerSpan>{reportItem.meetingDate}</InnerSpan>
            {
-             user.role === 'Admin' ? 
+             role === 'Admin' ? 
              <InnerSpan>{reportItem.whoseDocument}</InnerSpan>
              : null
            }

@@ -70,9 +70,11 @@ align-self:flex-end;
 }
 @media (max-width: 1030px) {
    align-self:center;
+   margin-top:10px;
    width:90%;
 }
 `
+
 const initialSearchState = {
  firstName:'',
  lastName:'',
@@ -89,6 +91,7 @@ export const  SearchPersonModal = React.memo(({isOpen,close,role,closeModalOnly,
     const [date,setDate] = useState(null);
     const [date2,setDate2] = useState(null);
     const {isLoggedinf}  = useContext(Context); 
+    
     const { width } = useViewport();
     const breakPoint = 1030;
 
@@ -119,7 +122,7 @@ export const  SearchPersonModal = React.memo(({isOpen,close,role,closeModalOnly,
 
         if(isOnlySubBranch) 
         {
-            let {role , ...updatedSearchData } = searchData;
+            let { role , ...updatedSearchData } = searchData;
             searchMainData={...updatedSearchData,relatedAgencyID:id}
         }
         

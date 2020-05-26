@@ -539,14 +539,14 @@ const General_User_Info = ({match,...rest})=>{
                    } />
 
                   <Route path='/home/personel_listesi/raporlar/:id' exact render={()=><InputsWrapper style={{alignSelf:'stretch',justifyContent:'flex-start'}}>  
-                            <PersonelReports role={userInformations.role} id={match.params.id} setLoggedin={context.isLoggedinf} user={user}/>                
+                            <PersonelReports role={userInformations.role} id={match.params.id} setLoggedin={context.isLoggedinf} />                
                    </InputsWrapper> 
                   }
                   />
 
 
                   <Route path='/home/personel_listesi/bayiler/:id' exact render={()=><InputsWrapper style={{alignSelf:'stretch',justifyContent:'flex-start'}}>  
-                            <PersonelSubBranches role={userInformations.role} id={match.params.id} setLoggedin={context.isLoggedinf} user={user}/>                
+                            <PersonelSubBranches role={userInformations.role} id={match.params.id} setLoggedin={context.isLoggedinf} />                
                    </InputsWrapper> 
                   }
                   />
@@ -555,6 +555,7 @@ const General_User_Info = ({match,...rest})=>{
 
            </InnerContainer>   
               { disable  ? null :
+
               <ButtonWrapper>
                 <SubmitButton type='button' onClick={()=>{  //here we reset the all informations
                 setDisable((prev)=>true);
@@ -578,7 +579,7 @@ const General_User_Info = ({match,...rest})=>{
 
 }
 
-const PersonelReports = ({id,setLoggedin,user,role})=>{
+export const PersonelReports = ({id,setLoggedin,role,isProfil})=>{
     
   const [reports, setReports] = useState([]);
   const [ notFound , setNotFound ] = useState(null);
@@ -629,7 +630,7 @@ const PersonelReports = ({id,setLoggedin,user,role})=>{
   :
   <HiddenWrapper>
     {!notFound ? <h1 style={{marginBottom:20,color:'lightblue',fontSize:16,color:'#52de97'}}>({subPagesCount}) Sonuç Bulundu</h1> : null}
-    <ReportList user={user} width={775} refs={refs} reports={reports} role={role} notFound={notFound} SwitchRow={SwitchRow} userProfile={true}  notFoundText='Bu Kullanıcının Henüz Bir Raporu Bulunmamaktadır.'/>
+    <ReportList isProfil={isProfil}  width={775} refs={refs} reports={reports} role={role} notFound={notFound} SwitchRow={SwitchRow}  />
 
     <SubPagesContainer>
       
@@ -647,7 +648,7 @@ const PersonelReports = ({id,setLoggedin,user,role})=>{
 }
 
 
-const PersonelSubBranches = ({id,setLoggedin,user,role})=>{
+export const PersonelSubBranches = ({id,setLoggedin,role,isProfil})=>{
     
 
   const [subBranches, setSubBranches] = useState([]);
@@ -673,7 +674,7 @@ const PersonelSubBranches = ({id,setLoggedin,user,role})=>{
     makePersonSearchRequest('post', {
       relatedAgencyID:id,
       pageNumber: page
-    },setLoggedin , setSubBranches, ()=>{}, setSubPagesCount, setLoading);
+    } , setLoggedin , setSubBranches, ()=>{}, setSubPagesCount, setLoading);
 
   }
 
@@ -699,9 +700,9 @@ const PersonelSubBranches = ({id,setLoggedin,user,role})=>{
   :
   <HiddenWrapper>
 
-     {!notFound ? <h1 style={{marginBottom:20,color:'lightblue',fontSize:16,color:'#52de97'}}>({subPagesCount}) Sonuç Bulundu</h1> : null}
+     {!notFound ? <h1 style={{marginBottom:20,color:'lightblue',fontSize:16,color:'#52de97'}}>({subPagesCount}) Sonuç Bulundu </h1> : null}
     
-    <_PersonelList user={user} width={775} refs={refs} role={role} personels={subBranches}  notFound={notFound} SwitchRow={SwitchRow} userProfile={true}  />
+    <_PersonelList  width={775} refs={refs} role={role} personels={subBranches} isProfil={isProfil}  notFound={notFound} SwitchRow={SwitchRow} userProfile={true}  />
 
     <SubPagesContainer>
       
