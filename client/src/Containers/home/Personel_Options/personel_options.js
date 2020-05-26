@@ -232,8 +232,6 @@ const General_User_Info = ({match,...rest})=>{
 
     },[width,topItems.length]); 
 
-    console.log(spanWiths);
-
     const context =  useContext(Context);
 
           const UserMenuLinks = useMemo(()=>{
