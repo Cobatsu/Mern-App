@@ -79,26 +79,27 @@ const MainPage = (props)=>{
                     <AnnouncementsWrapper>
                             
                             <Announcement>
+
                                 <i class="fas fa-circle" style={{ marginRight:10 , fontSize:8 , color:'#1eb2a6'}}></i>
-                                Şimdilik , uygulamamızda sadece rapor bilgilendirme sistemi bulunmaktadır . Yeni güncellemeler için çalışmalara devam etmekteyiz . 
+                                Şimdilik , uygulamamızda sadece " Rapor Bilgilendirme " sistemi bulunmaktadır . Yeni güncellemeler için çalışmalarımız devam etmektedir . 
 
                             </Announcement>
-                            
-                            {
-                                user.role === 'Admin' && <Announcement> 
-                                    
-                                    <i class="fas fa-circle" style={{ marginRight:10 , fontSize:8 , color:'#1eb2a6'}}></i>  
-                                    Yetkilendirme özellikleri şimdilik kısıtlıdır . 
                                 
-                                </Announcement> 
-                            }
+                                {
+                                    user.role === 'Admin' && <Announcement> 
+                                        
+                                        <i class="fas fa-circle" style={{ marginRight:10 , fontSize:8 , color:'#1eb2a6'}}></i>  
+                                        Yetkilendirme sistemimiz şimdilik  kısıtlı bölgelere etki etmektedir . 
+                                    
+                                    </Announcement> 
+                                }
 
                                 <Announcement>
 
                                 <i class="fas fa-circle" style={{ marginRight:10 , fontSize:8 , color:'#1eb2a6'}}></i>
 
-                                Uygulamamızda olası bir hata ile karşılaşırsanız , lütfen  şikayetlerinizi ve isteklerinizi bu e-posta adresine
-                                iletiniz : bexfg@hotmail.com. 
+                                    Lütfen Uygulamayla ilgili şikayetlerinizi ve isteklerinizi bu e-posta adresine
+                                    iletiniz : bexfg@hotmail.com. 
 
                                 </Announcement>
                             
