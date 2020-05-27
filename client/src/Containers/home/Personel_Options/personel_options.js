@@ -205,7 +205,7 @@ const  initialUserInformations = {
 const General_User_Info = ({match,...rest})=>{
 
     const { width } = useViewport();
-    const breakPoint = 1030;
+   
 
     const [userInformations , setUserInformations ] = useState(initialUserInformations);
     const [reuseUser , setreuseUser ] = useState({});
@@ -223,29 +223,10 @@ const General_User_Info = ({match,...rest})=>{
     const [backStageOpen ,setbackStageOpen] = useState(false);
     const [relatedAgencyLoading , setrelatedAgencyLoading]= useState(false);
     const [relatedAgency , setRelatedAgency] = useState({});
-    const [spanWiths , setSpanWiths] = useState([]);
+   
     
-    useEffect(()=>{
-
-       var topItems =  document.querySelectorAll('.TopSpans span') ;
-        
-       if( topItems.length > 0 ) {
-         
-          if ( spanWiths.length > 0 && width > breakPoint )
-          {
-             return  ;
-          }
-          else
-          {
-            var spanWithsLast = [ ...topItems ].map( ( item )=>{ return item.offsetWidth });
-            setSpanWiths( spanWithsLast )
-          }         
-          
-       }
-
-    },[ width , userInformations.permissions , rest.history.location.pathname ]);
     
-  
+    
     const context =  useContext(Context);
 
           const UserMenuLinks = useMemo(()=>{
@@ -521,7 +502,7 @@ const General_User_Info = ({match,...rest})=>{
 
                            <PermissionsTabs value={tabShow} handler={tabsHandle} />  
 
-                           <ChecBoxes disabled={disable} spanWiths={spanWiths}  permissions={permissionsState} handler={permissionHandler} tabShow={tabShow}/>                  
+                           <ChecBoxes disabled={disable} width={width}   permissions={permissionsState} handler={permissionHandler} tabShow={tabShow}/>                  
                               
                            </div> 
                          </PermissionsWrapper>

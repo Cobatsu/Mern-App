@@ -748,8 +748,26 @@ export const UserInputs = React.memo(({userInformations,townships,textChangeHand
     })
 })
 
-export const ChecBoxes = React.memo(({permissions,handler,tabShow,disabled,spanWiths})=>{
+export const ChecBoxes = React.memo(({permissions,handler,tabShow,disabled,width})=>{
 
+  const [spanWiths , setSpanWiths] = useState([]);
+  const breakPoint = 1030;
+  
+  useEffect(()=>{
+
+    var topItems =  document.querySelectorAll('.TopSpans span') ;
+            
+       if ( spanWiths.length > 0 && width > breakPoint ){
+          return  ;
+       }
+       else
+       {
+         var spanWithsLast = [ ...topItems ].map( ( item )=>{ return item.offsetWidth });
+         setSpanWiths( spanWithsLast )
+       }         
+       
+  
+ },[ width ]);
   
   var checkBoxes = ( mainItem , item ) => spanWiths.map( ( width , index ) => {
 
