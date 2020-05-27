@@ -82,7 +82,7 @@ export const makeSpecificUserRequest = (Type,id,setLoading,setStudent)=>{
    }
    else
    {
-    console.log(res);
+
       setStudent(specificStudent);
       setLoading(false);
    }

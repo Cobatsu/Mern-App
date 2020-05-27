@@ -748,10 +748,10 @@ export const UserInputs = React.memo(({userInformations,townships,textChangeHand
     })
 })
 
-export const ChecBoxes = ({permissions,handler,tabShow,disabled,spanWiths})=>{
+export const ChecBoxes = React.memo(({permissions,handler,tabShow,disabled,spanWiths})=>{
 
   
-  var checkBoxes = ( mainItem , item ) => spanWiths.map( ( width , index )=>{
+  var checkBoxes = ( mainItem , item ) => spanWiths.map( ( width , index ) => {
 
     return <WidthCapsules width={ width } >
 
@@ -783,6 +783,7 @@ export const ChecBoxes = ({permissions,handler,tabShow,disabled,spanWiths})=>{
           Object.keys(permissions).map((mainItem,index)=>{      
 
           return UserPermissions[Object.keys( UserPermissions)[tabShow]].map((item)=>{
+
             return mainItem === item.split(' ').join('_')  ?  
               <InnerPermission key={item}>
 
@@ -810,7 +811,7 @@ export const ChecBoxes = ({permissions,handler,tabShow,disabled,spanWiths})=>{
 
   </React.Fragment>
 
-}
+})
 
 export const PermissionsTabs=React.memo(({handler,value})=>{
   return (

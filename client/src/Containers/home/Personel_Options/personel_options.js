@@ -227,19 +227,25 @@ const General_User_Info = ({match,...rest})=>{
     
     useEffect(()=>{
 
-        var topItems =  document.querySelectorAll('.TopSpans span') ;
+       var topItems =  document.querySelectorAll('.TopSpans span') ;
         
-        if(topItems) {
+       if( topItems.length > 0 ) {
+         
+          if ( spanWiths.length > 0 && width > breakPoint )
+          {
+             return  ;
+          }
+          else
+          {
+            var spanWithsLast = [ ...topItems ].map( ( item )=>{ return item.offsetWidth });
+            setSpanWiths( spanWithsLast )
+          }         
+          
+       }
 
-          var spanWithsLast = [...topItems].map( ( item )=>{ return item.offsetWidth });
-          setSpanWiths(spanWithsLast)
-
-        }
-
-    },[ width , userInformations.permissions , rest.history.location.pathname]); 
-
+    },[ width , userInformations.permissions , rest.history.location.pathname ]);
+    
   
-
     const context =  useContext(Context);
 
           const UserMenuLinks = useMemo(()=>{
@@ -413,6 +419,7 @@ const General_User_Info = ({match,...rest})=>{
 
         const oldPermissions = {...permissionsState}; //we need to keep updated state;
         oldPermissions[Type]=[...oldPermissions[Type]];
+
         if(!event.target.checked)
         {
           oldPermissions[Type].splice( oldPermissions[Type].indexOf(value),1);

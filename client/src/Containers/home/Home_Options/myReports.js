@@ -344,7 +344,7 @@ export const ReportList = ({reports,notFound,refs,SwitchRow,width,role,isProfil}
   if( role && !isProfil )
   {
 
-     var notFoundText = ` Henüz , Bu ${role} ye Ait   Bir Rapor  Bulunmamaktadır.`
+     var notFoundText = ` Henüz , Bu ${role}ye Ait   Bir Rapor  Bulunmamaktadır.`
 
   }
   else if( isProfil )
