@@ -202,6 +202,7 @@ const UserInformations = [
 const UserPermissions = {
 Personel:['Personel Bilgileri'],
 Rapor:['Rapor Bilgileri'],
+"Ana Sayfa":['Ana Sayfa Bilgileri']
 }
 // -----------------------------
 
@@ -262,14 +263,7 @@ const AddPerson  = React.memo((props)=>{
   const [BackStage,setBackStage]  = useState(false);
   const [spanWiths , setSpanWiths] = useState([]);
    
-    var topItems =  document.querySelectorAll('.TopSpans span') ;
-
-    useEffect(()=>{
-     
-      setSpanWiths( [...topItems].map( ( item )=>{ return item.offsetWidth }) ) ;
-
-    },[width,topItems.length]); 
-
+  
   
   const tabsHandle = (event, newValue) => {
     setTabShow(newValue);
@@ -488,7 +482,7 @@ const AddPerson  = React.memo((props)=>{
                         }   */}
 
                         {
-                          userInformations['role']  ? <ChecBoxes spanWiths={spanWiths}  permissions={permissions} handler={permissionHandler} tabShow={tabShow}/>  : <h6 style={{textAlign:'center',color:'#00909e',marginBottom:'7px',flex:0.2}}>LÜTFEN ROL SEÇİNİZ</h6>
+                          userInformations['role']  ? <ChecBoxes permissions={permissions} handler={permissionHandler} tabShow={tabShow}/>  : <h6 style={{textAlign:'center',color:'#00909e',marginBottom:'7px',flex:0.2}}>LÜTFEN ROL SEÇİNİZ</h6>
                         }
 
                     </div> 
@@ -751,22 +745,14 @@ export const UserInputs = React.memo(({userInformations,townships,textChangeHand
 export const ChecBoxes = React.memo(({permissions,handler,tabShow,disabled,width})=>{
 
   const [spanWiths , setSpanWiths] = useState([]);
-  const breakPoint = 1030;
-  
+ 
   useEffect(()=>{
 
-    var topItems =  document.querySelectorAll('.TopSpans span') ;
+       var topItems =  document.querySelectorAll('.TopSpans span') ;
             
-       if ( spanWiths.length > 0 && width > breakPoint ){
-          return  ;
-       }
-       else
-       {
-         var spanWithsLast = [ ...topItems ].map( ( item )=>{ return item.offsetWidth });
-         setSpanWiths( spanWithsLast )
-       }         
-       
-  
+       var spanWithsLast = [ ...topItems ].map( ( item )=>{ return item.offsetWidth });
+       setSpanWiths( spanWithsLast )
+              
  },[ width ]);
   
   var checkBoxes = ( mainItem , item ) => spanWiths.map( ( width , index ) => {
@@ -805,7 +791,7 @@ export const ChecBoxes = React.memo(({permissions,handler,tabShow,disabled,width
             return mainItem === item.split(' ').join('_')  ?  
               <InnerPermission key={item}>
 
-              <span style={{flex:0.2,fontSize:'14px',textAlign:'center'}}> {item}</span>
+              <span style={{flex:0.2,fontSize:'13px',textAlign:'center'}}> {item}</span>
                 
               <RadioWrapper >  
 
