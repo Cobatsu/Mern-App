@@ -45,7 +45,7 @@ color:#707070;
 `
 
 const InfoFields = styled.div`
-width:80%;
+width:70%;
 display:flex;
 justify-content:space-evenly;
 padding:30px 0 ;
@@ -59,8 +59,8 @@ justify-content:center;
 font-size:13px;
 padding:10px;
 color:#707070;
-border-radius:7px;
-box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+border-radius:3px;
+box-shadow: 0 2px 6px -2px grey;
 
 `
 
@@ -160,18 +160,24 @@ const MainPage = (props)=>{
                                      <InfoFields> 
                                           
                                           <Field>
+
                                                <span> Öğrenci Görüşme Sayısı </span>
                                                 { region.reportInfo.studentLength  }
+
                                           </Field>
 
                                           <Field>
+
                                                <span> Okul Görüşme Sayısı</span>
                                                 { region.reportInfo.schoolLength  }
+
                                           </Field>
 
                                           <Field>
+
                                                <span> Toplam Görüşme Sayısı </span>
                                                 { region.reportInfo.totalLength  }
+
                                           </Field>
 
 
