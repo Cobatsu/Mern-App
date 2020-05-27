@@ -33,7 +33,6 @@ module.exports = async (req,res,next)=>{
         })
         
        
-
         for (const key in agentaRegions) {
 
             if (agentaRegions.hasOwnProperty(key)) {

@@ -220,7 +220,7 @@ const ReportDetail  = ({match,...rest })=>{
 
                    </InnerItems>
 
-                    <Report State={initalReportStates} SubmitOnChange={SubmitOnChange} disable={disable} setDate={setDate}  type='detail' reportType={initalReportStates.reportType === 'schoolReport'}/>
+                    <Report State={initalReportStates} SubmitOnChange={SubmitOnChange} disable={disable} setDate={setDate}  type='detail' reportType={initalReportStates.reportType}/>
 
                     {
                         disable
