@@ -76,16 +76,19 @@ align-items:center;
 
 const MainPage = (props)=>{
       
-    const [ regionReportInfo , setRegionReportInfo ]  = useState( { } );
-    const [ loading , setLoading  ] = useState( false );
+    const [ regionReportInfo , setRegionReportInfo ]  = useState({});
+    
+    const [ loading , setLoading  ] = useState( true );
   
     useEffect(()=>{
 
-        
-        axios.get('/api/homeSearch').then((response)=>{
+        axios.get('/api/homeSearch',{ headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}}).then((response)=>{
 
-         setRegionReportInfo(response.data.regionReportInfo);
-         setLoading(true)
+         const  { regionReportInfo } = response.data; 
+         
+         setRegionReportInfo( regionReportInfo );
+
+         setLoading(false)
 
         })
         .catch((err)=>{
@@ -98,9 +101,9 @@ const MainPage = (props)=>{
 
     return  <UpdateLoggedin page='MAİN_PAGE' {...props}>
     {
-            ( Loading , user )=> Loading ? null : 
+        ( Loading , user )=> Loading ? null : 
         
-        <React.Fragment>
+           <React.Fragment>
 
                     <MainPageWrapper>
 
@@ -141,21 +144,29 @@ const MainPage = (props)=>{
 
                     </MainPageWrapper>
                     
-                    {user.role === 'Admin' && <MainPageWrapper style={{marginBottom:30}}>    
+                    { ( user.role === 'Admin' || user.role === 'Temsilci' ) && <MainPageWrapper style={{marginBottom:30}}>    
 
                         <TopTitle>
-                                Günlük Görüşme Sayıları <i style={{marginLeft:4}}  class="fas fa-file"></i>
+                          
+                          {
+                              user.role === 'Admin' ?  'Günlük Temsilci Görüşme Sayıları' : 'Günlük Bayi Görüşme Sayıları' 
+                          }
+
+                          <i style={{marginLeft:4}}  class="fas fa-file"></i>
+
                         </TopTitle>
 
                         {
-                            loading  ? <GeneralWrapper>
+                            loading  ?  <Circle position='static' Load={true}/> : 
+
+                            <GeneralWrapper>
                                 
                             {
                                 Object.keys( regionReportInfo ).map(( key )=>{
                                   
-                                  return regionReportInfo [ key ].map( ( region , index )=> <GeneralItem2 key={index}>
+                                  return regionReportInfo [ key ].map( ( region , index )=> < GeneralItem2 key={index}>
 
-                                     <span style={{color:'#7ebdb4'}}> { region.region + ` : ${region.fullName} ` }  </span>
+                                     <span style={{color:'#0e9aa7'}}> { region.region + ` : ${region.fullName} ` }  </span>
 
                                      <InfoFields> 
                                           
@@ -191,18 +202,15 @@ const MainPage = (props)=>{
                             }
                           
   
-                          </GeneralWrapper>  
-                          
-                          : 
-                          
-                          <Circle position='static' Load={true}/>
+                          </GeneralWrapper>
 
                         }
 
                     </MainPageWrapper>
                     
                     }
-        </React.Fragment>
+
+         </React.Fragment>
     }
    
     </UpdateLoggedin> 

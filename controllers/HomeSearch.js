@@ -3,18 +3,23 @@ const Reports = require('../models/reports');
 
 module.exports = async (req,res,next)=>{
   
+    const { user } = req ; 
+
     try {
-    
+      
         const now = new Date();
         const today = new Date( now.getFullYear() , now.getMonth() , now.getDate() );
         
+      if( user.role === 'Admin' ){
+
         const Agenta  = await User.find({ role:'Temsilci' });
         const SubBranches = await  User.find({role:'Bayi'});
-        const Report = await Reports.find({meetingDate:{$gte:today}});
+        const Report = await Reports.find({ meetingDate:{ $gte:today }});
 
         let agentaRegions = {};
         let agentaReports = {};
         let regionReportInfo = {}; 
+        
         
 
         let placeRegion = (item,propertyName)=>{
@@ -47,13 +52,13 @@ module.exports = async (req,res,next)=>{
                     } ) 
                        
                          
-                    lastArray = lastArray.concat(Report.filter(( report , index )=>{
+                    lastArray = lastArray.concat( Report.filter(( report , index )=>{
                         return  agenta._id == report.userID ;
                     }))
 
                     subBranches.forEach ( ( person , index )=>{
 
-                        lastArray = lastArray.concat(Report.filter((report,index)=>{
+                        lastArray = lastArray.concat( Report.filter((report,index)=>{
                             return  person._id == report.userID ;
                         }))
                         
@@ -88,16 +93,58 @@ module.exports = async (req,res,next)=>{
                      
                     var fullName = user.firstName  + ' ' + user.lastName
 
-                    regionReportInfo[key] = [...regionReportInfo[key] || [], { reportInfo:agentaReports_2[index] , fullName , region :user.region + ' Bölge Temsilcisi'}];
+                    regionReportInfo[key] = [ ...regionReportInfo[key] || []  , { reportInfo:agentaReports_2[index] , fullName , region :user.region + ' Bölge Temsilcisi'}];
   
                 })
 
             }
         }
+ 
+        return res.json({regionReportInfo});
+
+      }
+
+      else if ( user.role  === 'Temsilci' ){
+          
+        const subBranchesOfAgency  = await User.find({ relatedAgencyID : user._id});
+        const Report = await Reports.find({ meetingDate:{ $gte:today }});
+     
+         let regionReportInfo = {};    
     
-        res.json({regionReportInfo})
+         subBranchesOfAgency.forEach(( branch,index )=>{
+ 
+            var matchedReports  = Report.filter((report,index)=>{
+
+                     return branch._id  === report.userID;
+
+            })    
+
+            var subSchoolLength  = matchedReports.filter((subReport,index)=>{
+                return subReport.reportType === 'schoolReport'                
+            })
+
+            var subStudentLength  = matchedReports.filter((subReport,index)=>{
+                return subReport.reportType === 'studentReport'                
+            })
+
+            
+            var reportInfo = { studentLength:subStudentLength.length , schoolLength:subSchoolLength.length , totalLength:matchedReports.length }
+
+            regionReportInfo[branch.region] = [...regionReportInfo[branch.region] || [] , { region:branch.region + ' Bayisi', fullName:branch.firstName + ' ' + branch.lastName , reportInfo } ]
+
+        }) 
+
+        return res.json({regionReportInfo});
+
+      }
+      else
+      {
+        return res.json('Not allowed to get any Data !');
+      }
        
     } catch (error) {
+
+        res.json({error});
         
     }
     
