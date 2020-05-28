@@ -58,7 +58,7 @@ flex:1;
 text-align:center;
 transition:100ms;
 background-color:${({isSelected})=>isSelected ? '#ff6363' : 'none' };
-color:${({isSelected})=>isSelected ? 'white' : 'black' };
+color:${({isSelected})=>isSelected ? 'white' : '#707070' };
 &:hover{
     cursor:pointer;
     background-color:#ff6363;
@@ -108,7 +108,7 @@ const NotResponsiveNav = ({logoutHandler,subMenu,user,setSubLeave,setSubEnter,ma
 
             <InnerItemLink style={{padding:0 ,flex:1}}>
                 
-                <Link to='/home'  style={{textDecoration:'none',display:'flex',alignItems:'center',justifyContent:'center',color:'black',width:'100%',height:'100%'}}>
+                <Link to='/home'  style={{textDecoration:'none',display:'flex',alignItems:'center',justifyContent:'center',color:'#707070',width:'100%',height:'100%'}}>
                 <i className="fas fa-home" style={{marginRight:5}}></i>
                     Ana Sayfa
                 </Link>
@@ -146,7 +146,7 @@ const NotResponsiveNav = ({logoutHandler,subMenu,user,setSubLeave,setSubEnter,ma
 
      </Item>
                     <ItemProfile>
-                         <Link to='/home/profil/genel_bilgiler'  style={{textDecoration:'none',display:'flex',alignItems:'center',justifyContent:'center',width:'100%',height:'100%',color:'black'}}>
+                         <Link to='/home/profil/genel_bilgiler'  style={{textDecoration:'none',display:'flex',alignItems:'center',justifyContent:'center',width:'100%',height:'100%',color:'#707070'}}>
                              <InnerItemText>{user.firstName}</InnerItemText>
                              <InnerItemText>{user.lastName}</InnerItemText>
                          </Link>    

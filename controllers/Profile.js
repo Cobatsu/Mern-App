@@ -59,7 +59,7 @@ module.exports.addReport  = async (req,res,next)=>{
 
 const Query =  (body)=>{
     
-    let searchData = null;
+    let searchData = {};
 
     for (const key  in body) { // it needs to be fixed
 
@@ -93,27 +93,51 @@ module.exports.reportSearch = async (req,res,next)=>{
 
     const {user,body:{pageNumber,personelReportID,...rest}} = req;
     let searchData = Query(rest);
-    
-    console.log(personelReportID)
-
+  
     try {
 
-        if(user.role !== 'Admin')
-        {
-            searchData={...searchData,userID:user._id}
-        }
+      
+        if(user.role === 'Bayi') searchData={...searchData,userID:user._id} ; 
 
-        if(personelReportID)
-        {
-            searchData={...searchData,userID:personelReportID};
+        
+        if(personelReportID)  searchData={...searchData,userID:personelReportID};
+        
+        
+        if(!pageNumber)  var documentCount = await Reports.countDocuments(searchData);     
+        
+
+        let sortedData = await  Reports.find ( searchData ).sort({meetingDate:'descending'}).skip(10*pageNumber).limit(12);
+
+        if( user.role === 'Temsilci' ) {
+
+            var newSortedArray  = [];
+                 
+            sortedData.forEach((report,index) => {
+        
+               if(report.userID == user._id) newSortedArray[index] = report ;
+
+            })
+
+            var subBranches   = await User.find ( { relatedAgencyID:user._id } );
+
+            subBranches.forEach( ( branch ) => {
+           
+                sortedData.forEach( ( report,index ) => {
+                    
+                    if(report.userID == branch._id)  newSortedArray[index] = report
+    
+                })
+
+            })
+
+            newSortedArray = newSortedArray.filter((item,index)=>item) //we remove undefined files .;
+
+            sortedData = newSortedArray 
+            
         }
         
-        if(!pageNumber)
-        {
-            var documentCount = await Reports.countDocuments(searchData);     
-        }
-        let sortedData = await  Reports.find(searchData).sort({meetingDate:'descending'}).skip(10*pageNumber).limit(12);
-        let copyReport = [...sortedData];
+        let copyReport = [...sortedData ];
+
         copyReport.forEach((mainItem,index)=>{
             
              let copyReportObj = {...mainItem._doc};
@@ -125,7 +149,9 @@ module.exports.reportSearch = async (req,res,next)=>{
              copyReportObj.meetingDate = updatedArray.join('/'); 
              copyReport[index] = copyReportObj;
         })
+
         res.json({sortedData:copyReport,documentCount});
+
     }       
     catch (error) {
          console.log(error);

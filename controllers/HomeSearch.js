@@ -103,39 +103,37 @@ module.exports = async (req,res,next)=>{
         return res.json({regionReportInfo});
 
       }
-
       else if ( user.role  === 'Temsilci' ){
           
-        const subBranchesOfAgency  = await User.find({ relatedAgencyID : user._id});
-        const Report = await Reports.find({ meetingDate:{ $gte:today }});
+         const subBranchesOfAgency  = await User.find( { relatedAgencyID : user._id} );
+
+         const Report = await Reports.find({ meetingDate:{ $gte:today }});
      
          let regionReportInfo = {};    
     
          subBranchesOfAgency.forEach(( branch,index )=>{
  
             var matchedReports  = Report.filter((report,index)=>{
-
-                     return branch._id  === report.userID;
-
+                     return branch._id  == report.userID;
             })    
 
+        
             var subSchoolLength  = matchedReports.filter((subReport,index)=>{
                 return subReport.reportType === 'schoolReport'                
             })
 
+          
             var subStudentLength  = matchedReports.filter((subReport,index)=>{
                 return subReport.reportType === 'studentReport'                
             })
-
-            
+        
             var reportInfo = { studentLength:subStudentLength.length , schoolLength:subSchoolLength.length , totalLength:matchedReports.length }
 
-            regionReportInfo[branch.region] = [...regionReportInfo[branch.region] || [] , { region:branch.region + ' Bayisi', fullName:branch.firstName + ' ' + branch.lastName , reportInfo } ]
+            regionReportInfo[branch.region] = [ ... ( regionReportInfo[branch.region] || [] )  , { region:branch.region + ' Bayisi', fullName:branch.firstName + ' ' + branch.lastName , reportInfo } ]
 
         }) 
-
+        
         return res.json({regionReportInfo});
-
       }
       else
       {

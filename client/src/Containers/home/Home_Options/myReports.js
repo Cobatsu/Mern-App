@@ -29,6 +29,19 @@ position:relative;
    overflow-x: scroll;
 }
 `
+
+const Capsule = styled.div`
+display:flex;
+align-items:center;
+justify-content:center;
+border-radius:4px;
+background:#1eb2a6;
+color:white;
+font-size:12.5px;
+padding:6px;
+`
+
+
 //------------------
 const HiddenWrapper = styled.div`
 width:100%;
@@ -84,6 +97,10 @@ const StudentListIconWrapper = styled.div`
   cursor:pointer;
   background:#ff6363;
 }
+
+display:flex;
+align-items:center;
+justify-content:center;
 font-size:8px;
 flex:0.2;
 `
@@ -311,7 +328,7 @@ const Student = (props) => {
         :
         <React.Fragment>
         
-            <ReportList reports={reports}  notFound={notFound} refs={refs} SwitchRow={SwitchRow}/>
+            <ReportList reports={reports} id={user._id} role={user.role}  notFound={notFound} refs={refs} SwitchRow={SwitchRow}/>
       
        <SubPagesContainer>
 
@@ -338,7 +355,7 @@ const Student = (props) => {
   </UpdateLoggedin>
 }
 
-export const ReportList = ({reports,notFound,refs,SwitchRow,width,role,isProfil})=>{
+export const ReportList = ({reports,notFound,refs,SwitchRow,width,role,isProfil,id})=>{
   
 
   if( role && !isProfil )
@@ -370,9 +387,9 @@ export const ReportList = ({reports,notFound,refs,SwitchRow,width,role,isProfil}
                {
                  TopRows.map((item) => {
 
-                   if(role !== 'Admin' && item === 'Gönderen Kişi')
+                   if(role === 'Bayi' && item ===  'Gönderen Kişi' )
                    {
-                     return null ;
+                      return null ;
                    }
                    else
                    {
@@ -398,6 +415,9 @@ export const ReportList = ({reports,notFound,refs,SwitchRow,width,role,isProfil}
     {
 
     reports.map((reportItem, index) => {
+
+      
+
        return <StudentListItem style={{
            background: index % 2 == 0 ? '#ececec' : '#fcf8f3'
          }}  key={reportItem._id} ref={refs.current[index]}>
@@ -408,11 +428,24 @@ export const ReportList = ({reports,notFound,refs,SwitchRow,width,role,isProfil}
            <InnerSpan>{reportItem.relatedPersonPhoneNumber}</InnerSpan>
            <InnerSpan>{reportItem.reportType === 'studentReport' ? 'Öğrenci Görüşmesi' : 'Okul Görüşmesi' }</InnerSpan>
            <InnerSpan>{reportItem.meetingDate}</InnerSpan>
+
            {
-             role === 'Admin' ? 
-             <InnerSpan>{reportItem.whoseDocument}</InnerSpan>
-             : null
+               ( role ===  'Temsilci' || role === 'Admin' )  &&
+
+              <InnerSpan>
+                  {
+                      reportItem.userID == id  
+                      ?
+                      <Capsule>
+                       <i style={{marginRight:8}} class="fas fa-user"></i> {reportItem.whoseDocument} 
+                      </Capsule>
+                    :
+                    reportItem.whoseDocument
+                  }      
+              </InnerSpan>
+                
            }
+           
            <IconInnerSpan style={{  flex: '0.05'}} onClick={SwitchRow(-50, refs.current[index])}>
 
            <SwitchButton >
@@ -431,7 +464,7 @@ export const ReportList = ({reports,notFound,refs,SwitchRow,width,role,isProfil}
 
                               return <StudentListIconWrapper key={Mainindex}>
                                               
-                                      <Link  to={'/home/raporlar/'+ reportItem._id} style={{display:'flex',flexFlow:'column',justifyContent:'center',alignItems:'center',padding:'6px',fontSize:'12px',color:'white', textDecoration:'none'}}>
+                                        <Link  to={'/home/raporlar/'+ reportItem._id} style={{display:'flex',flexFlow:'column',justifyContent:'center',alignItems:'center',padding:'6px',fontSize:'12px',color:'white', textDecoration:'none'}}>
                                           {item.Icon}
                                           <span>{item.desc}</span>
                                         </Link>

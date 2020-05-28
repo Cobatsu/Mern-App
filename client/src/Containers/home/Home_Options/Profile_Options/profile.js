@@ -98,14 +98,6 @@ padding:10px 20px ;
 }
 `
 
-const Capsule = styled.div`
-border-radius:4px;
-margin-top:10px;
-background:#f57170;
-color:white;
-padding:5px 8px;
-font-size:12.5px;
-`
 
 
 
@@ -129,8 +121,7 @@ const Profile = ({match,...rest})=>{
 
      useEffect(()=>{  //we prevent no need rerenders
 
-       if(Object.keys(user).length>0 && Object.keys(userInformations).length<=0)
-       {
+       if( Object.keys( user ).length > 0 && Object.keys(userInformations).length <= 0){
          setUserInformations(user);  
        } 
 
@@ -333,7 +324,7 @@ const Profile = ({match,...rest})=>{
 
                           <Route path='/home/profil/raporlar' exact   render={()=><InputsWrapper> 
                           
-                               <PersonelReports  id={user._id}   role={user.role} setLoggedin={restContext.isLoggedinf} isProfil={true}  />
+                               <PersonelReports    role={user.role} currentID={user._id} setLoggedin={restContext.isLoggedinf} isProfil={true}  />
 
                             </InputsWrapper>
                           } />

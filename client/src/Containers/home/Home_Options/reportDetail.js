@@ -23,6 +23,7 @@ align-items:center;
 justify-content:center;
 padding:0;
 margin-top:2%;
+margin-bottom:20px;
 padding:30px;
 @media (max-width: 1030px) {
   width:90%;
@@ -195,17 +196,19 @@ const ReportDetail  = ({match,...rest })=>{
                <Form onSubmit={submitUpdatedReport}>
                    
                    {
-                       user.role === 'Admin' ? 
+                       ( user.role === 'Admin' || user.role === 'Temsilci')  &&  <InnerItems style={{justifyContent:'flex-start',padding:10}}>  
 
-                        <InnerItems style={{justifyContent:'flex-start',padding:10}}>  
-                            <Icon style={{background:'#63b7af',padding:0}}>
-                                <Link to={'/home/personel_listesi/raporlar/' + initalReportStates.userID} style={{width:'100%',height:'100%',textDecoration:'none',color:'white',display:'block',padding:'5px 10px'}}>
-                                    Gönderen:  {initalReportStates.whoseDocument}   <i class="fas fa-user"></i> 
-                                </Link>
-                            </Icon>
+                            {
+                                user._id != initalReportStates.userID  &&   <Icon style={{background:'#63b7af',padding:0}}>
+
+                                        <Link to={'/home/personel_listesi/raporlar/' + initalReportStates.userID} style={{width:'100%',height:'100%',textDecoration:'none',color:'white',display:'block',padding:'5px 10px'}}>
+                                            Gönderen:  {initalReportStates.whoseDocument}   <i class="fas fa-user"></i> 
+                                        </Link>
+                                        
+                                </Icon> 
+                            }
+                            
                         </InnerItems>
-                        :
-                        null
                    }
                    
                    <InnerItems>

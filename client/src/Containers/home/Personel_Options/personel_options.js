@@ -572,7 +572,7 @@ const General_User_Info = ({match,...rest})=>{
 
 }
 
-export const PersonelReports = ({id,setLoggedin,role,isProfil})=>{
+export const PersonelReports = ({id,setLoggedin,role,isProfil,currentID})=>{
     
   const [reports, setReports] = useState([]);
   const [ notFound , setNotFound ] = useState(null);
@@ -612,10 +612,11 @@ export const PersonelReports = ({id,setLoggedin,role,isProfil})=>{
           refs.current[i].current.style.transform = `translateX(0)`
         }
     }
+
   }
    
   useEffect(()=>{
-    makeReportSearchRequest('post',{personelReportID:id},setLoggedin,setReports,()=>{},setSubPagesCount,setLoading,setNotFound);
+    makeReportSearchRequest('post',{ personelReportID:id },setLoggedin,setReports,()=>{},setSubPagesCount,setLoading,setNotFound);
   },[])
     
   return loading ? 
@@ -623,7 +624,7 @@ export const PersonelReports = ({id,setLoggedin,role,isProfil})=>{
   :
   <HiddenWrapper>
     {!notFound ? <h1 style={{marginBottom:20,color:'lightblue',fontSize:16,color:'#52de97'}}>({subPagesCount}) Sonuç Bulundu</h1> : null}
-    <ReportList isProfil={isProfil}  width={775} refs={refs} reports={reports} role={role} notFound={notFound} SwitchRow={SwitchRow}  />
+    <ReportList isProfil={isProfil}  width={775} id={currentID} refs={refs} reports={reports} role={role} notFound={notFound} SwitchRow={SwitchRow}  />
 
     <SubPagesContainer>
       
@@ -643,7 +644,6 @@ export const PersonelReports = ({id,setLoggedin,role,isProfil})=>{
 
 export const PersonelSubBranches = ({id,setLoggedin,role,isProfil,currentRole})=>{
     
-
   const [subBranches, setSubBranches] = useState([]);
   const [ notFound , setNotFound ] = useState(null);
   const [subPagesCount , setSubPagesCount] = useState(null);

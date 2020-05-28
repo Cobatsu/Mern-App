@@ -45,7 +45,7 @@ color:#707070;
 `
 
 const InfoFields = styled.div`
-width:70%;
+width:60%;
 display:flex;
 justify-content:space-evenly;
 padding:30px 0 ;
@@ -61,8 +61,18 @@ padding:10px;
 color:#707070;
 border-radius:3px;
 box-shadow: 0 2px 6px -2px grey;
-
 `
+
+const Capsule = styled.div`
+border-radius:4px;
+background:#1eb2a6;
+color:white;
+padding:5px 7px;
+opacity:0.76;
+margin-left:7px;
+font-size:13px;
+`
+
 
 const GeneralItem2 = styled.li`
 min-height:80px;
@@ -77,7 +87,7 @@ align-items:center;
 const MainPage = (props)=>{
       
     const [ regionReportInfo , setRegionReportInfo ]  = useState({});
-    
+
     const [ loading , setLoading  ] = useState( true );
   
     useEffect(()=>{
@@ -152,7 +162,7 @@ const MainPage = (props)=>{
                               user.role === 'Admin' ?  'Günlük Temsilci Görüşme Sayıları' : 'Günlük Bayi Görüşme Sayıları' 
                           }
 
-                          <i style={{marginLeft:4}}  class="fas fa-file"></i>
+                          <i style={{marginLeft:8}}  class="fas fa-file"></i>
 
                         </TopTitle>
 
@@ -165,9 +175,14 @@ const MainPage = (props)=>{
                                 Object.keys( regionReportInfo ).map(( key )=>{
                                   
                                   return regionReportInfo [ key ].map( ( region , index )=> < GeneralItem2 key={index}>
+                                    
+                                     <div style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
 
-                                     <span style={{color:'#0e9aa7'}}> { region.region + ` : ${region.fullName} ` }  </span>
-
+                                           <span style= { {marginRight:5 , color:'#707070'}} > { region.region } </span>
+                                           <Capsule> <i style={{marginRight:5}} class="fas fa-user"></i> { region.fullName } </Capsule> 
+                                            
+                                     </div>
+                                    
                                      <InfoFields> 
                                           
                                           <Field>

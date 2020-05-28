@@ -98,7 +98,7 @@ margin-right:4px;
 text-align:center;
 `
 
-const ResponsiveNav = ({user,subMenu,match,logOutHandler})=>{
+const ResponsiveNav = ({ user,subMenu,match,logOutHandler })=>{
 
     const [sideBarStatus , setSideBarStatus ] = useState(false);
   

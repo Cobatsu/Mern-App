@@ -265,7 +265,7 @@ module.exports.personSearch = async (req,res,next) => {
 
 module.exports.getSubBranchs = async (req,res,next)=>{
      
-     const {id}  = req.params;
+     const { id }  = req.params;
 
      try 
      {
@@ -282,7 +282,7 @@ module.exports.getSubBranchs = async (req,res,next)=>{
 
 module.exports.getRelatedAgency = async (req,res,next)=>{
 
-    const {id} = req.params;
+    const { id } = req.params;
     try { 
         const relatedAgency = await User.findOne({_id:id}).select({ "firstName": 1,"lastName":1,"region":1 , "_id":0 });
         res.json({relatedAgency});
