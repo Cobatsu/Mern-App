@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+import ReactDOM from 'react-dom';
 // axios.interceptors.response.use(function (response) {
 //   return response.data;
 // }, function (error) {
@@ -145,9 +145,14 @@ export const makeVerifyRequest = (Type,setUser,setLoggedin,setLoading )=>{
   {
     headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}}).then((res)=>{
         const {user,isLoggedin} = res.data;
-        setLoggedin(isLoggedin);
-        setUser(user);
-        setLoading(false);
+
+          ReactDOM.unstable_batchedUpdates(() => {
+
+            setLoggedin(isLoggedin);
+            setUser(user);
+            setLoading(false);
+               
+          });
   })
   .catch((err)=>{
     console.log(err);
@@ -158,17 +163,21 @@ export const makeVerifyRequest = (Type,setUser,setLoggedin,setLoading )=>{
 export const makeAuthenticationRequest = (Type,Body,redirectTo,setContext)=>{
    setContext.setLoadingf(true);
    axios[Type]('/api/login',Body).then((res)=>{
+     
     if(res.data.user)
     {
       const isLoggedState = {isLoggedin:true}
 
       const {user,token} = res.data;
 
+
         localStorage.setItem('auth_token',token);
-        setContext.setLoadingf(false);
-        setContext.setUser(user);
-        setContext.isLoggedinf(true);  
-        redirectTo(isLoggedState)
+
+          setContext.setLoadingf(false);
+          setContext.setUser(user);
+          setContext.isLoggedinf(true);  
+          redirectTo(isLoggedState)
+      
     }
     else
     {

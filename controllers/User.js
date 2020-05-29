@@ -2,36 +2,45 @@ const User = require('../models/user');
 const Permission = require('../models/permission');
 const bcyrpt = require('bcryptjs');
 
-const isPermissionSame = async (permissions)=>{
+const isPermissionSame = async (permissions,type,updatedPermission)=>{
      
+    if( type === 'ADD_PHASE' ) {
 
-    const originalPermissions = await Permission.findOne({ _id : process.env.PERMİSSİON_İD }) 
+      var originalPermissions = await Permission.findOne({ _id :"5ea5ea1421f697326c0c53f0" }) ; 
 
-    var  { subBranchDefault } = originalPermissions;
+      var  { agencyDefault } = originalPermissions;
 
-    for (const key in permissions) {
-        
-       if(Object.keys(subBranchDefault).includes( key )) {
+    }
 
-            let isSame  =  permissions[ key ].every( ( value,index)=> value === subBranchDefault[key][index] );
-                
-            return  isSame  ;  
+    if( type === 'UPDATE_PHASE'){ 
+
+      var agencyDefault  = permissions;
+
+    }
+
+    for ( const key in ( updatedPermission || permissions )  ) {
+
+       if( Object.keys(agencyDefault).includes( key ) ) {
+      
+            let isSame  =  ( updatedPermission || permissions )[ key ].every( ( value,index)=> agencyDefault[key].includes(value) );    
+
+            if(!isSame) return  isSame  ; 
 
        }
        else {
-
             return  false ;
-
        }
         
     }
+
+    return true ; 
 
 }
 
 module.exports.addUser = async (req,res,next)=>{
     
-    const { password , ...rest } = req.body; 
-    const { permissions } = rest;
+    const { password , ...AddedUser } = req.body; 
+    const { permissions } = AddedUser;
     const currentUser = req.user ;
 
   
@@ -40,28 +49,32 @@ module.exports.addUser = async (req,res,next)=>{
        return res.json({ error:'Server Error' });
    }
 
-   if(currentUser.role === 'Temsilci' && rest.role !== 'Bayi')
+   if(currentUser.role === 'Temsilci' && AddedUser.role !== 'Bayi')
    {
        return res.json({ error:'Server Error' });
    }
 
+   // we must check permissions 
+   
+   if( currentUser.role !== 'Admin' ){ 
 
-   if(currentUser.role !== 'Admin') // we must check permissions 
-   {
-        if(!isPermissionSame(permissions)) return res.json({error:'Server Error'});
-   }
-    
+      const result  = await isPermissionSame( permissions , 'ADD_PHASE' , null);
+        
+      if( !result ) return res.json({error:'Server Error'}) ;
+
+   } 
+   
    bcyrpt.hash(password,10,async (err,hash)=>{
 
         let  newUser = null ;
 
-        if(rest.role  === 'Bayi' )
+        if(AddedUser.role  === 'Bayi' )
         {       
-            newUser = new User({...rest,relatedAgencyID:currentUser._id,password:hash});
+            newUser = new User({...AddedUser,relatedAgencyID:currentUser._id,password:hash});
         }
         else
         {
-            newUser = new User({ ...rest , password:hash });
+            newUser = new User({ ...AddedUser , password:hash });
         }
       
 
@@ -154,18 +167,23 @@ module.exports.updateSpecificUser = async (req,res,next)=>{
     let  updatedUser = req.body;
     const {password} = updatedUser;
 
-    if(updatedUser.role !== 'Bayi')  
-        updatedUser = {...updatedUser,relatedAgencyID:''}
+    if(updatedUser.role !== 'Bayi')   updatedUser = {...updatedUser,relatedAgencyID:''} ;
     
-    if(currentUser.role !== 'Admin' &&   currentUser.role !== 'Temsilci')
-        return res.json({error:'Server Error'}) ;
+    if( currentUser.role === 'Bayi' ) return res.json({error:'Server Error'}) ;
     
-    if(currentUser.role === 'Temsilci' && updatedUser.role !== 'Bayi')
-        return res.json({error:'Server Error'}) ;
+    if(currentUser.role === 'Temsilci' && updatedUser.role !== 'Bayi') return res.json({error:'Server Error'}) ;
    
     try {
         
         const willUpdate = await User.findOne({_id:id});
+
+        if( currentUser.role !== 'Admin' ){
+
+            const result  = await isPermissionSame( willUpdate.permissions , 'UPDATE_PHASE' , updatedUser.permissions );
+            
+            if(!result) return res.json({error:'Server Error'});
+
+        } 
 
         if(willUpdate.password !== password)
         {
@@ -186,6 +204,7 @@ module.exports.updateSpecificUser = async (req,res,next)=>{
         }
        
     } catch (error) {
+        console.log(error);
         res.json({error});
     }
 }

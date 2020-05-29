@@ -16,6 +16,7 @@ background:white;
 width:80%;
 margin:0 auto;
 margin-top:2%;
+margin-bottom:20px;
 border-radius:3px;
 padding:0 0 20px 0;
 position:relative;

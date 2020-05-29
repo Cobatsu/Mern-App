@@ -5,7 +5,7 @@ import {UpdateLoggedin} from '../../isLoggedin/action'
 import {Route,Redirect} from 'react-router-dom'
 import Circle from '../../../UI/Circle'
 import axios from 'axios';
-
+import ReactDOM from 'react-dom';
 
 const MainPageWrapper = styled.div`
 display:flex;
@@ -48,7 +48,7 @@ const InfoFields = styled.div`
 width:60%;
 display:flex;
 justify-content:space-evenly;
-padding:30px 0 ;
+padding:15px 0 ;
 `
 
 const Field = styled.div`
@@ -76,7 +76,8 @@ font-size:13px;
 
 const GeneralItem2 = styled.li`
 min-height:80px;
-margin-top:5px;
+margin-bottom:30px;
+color:#707070;
 display:flex;
 flex-flow:column;
 align-items:center;
@@ -86,19 +87,37 @@ align-items:center;
 
 const MainPage = (props)=>{
       
-    const [ regionReportInfo , setRegionReportInfo ]  = useState({});
+    const [ regionReportInfoState , setRegionReportInfo ]  = useState({});
 
     const [ loading , setLoading  ] = useState( true );
+
+    const [totalDailyReportNumber , setTotalDailyReportNumber] = useState(null);
   
+    console.log('render');
+
     useEffect(()=>{
 
         axios.get('/api/homeSearch',{ headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}}).then((response)=>{
 
-         const  { regionReportInfo } = response.data; 
-         
-         setRegionReportInfo( regionReportInfo );
+          const  { regionReportInfo } = response.data;
 
-         setLoading(false)
+          let totalDailyReport = 0 ;
+     
+            Object.keys( regionReportInfo ).forEach( (key)=>{
+                    regionReportInfo[key].forEach( ( item,index )=>{
+
+                    totalDailyReport += item.reportInfo.totalLength;
+
+                    })                
+            })
+
+            ReactDOM.unstable_batchedUpdates(() => {
+
+                  setLoading(false);
+                  setTotalDailyReportNumber(totalDailyReport)
+                  setRegionReportInfo( regionReportInfo );
+  
+            });
 
         })
         .catch((err)=>{
@@ -109,6 +128,7 @@ const MainPage = (props)=>{
         
     },[])
 
+   
     return  <UpdateLoggedin page='MAİN_PAGE' {...props}>
     {
         ( Loading , user )=> Loading ? null : 
@@ -159,7 +179,7 @@ const MainPage = (props)=>{
                         <TopTitle>
                           
                           {
-                              user.role === 'Admin' ?  'Günlük Temsilci Görüşme Sayıları' : 'Günlük Bayi Görüşme Sayıları' 
+                              user.role === 'Admin' ?  'Günlük Temsilci Görüşme Rakamları' : 'Günlük Bayi Görüşme Rakamları' 
                           }
 
                           <i style={{marginLeft:8}}  class="fas fa-file"></i>
@@ -170,17 +190,25 @@ const MainPage = (props)=>{
                             loading  ?  <Circle position='static' Load={true}/> : 
 
                             <GeneralWrapper>
+
+                               <GeneralItem2> 
+
+                                            <span> Günlük Toplam Görüşme</span>
+
+                                    <Field style={{padding:'4px 8px', fontSize:17 , marginTop:6}}>   
+                                               {totalDailyReportNumber}
+                                    </Field>
+                                  
+                                </GeneralItem2>  
                                 
                             {
-                                Object.keys( regionReportInfo ).map(( key )=>{
+                                Object.keys( regionReportInfoState ).map(( key )=>{
                                   
-                                  return regionReportInfo [ key ].map( ( region , index )=> < GeneralItem2 key={index}>
+                                return regionReportInfoState [ key ].map( ( region , index )=> < GeneralItem2 key={index}>
                                     
                                      <div style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
-
                                            <span style= { {marginRight:5 , color:'#707070'}} > { region.region } </span>
-                                           <Capsule> <i style={{marginRight:5}} class="fas fa-user"></i> { region.fullName } </Capsule> 
-                                            
+                                           <Capsule> <i style={{marginRight:5}} class="fas fa-user"></i> { region.fullName } </Capsule>        
                                      </div>
                                     
                                      <InfoFields> 

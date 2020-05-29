@@ -27,6 +27,7 @@ align-items:center;
 justify-content:center;
 padding:0;
 margin-top:2%;
+margin-bottom:20px;
 padding:30px;
 @media (max-width: 1030px) {
   padding:10px;

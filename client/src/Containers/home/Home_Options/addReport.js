@@ -24,6 +24,7 @@ justify-content:center;
 margin-top:2%;
 box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
 padding:30px;
+margin-bottom:20px;
 @media (max-width: 1030px) {
   padding:10px 0 30px 0 ;
   width:90%;

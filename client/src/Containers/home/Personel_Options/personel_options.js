@@ -28,6 +28,7 @@ margin:0 auto;
 align-items:center;
 justify-content:center;
 margin-top:2%;
+margin-bottom:20px;
 padding:30px;
 border-radius:3px;
 flex-flow:column;
