@@ -80,6 +80,7 @@ export const UpdateLoggedin = ({page,children,history,isLoggedin,location,match}
                     history.push('/home');
 
                 }
+                
                 else{
                     return children( Loading , user );
                 }

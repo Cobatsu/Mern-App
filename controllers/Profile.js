@@ -127,16 +127,21 @@ module.exports.reportSearch = async (req,res,next)=>{
             var subBranches   = await User.find ( { relatedAgencyID: user.role === 'Temsilci'  ?  user._id : personelReportID  } );
 
             subBranches.forEach( ( branch ) => {
+
                 sortedData.forEach( ( report,index ) => {
                     
                     if(report.userID == branch._id)  newSortedArray[index] = report
+                     
                 })
+                
             })
 
-            newSortedArray = newSortedArray.filter( (item,index)=> item );  //we remove undefined files .;
+              //we remove undefined files .;
 
             if(!pageNumber)
             {
+                newSortedArray = newSortedArray.filter( (item,index)=> item );
+
                 var newSortedArrayLength = newSortedArray.length;
             }
            

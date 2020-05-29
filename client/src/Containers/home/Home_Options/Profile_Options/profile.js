@@ -317,7 +317,7 @@ const Profile = ({match,...rest})=>{
 
                           <Route path='/home/profil/bayiler' exact   render={()=><InputsWrapper> 
                           
-                               <PersonelSubBranches id={user._id} role={user.role} setLoggedin={restContext.isLoggedinf} isProfil={true}  />
+                               <PersonelSubBranches id={ user._id } role={ user.role } setLoggedin={restContext.isLoggedinf} isProfil={true}  />
 
                             </InputsWrapper>
                            } />
