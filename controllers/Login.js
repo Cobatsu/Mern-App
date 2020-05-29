@@ -16,7 +16,8 @@ module.exports = async (req,res,next)=>{
     
             if(result)
             {            
-                const permissions = await Permission.findOne({_id:process.env.PERMİSSİON_İD});
+                const permissions = await Permission.findOne({_id:"5ea5ea1421f697326c0c53f0"});
+
                 const {_doc:{_id,...rest}}=permissions;
                 let newPermission = null;
                 let type = ''; 
@@ -36,11 +37,13 @@ module.exports = async (req,res,next)=>{
                 
                 for(let i = 0 ; i < Object.keys(rest[type]).length ; i++) //we assing new permission to user if it is updated 
                 {   
-                       
+
                     if( Object.keys(rest[type])[i] !== Object.keys(user.permissions)[i] )
                     {
                         newPermission=Object.keys(rest[type])[i];
+                        
                         const updatedUser = await User.updateOne({_id:user._id},{$set:{permissions:{...user.permissions,[newPermission]:[]}}});
+
                         break;
                     }    
 

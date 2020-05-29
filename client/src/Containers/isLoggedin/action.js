@@ -67,6 +67,32 @@ export const UpdateLoggedin = ({page,children,history,isLoggedin,location,match}
 
         break;
 
+        case  'PERSONEL_GENERAL_INFO' :  
+
+        if(Loggedin || Loading)
+        {  
+
+            if(!Loading)
+            {
+
+                if(user.role !== 'Admin' && match.params.id == user._id){ 
+
+                    history.push('/home');
+
+                }
+                else{
+                    return children( Loading , user );
+                }
+
+            }
+          
+        }    
+        else
+        {
+            history.push('/');
+        }
+
+        break;
 
             
         default:

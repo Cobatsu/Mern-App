@@ -435,7 +435,7 @@ const General_User_Info = ({match,...rest})=>{
     }
    
      //
-    return <UpdateLoggedin page='PERSONEL_GENERAL_INFO'  {...rest}>
+    return <UpdateLoggedin page='PERSONEL_GENERAL_INFO'  {...rest} match={match}>
         {
            ( Loading , user )=>Loading ? null : loading 
            ?  

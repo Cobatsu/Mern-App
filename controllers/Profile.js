@@ -142,7 +142,7 @@ module.exports.reportSearch = async (req,res,next)=>{
            
             var factor1 =  typeof pageNumber === 'number' ? pageNumber : 0 ; 
      
-            sortedData = newSortedArray.filter( ( item , index )=> item ).slice( 10 * factor1 , 10 + 10*factor1);
+            sortedData = newSortedArray.filter( ( item , index )=> item ).slice( 10 * factor1 , 10 + 10 * factor1);
 
         }
         

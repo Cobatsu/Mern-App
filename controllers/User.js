@@ -1,6 +1,5 @@
 const User = require('../models/user');
 const Permission = require('../models/permission');
-require('dotenv').config();
 const bcyrpt = require('bcryptjs');
 
 const isPermissionSame = async (permissions)=>{
@@ -238,7 +237,7 @@ module.exports.personSearch = async (req,res,next) => {
 
         if(!pageNumber)
         {
-          var documentCount = await User.countDocuments(searchData);     
+           var documentCount = await User.countDocuments(searchData);     
         }
 
         let sortedData = await  User.find(searchData).sort({contractDate:'descending'}).skip(10*pageNumber).limit(12);

@@ -184,7 +184,6 @@ class Login  extends React.Component {
    
                          </Inner_Fields>
    
-                         <SubButtons><Link style={{width:'100%',padding:'5px 0',display:'block',textDecoration:'none',color:'white'}} className='loginLink'  to='/register'><i style={{marginRight:10}} className="fas fa-file-alt"></i>Ön Kayıt Başvurusu</Link></SubButtons>
                     </Fields>
    
                </Container>

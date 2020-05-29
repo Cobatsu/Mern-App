@@ -13,6 +13,7 @@ import Stage from '../../../UI/backStage';
 import {Checkbox,TextField,Tab,Tabs,Paper,InputLabel,MenuItem,Selec} from '@material-ui/core'
 import {makeUpdateReportRequest,makeDeleteReportRequest,makeSpecificReportRequest}  from '../../../request/requset'
 import {Report} from './addReport';
+import NotFoundPage from '../../../Components/NotFoundPage'
 
 const MainWrapper = styled.form`
 display:flex;
@@ -88,8 +89,6 @@ export const PermissionsNumbers = {
     READ: 4,
 }
 
-
-
 const ReportDetail  = ({match,...rest })=>{
      
     const  [loading , setLoading ]  = useState(true);
@@ -102,12 +101,14 @@ const ReportDetail  = ({match,...rest })=>{
     const  [date , setDate ] = useState(new Date());
     const  [deleteModal , setDeleteModal] = useState(false);
     const  [deleted , setDeleted ] = useState(false);
+    const  [ notFoundPage , setNotFoundPage ] = useState(false)
+
 
     const context = useContext(Context);
      
     useEffect(()=>{
         const {id} = match.params;
-        makeSpecificReportRequest('get',id,setLoading,setInitalReportState,reIsetInitalReportState);
+        makeSpecificReportRequest('get',id,setLoading,setInitalReportState,reIsetInitalReportState,setNotFoundPage);
     },[])
 
     const SubmitOnChange =Type=>event=>{
@@ -177,7 +178,10 @@ const ReportDetail  = ({match,...rest })=>{
     }
 
 
-    return <UpdateLoggedin {...rest}>
+  
+    if(!notFoundPage) 
+
+       return <UpdateLoggedin {...rest}>
 
         {
             (Loading,user)=>Loading ? null : loading
@@ -247,6 +251,11 @@ const ReportDetail  = ({match,...rest })=>{
             </MainWrapper>   
         }
     </UpdateLoggedin>
+
+  else 
+
+     return   <NotFoundPage/>
+
 }
 
 export default  ReportDetail;

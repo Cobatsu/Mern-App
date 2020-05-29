@@ -36,7 +36,7 @@ display:flex;
 align-items:center;
 justify-content:center;
 border-radius:4px;
-background:#1eb2a6;
+background:#fc8210;
 color:white;
 font-size:12.5px;
 padding:6px;

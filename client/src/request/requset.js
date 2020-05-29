@@ -75,7 +75,8 @@ export const makeFileRequest = (Type,FormData,activeCircle,backStage)=>{
 
 export const makeSpecificUserRequest = (Type,id,setLoading,setStudent)=>{
  axios[Type]('/api/register/'+id).then((res)=>{
-     const {specificStudent,error} = res.data;    
+     const {specificStudent,error} = res.data;   
+     
    if(error)
    {
       console.log(error); 
@@ -144,7 +145,6 @@ export const makeVerifyRequest = (Type,setUser,setLoggedin,setLoading )=>{
   {
     headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}}).then((res)=>{
         const {user,isLoggedin} = res.data;
-        console.log(res);
         setLoggedin(isLoggedin);
         setUser(user);
         setLoading(false);
@@ -192,10 +192,8 @@ export const makePermissionRequest = (Type,setPermission)=>{
  
   axios[Type]('/api/user/permission')
   .then((res)=>{
-    console.log(res);
     const {permissionsList} = res.data;
     setPermission(permissionsList);
-   
   })
   .catch((err)=>{
 
@@ -209,8 +207,6 @@ export const makeSpecificPersonRequest = (Type,person_id,setLoading,setPerson,se
   .then((res)=>{
     const {person,error} = res.data;
     const {permissions}  = person; 
-    
-    console.log(person)
     
     if(error)
     {
@@ -341,7 +337,6 @@ export const makeReportsRequest = (Type,setReports,setLoading)=>{
   })
   .then((res)=>{
       const {reports} = res.data;
-      console.log(res);
       setLoading(false);
       setReports(reports);
   })
@@ -354,10 +349,15 @@ export const makeReportsRequest = (Type,setReports,setLoading)=>{
 
 
 
-export const makeSpecificReportRequest = (Type,id,setLoading,setInitialReport,reIsetInitalReport)=>{
+export const makeSpecificReportRequest = (Type,id,setLoading,setInitialReport,reIsetInitalReport,setNotFoundPage)=>{
 
   axios[Type]('/api/profile/report/'+id)
   .then((res)=>{
+
+    if(res.data.error)
+    {
+        setNotFoundPage(true);
+    }
 
     const {specificReport} =res.data;
     setLoading(false);
@@ -366,6 +366,7 @@ export const makeSpecificReportRequest = (Type,id,setLoading,setInitialReport,re
     
   })
   .catch((res)=>{
+
 
   });
 
@@ -416,15 +417,13 @@ export const makeDeleteReportRequest =(Type,id,setLoggedin,setDeleted)=>{
 
 export const makeReportSearchRequest = (Type,searchData,setLoggedin , setReport , close , setCount , setLoading , setNotFound  )=>{
   
-  console.log(searchData)
-
   axios[Type]('/api/profile/report_search',searchData,{
     headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`} 
   })
   .then((res)=>{
     
     const {sortedData,documentCount} = res.data;
-    console.log(res);
+    
 
     if(res.data.error && !res.data.isLoggedin)
     {
@@ -474,10 +473,7 @@ export const makePersonSearchRequest = (Type,searchData,setLoggedin , setReport 
 
     else if (sortedData.length > 0)
     {
-
-     
       close();
-      console.log(res)
       setReport(sortedData);
 
       if(!Object.keys(searchData).includes('pageNumber'))
