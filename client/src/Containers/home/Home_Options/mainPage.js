@@ -93,8 +93,6 @@ const MainPage = (props)=>{
 
     const [totalDailyReportNumber , setTotalDailyReportNumber] = useState(null);
   
-    console.log('render');
-
     useEffect(()=>{
 
         axios.get('/api/homeSearch',{ headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}}).then((response)=>{

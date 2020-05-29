@@ -120,19 +120,18 @@ const Profile = ({match,...rest})=>{
     const [relatedAgencyLoading , setrelatedAgencyLoading]= useState(false);
     const [relatedAgency , setRelatedAgency] = useState({});
 
-     useEffect(()=>{  //we prevent no need rerenders
-
-       if( Object.keys( user ).length > 0 && Object.keys(userInformations).length <= 0){
-         setUserInformations(user);  
-       } 
-
+     useEffect(()=>{  //we prevent no need rerenders  
+           setUserInformations(user);  
      },[user])
     
      useEffect(()=>{
        
-      if(userInformations.relatedAgencyID)
-            makeRelatedAgencyRequest('get',userInformations.relatedAgencyID,setrelatedAgencyLoading,setRelatedAgency,restContext.isLoggedinf)
+      if(userInformations.relatedAgencyID){
 
+         makeRelatedAgencyRequest('get',userInformations.relatedAgencyID,setrelatedAgencyLoading,setRelatedAgency,restContext.isLoggedinf);
+
+      }
+          
      },[userInformations.relatedAgencyID])
 
      const UserMenuLinks = useMemo(()=>{
@@ -261,10 +260,10 @@ const Profile = ({match,...rest})=>{
 
            <Stage backStage={backStageOpen} loading={!isChanged && !warning && !dontMatch && !isOldPasswordTrue}   close={isChanged ? closeModal_1 : warning ? closeModal_2: dontMatch ?  closeModal_3 : isOldPasswordTrue ? closeModal_4 : null }/>
 
-           <Modal backStage={isChanged} closeModal={closeModal_1} type='CHANGED_PASSWORD'/>
-           <Modal backStage={warning} closeModal={closeModal_2} type='EMPTY_FİELD'/>
-           <Modal backStage={dontMatch} closeModal={closeModal_3} type='PASSWORDS_DONT_MATCH'/>
-           <Modal backStage={isOldPasswordTrue} closeModal={closeModal_4} type='OLD_PASSWORD_WRONG'/>
+            <Modal backStage={isChanged} closeModal={closeModal_1} type='CHANGED_PASSWORD'/>
+            <Modal backStage={warning} closeModal={closeModal_2} type='EMPTY_FİELD'/>
+            <Modal backStage={dontMatch} closeModal={closeModal_3} type='PASSWORDS_DONT_MATCH'/>
+            <Modal backStage={isOldPasswordTrue} closeModal={closeModal_4} type='OLD_PASSWORD_WRONG'/>
                      {
                          UserMenuLinks.map((item)=>{ 
                                  return item.desc.toUpperCase() === subMenuIndex.split('_').join(' ').toUpperCase() ? 

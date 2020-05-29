@@ -13,7 +13,15 @@ class  App extends React.Component{
 
   render()
   { 
+  
+   let tesFunc = function name(params) {
+     
+    console.log(x);
 
+   }
+
+   testFunc();
+   
     
    
     return ( <BrowserRouter> 

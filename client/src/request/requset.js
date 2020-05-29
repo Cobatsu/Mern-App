@@ -141,18 +141,14 @@ export const makeStudentRequest = (type,setStudent,setLoading)=>{
 
 export const makeVerifyRequest = (Type,setUser,setLoggedin,setLoading )=>{
 
-  axios[Type]('/api/verify',
-  {
+  axios[Type]('/api/verify', {
     headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}}).then((res)=>{
         const {user,isLoggedin} = res.data;
-
-          ReactDOM.unstable_batchedUpdates(() => {
 
             setLoggedin(isLoggedin);
             setUser(user);
             setLoading(false);
-               
-          });
+     
   })
   .catch((err)=>{
     console.log(err);
@@ -163,7 +159,7 @@ export const makeVerifyRequest = (Type,setUser,setLoggedin,setLoading )=>{
 export const makeAuthenticationRequest = (Type,Body,redirectTo,setContext)=>{
    setContext.setLoadingf(true);
    axios[Type]('/api/login',Body).then((res)=>{
-     
+
     if(res.data.user)
     {
       const isLoggedState = {isLoggedin:true}
