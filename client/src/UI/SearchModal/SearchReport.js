@@ -93,7 +93,7 @@ const initialSearchState2 = {
  whoseDocument:'',
 }
 
-export const  SearchReportModal =React.memo(({isOpen,close,role,closeModalOnly,setReports ,setSubPagesCount,setNotFound, setMainSearchData , setSelectedSubPage }) => {
+export const  SearchReportModal =React.memo(({isOpen,close,role,closeModalOnly,setReports,setSubPagesCount,setNotFound, setMainSearchData , setSelectedSubPage }) => {
   
     const [searchData,setSearchData] = useState (null);
     const [date,setDate] = useState(null);
@@ -128,7 +128,7 @@ export const  SearchReportModal =React.memo(({isOpen,close,role,closeModalOnly,s
 
         setMainSearchData(searchMainData);  //we can also send trimmed data to parent component;
 
-        makeReportSearchRequest('post',searchMainData, isLoggedinf , setReports , close , setSubPagesCount,()=>{},setNotFound);      
+        makeReportSearchRequest('post',{...searchMainData,role}, isLoggedinf , setReports , close , setSubPagesCount,()=>{},setNotFound);      
         
     }
 

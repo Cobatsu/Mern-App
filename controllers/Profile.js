@@ -91,49 +91,59 @@ const Query =  (body)=>{
 
 module.exports.reportSearch = async (req,res,next)=>{
 
-    const {user,body:{pageNumber,personelReportID,...rest}} = req;
+    const {user,body:{pageNumber,personelReportID,role,...rest}} = req;
+
     let searchData = Query(rest);
   
     try {
 
+        if(user.role === 'Bayi') searchData={ ...searchData , userID:user._id } ; 
+
+        if( personelReportID && role === 'Bayi')  searchData={...searchData,userID:personelReportID};
+                
+        if(!pageNumber && role !== 'Temsilci')  var documentCount = await Reports.countDocuments( searchData );     
+        
+        if ( role === 'Temsilci' )
+        {
+            var sortedData = await  Reports.find ( searchData ).sort({meetingDate:'descending'});
+        }
+        else
+        {
+            var sortedData = await  Reports.find ( searchData ).sort({meetingDate:'descending'}).skip(10*pageNumber).limit(10);
+        }
       
-        if(user.role === 'Bayi') searchData={...searchData,userID:user._id} ; 
-
-        
-        if(personelReportID)  searchData={...searchData,userID:personelReportID};
-        
-        
-        if(!pageNumber)  var documentCount = await Reports.countDocuments(searchData);     
         
 
-        let sortedData = await  Reports.find ( searchData ).sort({meetingDate:'descending'}).skip(10*pageNumber).limit(12);
-
-        if( user.role === 'Temsilci' ) {
+        if( ( user.role === 'Temsilci' && role !== 'Bayi' ) ||  role === 'Temsilci' ) {
 
             var newSortedArray  = [];
                  
             sortedData.forEach((report,index) => {
         
-               if(report.userID == user._id) newSortedArray[index] = report ;
+               if( report.userID == ( user.role === 'Temsilci'  ?  user._id : personelReportID  ) ) newSortedArray[index] = report ;
 
             })
 
-            var subBranches   = await User.find ( { relatedAgencyID:user._id } );
+            var subBranches   = await User.find ( { relatedAgencyID: user.role === 'Temsilci'  ?  user._id : personelReportID  } );
 
             subBranches.forEach( ( branch ) => {
-           
                 sortedData.forEach( ( report,index ) => {
                     
                     if(report.userID == branch._id)  newSortedArray[index] = report
-    
                 })
-
             })
 
-            newSortedArray = newSortedArray.filter((item,index)=>item) //we remove undefined files .;
+            newSortedArray = newSortedArray.filter( (item,index)=> item );  //we remove undefined files .;
 
-            sortedData = newSortedArray 
-            
+            if(!pageNumber)
+            {
+                var newSortedArrayLength = newSortedArray.length;
+            }
+           
+            var factor1 =  typeof pageNumber === 'number' ? pageNumber : 0 ; 
+     
+            sortedData = newSortedArray.filter( ( item , index )=> item ).slice( 10 * factor1 , 10 + 10*factor1);
+
         }
         
         let copyReport = [...sortedData ];
@@ -150,7 +160,7 @@ module.exports.reportSearch = async (req,res,next)=>{
              copyReport[index] = copyReportObj;
         })
 
-        res.json({sortedData:copyReport,documentCount});
+        res.json({ sortedData:copyReport , documentCount: documentCount || newSortedArrayLength});
 
     }       
     catch (error) {

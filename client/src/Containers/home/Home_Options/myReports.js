@@ -19,6 +19,7 @@ width:80%;
 margin:0 auto;
 padding:0 0 20px 0;
 margin-top:2%;
+margin-bottom:30px;
 border-radius:3px;
 box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
 position:relative;
@@ -235,7 +236,7 @@ const Student = (props) => {
 
   const refs = useRef([]); // we can also  use useRef hook for storing value or objects; 
 
-  const {isLoggedinf} = useContext(Context);
+  const {isLoggedinf,user} = useContext(Context);
   
   refs.current = refs.current.slice(0, reports.length);
   for (let step = refs.current.length; step < reports.length; step++) {
@@ -270,7 +271,8 @@ const Student = (props) => {
 
     makeReportSearchRequest('post', {
       ...searchData,
-      pageNumber: page
+      role:user.role,
+      pageNumber: page,
     }, isLoggedinf, setReports, closeModal_1, setSubPagesCount, setLoading);
 
   }
@@ -327,8 +329,9 @@ const Student = (props) => {
 
         :
         <React.Fragment>
-        
-            <ReportList reports={reports} id={user._id} role={user.role}  notFound={notFound} refs={refs} SwitchRow={SwitchRow}/>
+            
+            {!notFound ?  <h1 style={{marginBottom:20,color:'lightblue',fontSize:16,color:'#52de97'}}>( {subPagesCount} ) Sonuç Bulundu </h1> : null }
+            <ReportList reports={reports} id={user._id} currentRole={user.role}  notFound={notFound} refs={refs} SwitchRow={SwitchRow}/>
       
        <SubPagesContainer>
 
@@ -337,7 +340,8 @@ const Student = (props) => {
 
           return <SubPageItem  key={index} selected={ selectedSubPage === index }  onClick={() => nextPage(index)}>{index + 1}</SubPageItem>
 
-        })
+         })
+
         :
         null
         }
@@ -355,7 +359,7 @@ const Student = (props) => {
   </UpdateLoggedin>
 }
 
-export const ReportList = ({reports,notFound,refs,SwitchRow,width,role,isProfil,id})=>{
+export const ReportList = ({reports,notFound,refs,SwitchRow,detailID,width,role,currentRole,isProfil,id})=>{
   
 
   if( role && !isProfil )
@@ -387,7 +391,7 @@ export const ReportList = ({reports,notFound,refs,SwitchRow,width,role,isProfil,
                {
                  TopRows.map((item) => {
 
-                   if(role === 'Bayi' && item ===  'Gönderen Kişi' )
+                   if(currentRole === 'Bayi' && item ===  'Gönderen Kişi' )
                    {
                       return null ;
                    }
@@ -416,8 +420,6 @@ export const ReportList = ({reports,notFound,refs,SwitchRow,width,role,isProfil,
 
     reports.map((reportItem, index) => {
 
-      
-
        return <StudentListItem style={{
            background: index % 2 == 0 ? '#ececec' : '#fcf8f3'
          }}  key={reportItem._id} ref={refs.current[index]}>
@@ -430,17 +432,21 @@ export const ReportList = ({reports,notFound,refs,SwitchRow,width,role,isProfil,
            <InnerSpan>{reportItem.meetingDate}</InnerSpan>
 
            {
-               ( role ===  'Temsilci' || role === 'Admin' )  &&
+               ( currentRole ===  'Temsilci' || currentRole === 'Admin' )  &&
 
               <InnerSpan>
                   {
-                      reportItem.userID == id  
+                      reportItem.userID == id  || detailID == reportItem.userID
+
                       ?
+
                       <Capsule>
                        <i style={{marginRight:8}} class="fas fa-user"></i> {reportItem.whoseDocument} 
-                      </Capsule>
-                    :
-                    reportItem.whoseDocument
+                      </Capsule> 
+
+                      :
+
+                      reportItem.whoseDocument
                   }      
               </InnerSpan>
                 
@@ -457,22 +463,24 @@ export const ReportList = ({reports,notFound,refs,SwitchRow,width,role,isProfil,
        </StudentListItemInnerWrapper>    
 
        <StudentListItemInnerWrapper style={{ backgroundColor: '#204051'}}> 
+
                 <div style={{display:'flex',flex:1}}>
 
                       {
+
                             reportOptions.map((item, Mainindex) => {
 
                               return <StudentListIconWrapper key={Mainindex}>
                                               
-                                        <Link  to={'/home/raporlar/'+ reportItem._id} style={{display:'flex',flexFlow:'column',justifyContent:'center',alignItems:'center',padding:'6px',fontSize:'12px',color:'white', textDecoration:'none'}}>
+                                        <Link  to={'/home/raporlar/'+ reportItem._id} style={{display:'flex',width:'100%',height:'100%',flexFlow:'column',justifyContent:'center',alignItems:'center',padding:'6px',fontSize:'12px',color:'white', textDecoration:'none'}}>
                                           {item.Icon}
                                           <span>{item.desc}</span>
                                         </Link>
                                                     
                               </StudentListIconWrapper>
-                                                      
-                                    
+                                                                          
                             })
+
                       }  
 
                 </div>

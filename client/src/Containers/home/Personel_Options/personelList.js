@@ -182,6 +182,7 @@ background:${({selected}) => selected ? '#f57170' : 'white'};
 cursor:pointer;
 }
 
+
 `
 
 
@@ -308,7 +309,9 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
 
                     </SearchBox>
 
-                      
+                    
+                    {!notFound ?  <h1 style={{marginBottom:20,color:'lightblue',fontSize:16,color:'#52de97'}}>( {subPagesCount} ) Sonuç Bulundu </h1> : null }
+                    
                     <_PersonelList currentRole = {user.role}  personels={personels} notFound={notFound} SwitchRow={SwitchRow} refs={refs} />
 
         <SubPagesContainer>
@@ -414,10 +417,9 @@ export const _PersonelList = ({ personels,notFound,SwitchRow,refs,width,role,isP
                 PersonelOptions.map((subItem,Mainindex)=>{
                 
                   if( item.role !== 'Temsilci' && subItem.desc === 'Bayiler' ) return null ;
-                  if( item.role === 'Admin' && subItem.desc === 'Raporlar' ) return null;
+                  if( item.role === 'Admin'    && subItem.desc === 'Raporlar' ) return null;
                   if( currentRole !==  'Admin' && subItem.desc === 'Yetkiler' ) return null ;
                    
-              
                   return <PersonelListIconWrapper key={Mainindex}>
                             
                       <Link  to={'/home/personel_listesi/'+ subItem.desc.split(' ').join('_').toLowerCase() +'/'+ item._id} style={{display:'flex',flexFlow:'column',justifyContent:'center',alignItems:'center',padding:'6px',fontSize:'12px',color:'white', textDecoration:'none'}}>
@@ -426,10 +428,8 @@ export const _PersonelList = ({ personels,notFound,SwitchRow,refs,width,role,isP
                       </Link>
                       
                   </PersonelListIconWrapper> 
-
-                          
+        
                 })
-
             }
 
         </div>

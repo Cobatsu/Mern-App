@@ -324,7 +324,7 @@ const Profile = ({match,...rest})=>{
 
                           <Route path='/home/profil/raporlar' exact   render={()=><InputsWrapper> 
                           
-                               <PersonelReports    role={user.role} currentID={user._id} setLoggedin={restContext.isLoggedinf} isProfil={true}  />
+                               <PersonelReports currentRole={ user.role } role = { user.role }   currentID={user._id} setLoggedin={restContext.isLoggedinf} isProfil={true}  />
 
                             </InputsWrapper>
                           } />

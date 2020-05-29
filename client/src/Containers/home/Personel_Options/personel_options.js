@@ -159,11 +159,11 @@ padding:10px 0;
 
 const SubPageItem = styled.div`
 margin-right:8px;
-border-radius:100%;
+border-radius:2px;
 display:flex;
-width:20px;
-height:20px;
-padding:14px;
+width:5px;
+height:5px;
+padding:11px;
 color:${({selected}) => selected ? 'white' : 'grey'};
 align-items:center;
 justify-content:center;
@@ -172,6 +172,7 @@ background:${({selected}) => selected ? '#f57170' : 'white'};
 &:hover{
 cursor:pointer;
 }
+
 `
 
 
@@ -532,14 +533,14 @@ const General_User_Info = ({match,...rest})=>{
                    } />
 
                   <Route path='/home/personel_listesi/raporlar/:id' exact render={()=><InputsWrapper style={{alignSelf:'stretch',justifyContent:'flex-start'}}>  
-                            <PersonelReports role={userInformations.role}   id={match.params.id} setLoggedin={context.isLoggedinf} />                
+                            <PersonelReports role={userInformations.role} currentRole={user.role}   id={match.params.id} setLoggedin={context.isLoggedinf} />                
                    </InputsWrapper> 
                   }
                   />
 
 
                   <Route path='/home/personel_listesi/bayiler/:id' exact render={()=><InputsWrapper style={{alignSelf:'stretch',justifyContent:'flex-start'}}>  
-                            <PersonelSubBranches role={userInformations.role} currentRole={user.role} id={match.params.id} setLoggedin={context.isLoggedinf} />                
+                            <PersonelSubBranches role={userInformations.role} currentRole={user.role}  id={match.params.id} setLoggedin={context.isLoggedinf} />                
                    </InputsWrapper> 
                   }
                   />
@@ -572,7 +573,7 @@ const General_User_Info = ({match,...rest})=>{
 
 }
 
-export const PersonelReports = ({id,setLoggedin,role,isProfil,currentID})=>{
+export const PersonelReports = ({ id , setLoggedin , role , currentRole , isProfil , currentID })=>{
     
   const [reports, setReports] = useState([]);
   const [ notFound , setNotFound ] = useState(null);
@@ -582,6 +583,8 @@ export const PersonelReports = ({id,setLoggedin,role,isProfil,currentID})=>{
   const refs = useRef([]);
   
   let subPagesLength  = Math.ceil(subPagesCount/10);
+
+  console.log(subPagesCount);
 
   refs.current = refs.current.slice(0, reports.length);
 
@@ -595,11 +598,14 @@ export const PersonelReports = ({id,setLoggedin,role,isProfil,currentID})=>{
     setLoading(true);
 
     makeReportSearchRequest('post', {
+      role:role,
       personelReportID:id,
       pageNumber: page
     },setLoggedin , setReports, ()=>{}, setSubPagesCount, setLoading);
 
   }
+
+  console.log(role);
 
   const SwitchRow = (Amount, ref) => event => {
 
@@ -616,15 +622,16 @@ export const PersonelReports = ({id,setLoggedin,role,isProfil,currentID})=>{
   }
    
   useEffect(()=>{
-    makeReportSearchRequest('post',{ personelReportID:id },setLoggedin,setReports,()=>{},setSubPagesCount,setLoading,setNotFound);
-  },[])
+    if(role) makeReportSearchRequest('post', { personelReportID:id , role:role  } ,setLoggedin,setReports,()=>{},setSubPagesCount,setLoading,setNotFound);
+  },[role])
     
   return loading ? 
    <Circle Load={loading}  position='static'/>
   :
   <HiddenWrapper>
+    
     {!notFound ? <h1 style={{marginBottom:20,color:'lightblue',fontSize:16,color:'#52de97'}}>({subPagesCount}) Sonuç Bulundu</h1> : null}
-    <ReportList isProfil={isProfil}  width={775} id={currentID} refs={refs} reports={reports} role={role} notFound={notFound} SwitchRow={SwitchRow}  />
+    <ReportList isProfil={isProfil}  width={775} id={currentID} detailID={id} refs={refs} reports={reports} role={role} currentRole={currentRole} notFound={notFound} SwitchRow={SwitchRow}  />
 
     <SubPagesContainer>
       
@@ -651,6 +658,7 @@ export const PersonelSubBranches = ({id,setLoggedin,role,isProfil,currentRole})=
   const [loading,setLoading] = useState(true);
   const refs = useRef([]);
  
+
   let subPagesLength = Math.ceil(subPagesCount/10);
 
   refs.current = refs.current.slice(0, subBranches.length);
