@@ -153,7 +153,7 @@ export const  SearchReportModal =React.memo(({isOpen,close,role,closeModalOnly,s
 
             
             {
-                role === 'Admin' ?  <TextField  InputLabelProps={{style:{fontSize:14}}} inputProps={{style:{fontSize:14}}}   style={{width:width<breakPoint ? '90%' : '48%' , margin:'10px 0  0 5px '}} value={searchData['whoseDocument']}  onChange={submitChangeHandler('whoseDocument')}  id="standard-basic" label="Gönderen  Kişi"/> : null 
+                ( role === 'Admin' || role === 'Temsilci' )  ?  <TextField  InputLabelProps={{style:{fontSize:14}}} inputProps={{style:{fontSize:14}}}   style={{width:width<breakPoint ? '90%' : '48%' , margin:'10px 0  0 5px '}} value={searchData['whoseDocument']}  onChange={submitChangeHandler('whoseDocument')}  id="standard-basic" label="Gönderen  Kişi"/> : null 
             }
       
             <TextField   style={{width:width<breakPoint ? '90%' : '48%' , margin:'10px 0  0 5px '}}  inputProps={{style:{fontSize:14}}}  InputLabelProps={{style:{fontSize:14}}} value={searchData['relatedPersonName']}  onChange={submitChangeHandler('relatedPersonName')}  id="standard-basic" label="Görüşülen Kişi" />

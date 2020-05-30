@@ -186,15 +186,13 @@ module.exports.updateReport = async ( req,res,next)=>{
 
     const {params:{id} ,body} = req;
     
-    try 
-    {
+    try {
         await Reports.updateOne({_id:id},{$set:{...body}})
         const updatedData = await  Reports.findOne({_id:id}).select('-__v -_id -userID');
 
         res.json({updatedData});
 
-    } catch (error) 
-    {
+    } catch (error) {
         res.json({error});
     }
 
@@ -203,19 +201,12 @@ module.exports.updateReport = async ( req,res,next)=>{
 module.exports.deleteReport = async (req,res,next)=>{
     const {params:{id},user} = req;
 
-    if(user.role === 'Admin')
-    {
         try {
             await Reports.remove({_id:id});
             res.json({removed:true})
         } catch (error) {
             res.json({error});
         }
-    }
-    else
-    {
-        return res.json({error:'Server Error'});
-    }
-   
+
 }
 

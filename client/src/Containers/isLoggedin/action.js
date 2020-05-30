@@ -75,12 +75,11 @@ export const UpdateLoggedin = ({page,children,history,isLoggedin,location,match}
             if(!Loading)
             {
 
-                if(user.role !== 'Admin' && match.params.id == user._id){ 
+                if(user.role !== 'Admin' && ( match.params.id === user._id || match.params.desc === 'yetkiler' )){ 
 
                     history.push('/home');
 
-                }
-                
+                }    
                 else{
                     return children( Loading , user );
                 }
@@ -94,7 +93,6 @@ export const UpdateLoggedin = ({page,children,history,isLoggedin,location,match}
         }
 
         break;
-
             
         default:
             
