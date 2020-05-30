@@ -65,7 +65,7 @@ box-shadow: 0 2px 6px -2px grey;
 
 const Capsule = styled.div`
 border-radius:4px;
-background:#1eb2a6;
+background:#f5803e;
 color:white;
 padding:5px 7px;
 opacity:0.76;
@@ -92,6 +92,8 @@ const MainPage = (props)=>{
     const [ loading , setLoading  ] = useState( true );
 
     const [totalDailyReportNumber , setTotalDailyReportNumber] = useState(null);
+
+    const [ dailyReportCounter , setDailyReportCounter ] = useState ( 0 );
   
     useEffect(()=>{
 
@@ -122,9 +124,18 @@ const MainPage = (props)=>{
 
         })
         
-    },[])
+    },[]);
 
-   
+    useEffect(()=>{
+      
+        if( Object.keys(regionReportInfoState).length > 0 ) {
+            setInterval(()=>{
+                setDailyReportCounter( (prevValue)=> (prevValue < totalDailyReportNumber) ?  prevValue+1 : prevValue );
+            } , 80 ) ;
+        }
+        
+    },[regionReportInfoState]);
+
     return  <UpdateLoggedin page='MAİN_PAGE' {...props}>
     {
         ( Loading , user )=> Loading ? null : 
@@ -191,8 +202,8 @@ const MainPage = (props)=>{
 
                                             <span> Günlük Toplam Görüşme</span>
 
-                                    <Field style={{padding:'4px 8px', fontSize:15 , marginTop:6}}>   
-                                               {totalDailyReportNumber}
+                                    <Field style={{padding:'4px 8px',minWidth:25 , minHeight:25, fontSize:15 , marginTop:6  , color:'#f5803e' , fontWeight:'bolder'}}>   
+                                               {dailyReportCounter}
                                     </Field>
                                   
                                 </GeneralItem2>  
@@ -204,7 +215,7 @@ const MainPage = (props)=>{
                                     
                                      <div style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
                                            <span style= { {marginRight:5 , color:'#707070'}} > { region.region } </span>
-                                           <Capsule> <i style={{marginRight:5}} class="fas fa-user"></i> { region.fullName } </Capsule>        
+                                           <Capsule> <i style={{marginRight:5}} class="fas fa-user"></i> { region.fullName.split(' ')[0] } </Capsule>        
                                      </div>
                                     
                                      <InfoFields> 
@@ -212,21 +223,24 @@ const MainPage = (props)=>{
                                           <Field>
 
                                                <span> Öğrenci Görüşme Sayısı </span>
-                                                { region.reportInfo.studentLength  }
+
+                                               <span style={{color:'#f5803e' , fontWeight:'bolder'}}>  { dailyReportCounter < region.reportInfo.studentLength ? dailyReportCounter : region.reportInfo.studentLength   } </span>
 
                                           </Field>
 
                                           <Field>
 
                                                <span> Okul Görüşme Sayısı</span>
-                                                { region.reportInfo.schoolLength  }
+
+                                               <span style={{color:'#f5803e' , fontWeight:'bolder'}}> { dailyReportCounter <  region.reportInfo.schoolLength ? dailyReportCounter :  region.reportInfo.schoolLength  } </span>
 
                                           </Field>
 
                                           <Field>
 
                                                <span> Toplam Görüşme Sayısı </span>
-                                                { region.reportInfo.totalLength  }
+
+                                               <span style={{color:'#f5803e' , fontWeight:'bolder'}}> { dailyReportCounter <  region.reportInfo.totalLength ? dailyReportCounter :  region.reportInfo.totalLength  } </span>
 
                                           </Field>
 
