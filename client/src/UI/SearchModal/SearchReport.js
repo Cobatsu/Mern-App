@@ -166,6 +166,7 @@ export const  SearchReportModal =React.memo(({isOpen,close,role,closeModalOnly,s
          <MuiPickersUtilsProvider utils={DateFnsUtils}>
 
          <KeyboardDatePicker disableToolbar
+          autoOk
           inputProps={{style:{fontSize:14}}}
           InputLabelProps={{style:{fontSize:14}}}
           variant="inline"
@@ -178,8 +179,11 @@ export const  SearchReportModal =React.memo(({isOpen,close,role,closeModalOnly,s
           style={{width:width<breakPoint ? '90%' : '48%' , margin:'10px 0  0 5px '}}/>
 
         <KeyboardDatePicker disableToolbar
-        inputProps={{style:{fontSize:14}}}
-         InputLabelProps={{style:{fontSize:14}}}
+
+          autoOk
+          maxDate={new Date()}
+          inputProps={{style:{fontSize:14}}}
+          InputLabelProps={{style:{fontSize:14}}}
           variant="inline"
           format="dd/MM/yyyy"
           margin="normal"
@@ -188,7 +192,7 @@ export const  SearchReportModal =React.memo(({isOpen,close,role,closeModalOnly,s
           value={searchData['dateIntervalEnd']} 
           onChange={setDate2} 
           style={{width:width<breakPoint ? '90%' : '48%' , margin:'10px 0  0 5px '}}/>
-
+       
          </MuiPickersUtilsProvider>
 
         </SearchFields>

@@ -240,6 +240,8 @@ export const Report = ({SubmitOnChange,State,setBackStage,setDate,disable,type,r
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
 
                 <KeyboardDatePicker 
+                
+                  autoOk
                   inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}} 
                   disabled={disable}
                   disableToolbar

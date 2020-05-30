@@ -187,9 +187,10 @@ module.exports.updateSpecificUser = async (req,res,next)=>{
 
         if(willUpdate.password !== password)
         {
-          bcyrpt.hash(password,10,async (err,hash)=>{
+          bcyrpt.hash(password,10,async (err,hash) => {
            
             const onePerson = await User.updateOne({_id:id},{$set:{...updatedUser,password:hash}});
+
             const updatedNewUser = await User.findOne({_id:id}).select('-__v');
 
             return res.json({success:true,message:'Updated',updatedNewUser});

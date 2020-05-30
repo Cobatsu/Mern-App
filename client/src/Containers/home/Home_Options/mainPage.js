@@ -191,7 +191,7 @@ const MainPage = (props)=>{
 
                                             <span> Günlük Toplam Görüşme</span>
 
-                                    <Field style={{padding:'4px 8px', fontSize:17 , marginTop:6}}>   
+                                    <Field style={{padding:'4px 8px', fontSize:15 , marginTop:6}}>   
                                                {totalDailyReportNumber}
                                     </Field>
                                   

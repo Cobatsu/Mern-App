@@ -184,7 +184,7 @@ module.exports.getSpecificReport =async (req,res,next)=>{
 
 module.exports.updateReport = async ( req,res,next)=>{
 
-    const {params:{id} ,body} = req;
+    const { params: { id } , body } = req;
     
     try {
         await Reports.updateOne({_id:id},{$set:{...body}})

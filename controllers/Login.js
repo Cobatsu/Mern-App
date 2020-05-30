@@ -43,11 +43,12 @@ module.exports = async (req,res,next)=>{
 
                        var  newPermissionKey =  Object.keys(rest[type])[i] ; 
 
-                       updatedPermissions[newPermissionKey] = [];
+                       updatedPermissions[newPermissionKey] = new Array() ;
                     }
-                }
 
-                await User.updateOne({_id:user._id},{$set:{permissions:{...user.permissions,...updatedPermissions}}});
+                }
+                
+                if( Object.keys(updatedPermissions).length > 0 )  await User.updateOne({_id:user._id},{$set:{permissions:{...user.permissions,...updatedPermissions}}});
 
                 const getUpdatedUser = await User.findOne({_id:user._id})
                  
@@ -59,7 +60,7 @@ module.exports = async (req,res,next)=>{
             {
                 return res.json({message:'Wrong Password'})
             } 
-            
+
         });  
         }
         else

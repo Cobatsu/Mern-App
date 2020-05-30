@@ -712,7 +712,8 @@ export const UserInputs = React.memo(({userInformations,townships,textChangeHand
             : null}   
            {item[0] === 'gender' ?   <TextField InputLabelProps={{style:{color:'black',zIndex:1}}}  inputProps={{style:{padding:14,background:disabled ?  '#eeeeee' : 'white',color:'#333'}}} disabled={disabled}   onChange={textChangeHandler(item[0])}  id="select" label="Cinsiyet" value={userInformations[item[0]]} style={{width:'100%',margin:'10px 0'}}  select> <MenuItem value="Male">Erkek</MenuItem> <MenuItem value="Female">Kadın</MenuItem> </TextField> : null}
            {item[0] === 'contractDate' ? <KeyboardDatePicker disableToolbar
-
+           
+                autoOk
                 InputLabelProps={{style:{color:'black',zIndex:1}}}
                 disabled={disabled}
                 variant="inline"

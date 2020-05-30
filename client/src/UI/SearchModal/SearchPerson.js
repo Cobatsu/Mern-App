@@ -171,6 +171,7 @@ export const  SearchPersonModal = React.memo(({isOpen,close,role,closeModalOnly,
          <MuiPickersUtilsProvider utils={DateFnsUtils}>
 
          <KeyboardDatePicker disableToolbar
+         autoOk
          inputProps={{style:{fontSize:14}}}
          InputLabelProps={{style:{fontSize:14}}}
           variant="inline"
@@ -183,6 +184,7 @@ export const  SearchPersonModal = React.memo(({isOpen,close,role,closeModalOnly,
           style={{width: width < breakPoint ? '90%' : '48%', margin:'10px 0 0 5px'}}/>
 
         <KeyboardDatePicker disableToolbar
+        autoOk
         inputProps={{style:{fontSize:14}}}
          InputLabelProps={{style:{fontSize:14}}}
           variant="inline"
