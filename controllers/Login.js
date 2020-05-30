@@ -4,7 +4,8 @@ const Permission = require('../models/permission');
 const jwt  = require('jsonwebtoken');
 
 module.exports = async (req,res,next)=>{
-    const {name,password} = req.body;
+
+    const { name , password } = req.body;
     
     if(name  && password)
     {
@@ -19,8 +20,9 @@ module.exports = async (req,res,next)=>{
                 const permissions = await Permission.findOne({_id:"5ea5ea1421f697326c0c53f0"});
 
                 const {_doc:{_id,...rest}}=permissions;
-                let newPermission = null;
+    
                 let type = ''; 
+                let updatedPermissions = {};
 
                 switch(user.role)
                 {
@@ -35,19 +37,17 @@ module.exports = async (req,res,next)=>{
                         break;     
                 }
                 
-                for(let i = 0 ; i < Object.keys(rest[type]).length ; i++) //we assing new permission to user if it is updated 
-                {   
+                for (let i = 0 ; i < Object.keys( rest[type] ).length ; i++) {  
 
-                    if( Object.keys(rest[type])[i] !== Object.keys(user.permissions)[i] )
-                    {
-                        newPermission=Object.keys(rest[type])[i];
-                        
-                        const updatedUser = await User.updateOne({_id:user._id},{$set:{permissions:{...user.permissions,[newPermission]:[]}}});
+                    if(! Object.keys( user.permissions ).includes( Object.keys(rest[type])[i] )){
 
-                        break;
-                    }    
+                       var  newPermissionKey =  Object.keys(rest[type])[i] ; 
 
+                       updatedPermissions[newPermissionKey] = [];
+                    }
                 }
+
+                await User.updateOne({_id:user._id},{$set:{permissions:{...user.permissions,...updatedPermissions}}});
 
                 const getUpdatedUser = await User.findOne({_id:user._id})
                  
@@ -59,6 +59,7 @@ module.exports = async (req,res,next)=>{
             {
                 return res.json({message:'Wrong Password'})
             } 
+            
         });  
         }
         else

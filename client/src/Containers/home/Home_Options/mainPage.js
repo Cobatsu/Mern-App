@@ -99,14 +99,12 @@ const MainPage = (props)=>{
 
           const  { regionReportInfo } = response.data;
 
-          let totalDailyReport = 0 ;
+            let totalDailyReport = 0 ;
      
             Object.keys( regionReportInfo ).forEach( (key)=>{
-                    regionReportInfo[key].forEach( ( item,index )=>{
 
-                    totalDailyReport += item.reportInfo.totalLength;
+                regionReportInfo[key].forEach( ( item , index )=>{ totalDailyReport += item.reportInfo.totalLength; })
 
-                    })                
             })
 
             ReactDOM.unstable_batchedUpdates(() => {
