@@ -14,16 +14,7 @@ class  App extends React.Component{
   render()
   { 
   
-   let tesFunc = function name(params) {
-     
-    console.log(x);
-
-   }
-
-   testFunc();
-   
     
-   
     return ( <BrowserRouter> 
            
            <Switch>
@@ -33,7 +24,7 @@ class  App extends React.Component{
               {/* <Route path='/register' exact component={Register} /> */}
               <Route path='/home'  component = {Home} /> 
 
-              <Route path='*'  render = {()=><NotFoundPage path=''/>} />
+              <Route path='*'  render = {()=> <NotFoundPage path=''/>} />
 
            </Switch> 
      </BrowserRouter> 

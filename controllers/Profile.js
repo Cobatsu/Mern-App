@@ -67,20 +67,16 @@ const Query =  (body)=>{
        
         if(element)
         {
-            if(key === 'reportType' || key === 'relatedAgencyID')
-            {
+            if(key === 'reportType' || key === 'relatedAgencyID'){
                 searchData={...searchData,[key]:element}
             }
-            else if (key === 'dateIntervalStart')
-            {
+            else if (key === 'dateIntervalStart'){
                 searchData={...searchData,meetingDate:{$gte:element}}
             }
-            else if (key === 'dateIntervalEnd')
-            {
+            else if (key === 'dateIntervalEnd'){
                 searchData={...searchData,meetingDate:{...searchData.meetingDate,$lte:element}}
             }
-            else
-            {
+            else{
                 searchData={...searchData,[key]:{ $regex:element, $options: "i" }}
             }    
         }
