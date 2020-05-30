@@ -168,7 +168,7 @@ const ReportDetail  = ({match,...rest })=>{
                 if(key !== 'meetingDate')  initalReportStates[key] = initalReportStates[key].trim();
             }
         }
-        makeUpdateReportRequest('patch',match.params.id,{...initalReportStates},context.isLoggedinf,setInitalReportState,reIsetInitalReportState,setUpdatedModal,setDisable);
+        makeUpdateReportRequest('patch', match.params.id ,{...initalReportStates},context.isLoggedinf,setInitalReportState,reIsetInitalReportState,setUpdatedModal,setDisable);
     }
    
     const deleteReport = ()=>{
@@ -176,9 +176,9 @@ const ReportDetail  = ({match,...rest })=>{
          const {id} = match.params;
          makeDeleteReportRequest('delete',id,context.isLoggedinf,setDeleted);
     }
+    
+    console.log(initalReportStates);
 
-
-  
     if(!notFoundPage) 
 
        return <UpdateLoggedin {...rest}>

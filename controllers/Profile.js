@@ -188,7 +188,7 @@ module.exports.updateReport = async ( req,res,next)=>{
     
     try {
         await Reports.updateOne({_id:id},{$set:{...body}})
-        const updatedData = await  Reports.findOne({_id:id}).select('-__v -_id -userID');
+        const updatedData = await  Reports.findOne({_id:id}).select('-__v');
 
         res.json({updatedData});
 
