@@ -49,6 +49,10 @@ width:60%;
 display:flex;
 justify-content:space-evenly;
 padding:15px 0 ;
+
+@media (max-width: 1030px) {
+    width:100%;
+}
 `
 
 const Field = styled.div`
@@ -61,6 +65,7 @@ padding:10px;
 color:#707070;
 border-radius:3px;
 box-shadow: 0 2px 6px -2px grey;
+margin-right:10px;
 `
 
 const Capsule = styled.div`
@@ -69,7 +74,7 @@ background:#1b6ca8;
 color:white;
 padding:5px 7px;
 opacity:0.76;
-margin-left:7px;
+margin-left:6.5px;
 font-size:13px;
 `
 
@@ -208,7 +213,7 @@ const MainPage = (props)=>{
                                 return regionReportInfoState [ key ].map( ( region , index )=> < GeneralItem2 key={index}>
                                     
                                      <div style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
-                                           <span style= { {marginRight:5 , color:'#707070'}} > { region.region } </span>
+                                           <span style= { {marginRight:3 , fontSize:14.5 , color:'#707070'}} > { region.region } </span>
                                            <Capsule> <i style={{marginRight:5}} class="fas fa-user"></i> { region.fullName.split(' ')[0] } </Capsule>        
                                      </div>
                                     
