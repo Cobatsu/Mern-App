@@ -2,7 +2,11 @@ import React, {useEffect,useState,useContext,useMemo} from 'react';
 import Generator  from 'generate-password';
 import {UpdateLoggedin} from '../../isLoggedin/action'
 import styled from 'styled-components';
-import {Checkbox,TextField,Tab,Tabs,Paper,InputLabel,MenuItem,Selec} from '@material-ui/core'
+import {Checkbox,TextField,Tab,Tabs,Paper,InputLabel,MenuItem,IconButton,InputAdornment} from '@material-ui/core'
+
+import Visibility from "@material-ui/icons/Visibility";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
+
 import {makeAddUserRequest} from '../../../request/requset'
 import {MuiPickersUtilsProvider,KeyboardDatePicker } from '@material-ui/pickers'
 import DateFnsUtils from '@date-io/date-fns';
@@ -262,6 +266,8 @@ const AddPerson  = React.memo((props)=>{
   const [warning,setwarningPopUp]   = useState();
   const [BackStage,setBackStage]  = useState(false);
   const [spanWiths , setSpanWiths] = useState([]);
+
+ 
    
   
   
@@ -409,7 +415,6 @@ const AddPerson  = React.memo((props)=>{
         }
       }
 
-      setUserInformations(initialState);
       makeAddUserRequest('post',mainState,setAlreadyInUse,setmodalShow,isLoggedinf);
   }
   
@@ -440,7 +445,7 @@ const AddPerson  = React.memo((props)=>{
                 <InputsWrapper> 
                
 
-                <UserInputs townships={townships} user={User} userInformations={userInformations} textChangeHandler={textChangeHandler} date={date} setDate={setDate} GeneratePassword={GeneratePassword}/>
+                <UserInputs townships={townships} user={User} userInformations={userInformations} textChangeHandler={textChangeHandler} date={date} setDate={setDate} GeneratePassword={GeneratePassword} />
 
                                                
                 </InputsWrapper>
@@ -506,8 +511,9 @@ const AddPerson  = React.memo((props)=>{
 
 
 export const UserInputs = React.memo(({userInformations,townships,textChangeHandler,setDate,GeneratePassword,disabled,isProfil,user,relatedAgency,relatedAgencyLoading})=>{
- 
-  var relatedAgencyIcon = ()=>null;
+  const [showPassword, setShowPassword] = useState(false);
+
+  var relatedAgencyIcon = ()=> null;
 
   if(user.role === 'Admin')
   {
@@ -662,13 +668,24 @@ export const UserInputs = React.memo(({userInformations,townships,textChangeHand
 
         ? 
         <React.Fragment>
-              <TextField type='password' InputLabelProps={{style:{color:'black',zIndex:1}}}  inputProps={{style:{padding:10,background:disabled ?  '#eeeeee' : 'white',color:'#333'}}}   value={userInformations[item[0]]} disabled={disabled}  onChange={textChangeHandler(item[0])}  id="outlined-basic" label={item[1]}  style={{width:'100%'}} />
+              <TextField type={showPassword ?  "text" : "password"}   InputProps={{ // <-- This is where the toggle button is added.
+    endAdornment: (
+      <InputAdornment position="end">
+        <IconButton
+          aria-label="toggle password visibility"
+          onClick={()=>setShowPassword(prev=>!prev)}
+        >
+          {showPassword ? <Visibility /> : <VisibilityOff />}
+        </IconButton>
+      </InputAdornment>
+    )
+  }}  InputLabelProps={{style:{color:'black',zIndex:1}}}  inputProps={{style:{padding:10,background:disabled ?  '#eeeeee' : 'white',color:'#333'}}}   value={userInformations[item[0]]} disabled={disabled}  onChange={textChangeHandler(item[0])}  id="outlined-basic" label={item[1]}  style={{width:'100%'}} />
               {!disabled ?  <GeneratePasswrd type='button'  onClick={GeneratePassword}>Şifre Ver</GeneratePasswrd> : null}
         </React.Fragment>  
          :
          item[0] === 'phoneNumber'
          ?   
-          <TextField type='number' InputLabelProps={{style:{color:'black',zIndex:1}}}  inputProps={{style:{padding:10,background:disabled ?  '#eeeeee' : 'white',color:'#333'}}}   value={userInformations[item[0]]} disabled={disabled}  onChange={textChangeHandler(item[0])}  id="outlined-basic" label={item[1]}  style={{width:'100%'}} />
+          <TextField  InputLabelProps={{style:{color:'black',zIndex:1}}}  inputProps={{style:{padding:10,background:disabled ?  '#eeeeee' : 'white',color:'#333'}}}   value={userInformations[item[0]]} disabled={disabled}  onChange={textChangeHandler(item[0])}  id="outlined-basic" label={item[1]}  style={{width:'100%'}} />
          :
          <TextField   value={userInformations[item[0]]} disabled={disabled}  onChange={textChangeHandler(item[0])}  id="outlined-basic" InputLabelProps={{style:{color:'black',zIndex:1}}}  label={item[1]} inputProps={{style:{padding:10,background:disabled ?  '#eeeeee' : 'white', color:'#333'}}} style={{width:'100%'}}   /> 
         } 
@@ -676,14 +693,16 @@ export const UserInputs = React.memo(({userInformations,townships,textChangeHand
         :
         <InnerInputWrapper key={item[0]}>  
         {
+
             item[0] === 'phoneNumber' 
             ?   
-            <TextField type='number' InputLabelProps={{style:{color:'black',zIndex:1}}}  inputProps={{style:{padding:10,background:disabled ?  '#eeeeee' : 'white',color:'#333'}}}   value={userInformations[item[0]]} disabled={disabled}  onChange={textChangeHandler(item[0])}  id="outlined-basic" label={item[1]}  style={{width:'100%'}} />
+            <TextField   InputLabelProps={{style:{color:'black',zIndex:1}}}  inputProps={{style:{padding:10,background:disabled ?  '#eeeeee' : 'white',color:'#333'}}}   value={userInformations[item[0]]} disabled={disabled}  onChange={textChangeHandler(item[0])}  id="outlined-basic" label={item[1]}  style={{width:'100%'}} />
             :
             item[0] !== 'password' ? 
-            <TextField   value={userInformations[item[0]]} disabled={disabled}  onChange={textChangeHandler(item[0])}  id="outlined-basic" InputLabelProps={{style:{color:'black',zIndex:1}}}  label={item[1]} inputProps={{style:{padding:10,background:disabled ?  '#eeeeee' : 'white',color:'#333'}}} style={{width:'100%'}}   /> 
+            <TextField    value={userInformations[item[0]]} disabled={disabled}  onChange={textChangeHandler(item[0])}  id="outlined-basic" InputLabelProps={{style:{color:'black',zIndex:1}}}  label={item[1]} inputProps={{style:{padding:10,background:disabled ?  '#eeeeee' : 'white',color:'#333'}}} style={{width:'100%'}}   /> 
             :
             null
+            
         } 
        </InnerInputWrapper>
        

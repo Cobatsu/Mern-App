@@ -28,7 +28,7 @@ box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.03
 `
 const TopTitle = styled.div`
 padding-bottom:20px;
-color:#1eb2a6;
+color:#1b6ca8;
 
 `
 
@@ -65,7 +65,7 @@ box-shadow: 0 2px 6px -2px grey;
 
 const Capsule = styled.div`
 border-radius:4px;
-background:#f5803e;
+background:#1b6ca8;
 color:white;
 padding:5px 7px;
 opacity:0.76;
@@ -94,7 +94,9 @@ const MainPage = (props)=>{
     const [totalDailyReportNumber , setTotalDailyReportNumber] = useState(null);
 
     const [ dailyReportCounter , setDailyReportCounter ] = useState ( 0 );
-  
+   
+    let test = 480;
+    
     useEffect(()=>{
 
         axios.get('/api/homeSearch',{ headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}}).then((response)=>{
@@ -126,15 +128,7 @@ const MainPage = (props)=>{
         
     },[]);
 
-    useEffect(()=>{
-      
-        if( Object.keys(regionReportInfoState).length > 0 ) {
-            setInterval(()=>{
-                setDailyReportCounter( (prevValue)=> (prevValue < totalDailyReportNumber) ?  prevValue+1 : prevValue );
-            } , 80 ) ;
-        }
-        
-    },[regionReportInfoState]);
+
 
     return  <UpdateLoggedin page='MAİN_PAGE' {...props}>
     {
@@ -202,8 +196,8 @@ const MainPage = (props)=>{
 
                                             <span> Günlük Toplam Görüşme</span>
 
-                                    <Field style={{padding:'4px 8px',minWidth:25 , minHeight:25, fontSize:15 , marginTop:6  , color:'#f5803e' , fontWeight:'bolder'}}>   
-                                               {dailyReportCounter}
+                                    <Field style={{padding:'2px 4px',minWidth:30 , minHeight:30, fontSize:16 , marginTop:6  , color:'#f5803e' , fontWeight:'400'}}>   
+                                               {totalDailyReportNumber}
                                     </Field>
                                   
                                 </GeneralItem2>  
@@ -224,7 +218,7 @@ const MainPage = (props)=>{
 
                                                <span> Öğrenci Görüşme Sayısı </span>
 
-                                               <span style={{color:'#f5803e' , fontWeight:'bolder'}}>  { dailyReportCounter < region.reportInfo.studentLength ? dailyReportCounter : region.reportInfo.studentLength   } </span>
+                                               <span style={{color:'#f5803e' , fontWeight:'400'}}>  { region.reportInfo.studentLength } </span>
 
                                           </Field>
 
@@ -232,7 +226,8 @@ const MainPage = (props)=>{
 
                                                <span> Okul Görüşme Sayısı</span>
 
-                                               <span style={{color:'#f5803e' , fontWeight:'bolder'}}> { dailyReportCounter <  region.reportInfo.schoolLength ? dailyReportCounter :  region.reportInfo.schoolLength  } </span>
+                                               <span style={{color:'#f5803e' , fontWeight:'400'}}> { region.reportInfo.schoolLength } </span>
+
 
                                           </Field>
 
@@ -240,7 +235,7 @@ const MainPage = (props)=>{
 
                                                <span> Toplam Görüşme Sayısı </span>
 
-                                               <span style={{color:'#f5803e' , fontWeight:'bolder'}}> { dailyReportCounter <  region.reportInfo.totalLength ? dailyReportCounter :  region.reportInfo.totalLength  } </span>
+                                               <span style={{color:'#f5803e' , fontWeight:'400'}}> { region.reportInfo.totalLength } </span>
 
                                           </Field>
 

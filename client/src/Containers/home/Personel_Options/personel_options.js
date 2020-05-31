@@ -585,7 +585,7 @@ export const PersonelReports = ({ id , setLoggedin , role , currentRole , isProf
   
   let subPagesLength  = Math.ceil(subPagesCount/10);
 
-  console.log(subPagesCount);
+
 
   refs.current = refs.current.slice(0, reports.length);
 
@@ -606,7 +606,6 @@ export const PersonelReports = ({ id , setLoggedin , role , currentRole , isProf
 
   }
 
-  console.log(role);
 
   const SwitchRow = (Amount, ref) => event => {
 

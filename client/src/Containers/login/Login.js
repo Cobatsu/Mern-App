@@ -15,13 +15,11 @@ display:flex;
 flex-direction: column;
 align-items: center;
 justify-content:center;
-@media (max-width: 600px) {
-    background:#fff;
-}
 `
 const Fields  = styled.form`
 max-width:350px;
-min-height:100%;
+margin:0 10px;
+height:450px;
 padding:0 20px;
 display:flex;
 flex-direction: column;
@@ -29,6 +27,7 @@ align-items: center;
 justify-content: center;
 background:#fff;
 position:relative;
+box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
 
 
 `

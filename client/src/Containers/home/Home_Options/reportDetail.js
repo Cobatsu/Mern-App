@@ -176,9 +176,7 @@ const ReportDetail  = ({match,...rest })=>{
          const {id} = match.params;
          makeDeleteReportRequest('delete',id,context.isLoggedinf,setDeleted);
     }
-    
-    console.log(initalReportStates);
-
+   
     if(!notFoundPage) 
 
        return <UpdateLoggedin {...rest}>

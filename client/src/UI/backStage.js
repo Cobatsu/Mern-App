@@ -12,7 +12,8 @@ background-color:black;
 opacity:0.3;
 z-index:3;
 `
-const BackStage  =React.memo(({backStage,close,loading})=>{
+
+const BackStage  = React.memo(({backStage,close,loading})=>{
   
     //it is so important to determine top and left for fixed objects
     if(backStage && !loading)
