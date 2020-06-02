@@ -97,8 +97,6 @@ const MainPage = (props)=>{
     const [ loading , setLoading  ] = useState( true );
 
     const [totalDailyReportNumber , setTotalDailyReportNumber] = useState(null);
-
-    const [ dailyReportCounter , setDailyReportCounter ] = useState ( 0 );
        
     useEffect(()=>{
 
@@ -109,8 +107,8 @@ const MainPage = (props)=>{
             let sumDailyReports = 0 ;
      
             Object.values( regionReportInfo ).forEach( ( item ) => {  
-
-                sumDailyReports += item.reduce( ( prevValue , currentItem ) => { return currentItem.reportInfo.totalLength + prevValue },0)
+              
+                sumDailyReports += item.reduce ( ( prevValue , currentItem ) => { return currentItem.reportInfo.totalLength + prevValue },0)
 
             })
 
