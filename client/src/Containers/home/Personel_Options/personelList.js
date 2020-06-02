@@ -418,7 +418,9 @@ export const _PersonelList = ({ personels,notFound,SwitchRow,refs,width,role,isP
                 PersonelOptions.map((subItem,Mainindex)=>{
                 
                   if( item.role !== 'Temsilci' && subItem.desc === 'Bayiler' ) return null ;
+
                   if( item.role === 'Admin'    && subItem.desc === 'Raporlar' ) return null;
+                  
                   if( currentRole !==  'Admin' && subItem.desc === 'Yetkiler' ) return null ;
                    
                   return <PersonelListIconWrapper key={Mainindex}>

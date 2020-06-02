@@ -20,10 +20,8 @@ class  App extends React.Component{
            <Switch>
 
               <Route path='/' exact component = {Login} />
-
-              {/* <Route path='/register' exact component={Register} /> */}
+           -  <Route path='/register' exact component={Register} /> 
               <Route path='/home'  component = {Home} /> 
-
               <Route path='*'  render = {()=> <NotFoundPage path=''/>} />
 
            </Switch> 

@@ -161,7 +161,7 @@ class Login  extends React.Component {
                     <Container>     
                      <Fields onSubmit={this.submitHandler}>
                      
-                        <Circle Load={Loading} top={10} />
+                        <Circle Load={Loading} top={10} position='static'/>
                       
                         <ImageWrapper>
                             <img style={{width:'100%'}} alt="ercan" src='canada.png' ></img>
