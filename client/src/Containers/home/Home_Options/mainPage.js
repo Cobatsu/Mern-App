@@ -110,7 +110,7 @@ const MainPage = (props)=>{
      
             Object.values( regionReportInfo ).forEach(( item )=>{  
 
-                item.forEach( ( item , index )=>{ totalDailyReport += item.reportInfo.totalLength; })
+                item.forEach( ( item , index ) => { totalDailyReport += item.reportInfo.totalLength; })
 
             })
 
@@ -125,7 +125,7 @@ const MainPage = (props)=>{
         })
         .catch((err)=>{
 
-         console.log(err);
+           console.log(err);
 
         })
         
@@ -204,11 +204,12 @@ const MainPage = (props)=>{
                                     </Field>
                                   
                                 </GeneralItem2>  
+
                                 
                             {
                                 Object.values( regionReportInfoState ).map(( item ) => {
                                   
-                                 return item.map (( region , index )=> < GeneralItem2 key={index}>
+                                 return item.map ( ( region , index )=> < GeneralItem2 key={index}>
                                     
                                      <div style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
 
