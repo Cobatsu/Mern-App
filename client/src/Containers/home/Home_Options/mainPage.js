@@ -99,9 +99,7 @@ const MainPage = (props)=>{
     const [totalDailyReportNumber , setTotalDailyReportNumber] = useState(null);
 
     const [ dailyReportCounter , setDailyReportCounter ] = useState ( 0 );
-   
-    let test = 480;
-    
+       
     useEffect(()=>{
 
         axios.get('/api/homeSearch',{ headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}}).then((response)=>{
@@ -110,9 +108,9 @@ const MainPage = (props)=>{
 
             let totalDailyReport = 0 ;
      
-            Object.keys( regionReportInfo ).forEach( (key)=>{
+            Object.values( regionReportInfo ).forEach(( item )=>{  
 
-                regionReportInfo[key].forEach( ( item , index )=>{ totalDailyReport += item.reportInfo.totalLength; })
+                item.forEach( ( item , index )=>{ totalDailyReport += item.reportInfo.totalLength; })
 
             })
 
@@ -199,7 +197,7 @@ const MainPage = (props)=>{
 
                                <GeneralItem2> 
 
-                                            <span> Günlük Toplam Görüşme</span>
+                                    <span> Günlük Toplam Görüşme</span>
 
                                     <Field style={{padding:'2px 4px',minWidth:30 , minHeight:30, fontSize:16 , marginTop:6  , color:'#f5803e' , fontWeight:'400'}}>   
                                                {totalDailyReportNumber}
@@ -208,13 +206,15 @@ const MainPage = (props)=>{
                                 </GeneralItem2>  
                                 
                             {
-                                Object.keys( regionReportInfoState ).map(( key )=>{
+                                Object.values( regionReportInfoState ).map(( item ) => {
                                   
-                                return regionReportInfoState [ key ].map( ( region , index )=> < GeneralItem2 key={index}>
+                                 return item.map (( region , index )=> < GeneralItem2 key={index}>
                                     
                                      <div style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
+
                                            <span style= { {marginRight:3 , fontSize:14.5 , color:'#707070'}} > { region.region } </span>
-                                           <Capsule> <i style={{marginRight:5}} class="fas fa-user"></i> { region.fullName.split(' ')[0] } </Capsule>        
+                                           <Capsule> <i style={{marginRight:5}} class="fas fa-user"></i> { region.fullName.split(' ')[0] } </Capsule> 
+
                                      </div>
                                     
                                      <InfoFields> 
