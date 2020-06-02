@@ -12,7 +12,6 @@ import moment from 'moment';
 import Header from './sections/Header';
 
 
-
 class Register extends React.Component{
 
    date_of_birth_ref = React.createRef();
@@ -153,6 +152,7 @@ class Register extends React.Component{
    render()
    {
       return( 
+        
          <div className='Container'>
              
                <Header backStage={this.state.backStage} warning={this.state.warningModal}/>
