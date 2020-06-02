@@ -48,13 +48,13 @@ const UserImage = styled.img`
 max-width:110px;
 `
 
-const pathGenerator = ( item , id )=>({
+const pathGenerator = ( item , id ) => ( {
 
    PROFİLE_PATH :  '/home/profil/' + item.desc.split(' ').join('_').toLowerCase(),
 
    DETAİL_PATH:'/home/personel_listesi/' + item.desc.split(' ').join('_').toLowerCase() + '/' + id
 
-})
+} )
  
 
 

@@ -106,18 +106,18 @@ const MainPage = (props)=>{
 
           const  { regionReportInfo } = response.data;
 
-            let totalDailyReport = 0 ;
+            let sumDailyReports = 0 ;
      
-            Object.values( regionReportInfo ).forEach(( item )=>{  
+            Object.values( regionReportInfo ).forEach( ( item ) => {  
 
-                item.forEach( ( item , index ) => { totalDailyReport += item.reportInfo.totalLength; })
+                sumDailyReports += item.reduce( ( prevValue , currentItem ) => { return currentItem.reportInfo.totalLength + prevValue },0)
 
             })
 
             ReactDOM.unstable_batchedUpdates(() => {
 
                   setLoading(false);
-                  setTotalDailyReportNumber(totalDailyReport)
+                  setTotalDailyReportNumber(sumDailyReports)
                   setRegionReportInfo( regionReportInfo );
   
             });
