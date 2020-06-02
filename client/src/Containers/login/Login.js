@@ -157,36 +157,51 @@ class Login  extends React.Component {
         return (  
         <UpdateLoggedin page='LOGİN' isLoggedin={this.state.isLoggedin} {...this.props}>
             {
-                ({Loading})=>(
-                    <Container>     
-                     <Fields onSubmit={this.submitHandler}>
-                     
-                        <Circle Load={Loading} top={10} position='static'/>
-                      
-                        <ImageWrapper>
-                            <img style={{width:'100%'}} alt="ercan" src='canada.png' ></img>
-                        </ImageWrapper>
+                ({Loading})=> <Container>     
+
+
+                        <Fields onSubmit={this.submitHandler}>
                         
-                        <Inner_Fields>
-                            {this.state.warning ? <PopUp>Hatalı Giriş !<i onClick={()=>this.setState({warning:false})}  style={{position:'absolute',right:5,color:'#a94442' , top:5}}  className="fas fa-times"></i></PopUp> : null}
-                            <InputWrapper>
-                               <i style={{display:'block',position:'absolute',left:8,top:'50%',color:'#ccc'}}  className="fas fa-user"/>
-                               <Input onChange={this.changeHandlerFactory('name')}   placeholder='Kullanıcı Adı'/>
-                            </InputWrapper> 
-   
-                             <InputWrapper>  
-                               <i style={{display:'block',position:'absolute',left:8,top:'50%',color:'#ccc'}}  className="fas fa-lock"/>
-                               <Input type='password' onChange={this.changeHandlerFactory('password')}  placeholder='Şifre'/>
-                            </InputWrapper>
-   
-                               <Submit type='Submit'>Giriş<i style={{marginLeft:5 }} className="fas fa-sign-in-alt"></i></Submit>
-   
-                         </Inner_Fields>
-   
-                    </Fields>
+                            <Circle Load={Loading} top={10} position='static'/>
+                        
+                            <ImageWrapper>
+                                <img style={{width:'100%'}} alt="ercan" src='canada.png' ></img>
+                            </ImageWrapper>
+                            
+                            <Inner_Fields>
+                                {this.state.warning ? <PopUp>Hatalı Giriş !<i onClick={()=>this.setState({warning:false})}  style={{position:'absolute',right:5,color:'#a94442' , top:5}}  className="fas fa-times"></i></PopUp> : null}
+                                <InputWrapper>
+                                <i style={{display:'block',position:'absolute',left:8,top:'50%',color:'#ccc'}}  className="fas fa-user"/>
+                                <Input onChange={this.changeHandlerFactory('name')}   placeholder='Kullanıcı Adı'/>
+                                </InputWrapper> 
+    
+                                <InputWrapper>  
+                                <i style={{display:'block',position:'absolute',left:8,top:'50%',color:'#ccc'}}  className="fas fa-lock"/>
+                                <Input type='password' onChange={this.changeHandlerFactory('password')}  placeholder='Şifre'/>
+                                </InputWrapper>
+    
+                                <Submit type='Submit'>Giriş<i style={{marginLeft:10 }} className="fas fa-sign-in-alt"></i></Submit>
+    
+                            </Inner_Fields>
+
+                            
+                            <SubButtons type='button'>
+                                
+                                <Link to='/register'style={{width:'100%',alignItems:'center',justifyContent:'center',height:'100%',textDecoration:'none',color:'white',padding:5,display:'flex'}}>
+
+                                 Kayıt Formu 
+                                 
+                                 <i style={{marginLeft:10 }} class="fas fa-file-alt"></i>
+                                
+                                </Link>
+                               
+                            </SubButtons>
+    
+                        </Fields>
+
    
                </Container>
-                )
+                
             }  
         </UpdateLoggedin>    
         );

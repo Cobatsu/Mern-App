@@ -7,26 +7,13 @@ display:flex;
 justify-content:space-evenly;
 align-items:center;
 flex-flow:column;
-width:100%;
-height:6%;
-padding:15px 0;
+min-width:100%;
+min-height:40px;
 top:${(props)=>props.top + '%'};
 background:#eb4559;
 transition:500ms;
 z-index:2;
 color:white;
-@media (max-width: 1030px) {
-    width:100%;
-    height:5%;
-  }
-@media (max-width: 500px) {
-    width:100%;
-    height:5%;
-  }
-@media (max-width: 350px) {
-    width:100%;
-    height:7%;
-  }
 `
 
 const WarningModalC = (props)=>{ 
@@ -46,7 +33,7 @@ const WarningModalC = (props)=>{
 
       
       return <WarningModal top={modalY}>
-            <h2 style={{textAlign:'center', fontSize:15 ,color:'white',fontWeight:'bolder'}}>Please Fill All Fields !</h2>
+                  Please Fill All Fields !
             </WarningModal>  
 }
 

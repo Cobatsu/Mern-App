@@ -7,11 +7,11 @@ const Header = ({backStage,warning})=><React.Fragment>
 <Warning warning = {warning}/>
 <Stage backStage = {backStage}/>
 <Modal backStage= {backStage} type='STUDENT_FORM'/> 
-<div style={{width:'60%',padding:5, borderRadius:5 }}>
-  <img style={{width:'100%'}} alt="ercan" src='https://www.studyonlineincanada.ca/wp-content/uploads/2020/02/cropped-kanada-lisediplomas%C4%B1.png' ></img>
+<div style={{width:'50%',padding:5, borderRadius:5 }}>
+  <img style={{width:'100%'}}  src='canada.png' ></img>
 </div>     
 
-<hr style={{border:'.5px solid black',width:'70%'}}/>
+<hr style={{border:'.5px solid grey',width:'55%'}}/>
 
 <h1 style={{width:'80%',textAlign:'center',fontSize:30 , color:''}}>PRE-REGİSTRATİON FORM</h1>
 </React.Fragment>

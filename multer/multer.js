@@ -1,6 +1,6 @@
 
 const multer =require("multer");
-const DIR = '../frontend/public/';
+const DIR = './client/public/';
 
 storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -17,7 +17,7 @@ module.exports.upload=multer({
 
     storage: storage,
     fileFilter: (req, file, cb) => {
-        if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
+        if (true) {
             cb(null, true);
         } else {
             cb(null, false);
