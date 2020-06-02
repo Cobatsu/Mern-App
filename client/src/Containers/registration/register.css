@@ -85,7 +85,7 @@ label{
     font-weight: 470;
 }
 
-div > input,div > select
+.Inner-Register  input, .Inner-Register  select
 {
     width:100%;
     border-radius: 5px;
@@ -93,7 +93,7 @@ div > input,div > select
     border:none;
     padding:5px;
     padding-left: 10px;
-    border:1px solid #679b9b;
+    box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 0.596), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
    
 }
 

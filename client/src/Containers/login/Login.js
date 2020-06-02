@@ -84,7 +84,7 @@ width:86%;
 
 const SubButtons = styled.button`
 padding:0;
-width:82%;
+width:83%;
 margin-top:3px;
 out-line:none;
 box-shadow:0 0 5px  rgb(112, 112, 112);
@@ -189,9 +189,9 @@ class Login  extends React.Component {
                                 
                                 <Link to='/register'style={{width:'100%',alignItems:'center',justifyContent:'center',height:'100%',textDecoration:'none',color:'white',padding:5,display:'flex'}}>
 
-                                 Kayıt Formu 
-                                 
-                                 <i style={{marginLeft:10 }} class="fas fa-file-alt"></i>
+                                        Öğrenci Kayıt Formu 
+                                        
+                                        <i style={{marginLeft:10 }} class="fas fa-file-alt"></i>
                                 
                                 </Link>
                                

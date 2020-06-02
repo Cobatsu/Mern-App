@@ -48,7 +48,17 @@ const UserImage = styled.img`
 max-width:110px;
 `
 
-const Usermenu = ( { role , firstName , lastName , UserMenuLinks , match , subMenuIndex , page  } )=> <UserMenu>
+const pathGenerator = ( item , id )=>({
+
+   PROFİLE_PATH :  '/home/profil/' + item.desc.split(' ').join('_').toLowerCase(),
+
+   DETAİL_PATH:'/home/personel_listesi/' + item.desc.split(' ').join('_').toLowerCase() + '/' + id
+
+})
+ 
+
+
+const Usermenu = ( { role , firstName , lastName , UserMenuLinks , match:{params:{id}} , subMenuIndex , page  } )=> <UserMenu>
                        
 <Capsule style={{position:'absolute',left:0,top:0,margin:0,borderRadius:0,fontSize:11.4,background:'#2fc4b2'}}>
    {role}
@@ -56,45 +66,38 @@ const Usermenu = ( { role , firstName , lastName , UserMenuLinks , match , subMe
 
 <UserImage  src={'/user.jpg'}></UserImage>
 
-<Capsule>
+         <Capsule>
 
-     <span style={{marginRight:5}}>{firstName}</span> 
-     <span>{lastName}</span>
+            <span style={{marginRight:5}}>{firstName}</span> 
+            <span>{lastName}</span>
 
-</Capsule>
+         </Capsule>
 
-<UserMenuContainer>
+         <UserMenuContainer>
 
-     {
-       UserMenuLinks.map((item,index)=>{
+            {
+               
+               UserMenuLinks.map((item,index)=>{
 
 
-         return  <UserMenuElement key={index} selected={subMenuIndex === item.desc.split(' ').join('_').toLowerCase()} >
+                  return  <UserMenuElement key={index} selected={subMenuIndex === item.desc.split(' ').join('_').toLowerCase()} >
 
-        {
-            page === 'Profile' 
-            ?
+                     <Link   className='responsiveLink' style={{padding:5,textDecoration:'none' , display:'block'  , width:'100%' , height:'100%'}}  
 
-            <Link   className='responsiveLink' style={{padding:5,textDecoration:'none' , display:'block'  , width:'100%' , height:'100%'}}  to={'/home/profil/' + item.desc.split(' ').join('_').toLowerCase() }>
-               {item.Icon} {item.desc} 
-            </Link>
+                     to = { page === 'Profile'  ?  pathGenerator(item).PROFİLE_PATH : pathGenerator(item,id).DETAİL_PATH  }   >
 
-            :
-            <Link   className='responsiveLink' style={{padding:5,textDecoration:'none' , display:'block'  , width:'100%' , height:'100%'}}  to={'/home/personel_listesi/' + item.desc.split(' ').join('_').toLowerCase() + '/' + match.params.id}>
-               {item.Icon} {item.desc} 
-            </Link>
-        }
+                        {item.Icon} {item.desc}
 
-        
+                     </Link>
 
-        </UserMenuElement>
-        
+                   </UserMenuElement>
+               
+               })
 
-        })
+            }       
+                  
+         </UserMenuContainer>
 
-     }       
-         
-</UserMenuContainer>
 </UserMenu> 
 
 export default Usermenu;
