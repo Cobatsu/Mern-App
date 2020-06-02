@@ -154,25 +154,9 @@ class Register extends React.Component{
    {
       return( 
          <div className='Container'>
-              {/* <button onClick={this.getFiles}>FETCH</button>
-               { 
-               this.state.users.map((items)=>{
-                    let images = [];
-                    for (const key in items.StudentInfo.Images) {
-                      if (items.StudentInfo.Images.hasOwnProperty(key)) {
-                        const element = items.StudentInfo.Images[key];
-                        images.push(element);
-                      }
-                    }
-                    console.log(items.StudentInfo.information.name + ' ' +images)
-                  return images.map((item)=>{
-                        return <div><h1>{items.StudentInfo.information.name}</h1><div style={{width:100 ,height:100}}><img style={{width:'100%'}}  key={item} src={item}></img></div></div>
-                   })
-                   
-                  })
-               }  */}
              
-              <Header backStage={this.state.backStage} warning={this.state.warningModal}/>
+               <Header backStage={this.state.backStage} warning={this.state.warningModal}/>
+               
                <form onSubmit={this.SubmitHandler} className='Inner-Register'>             
                             
                <StudentInformations changeHandler={this.changeHandlerFactory}  name={this.state.studentInformations.name} warning={this.state.warning} warningText={this.state.warning_text} surname={this.state.studentInformations.surname} phoneNumber={this.state.studentInformations.phone_number} eMail={this.state.studentInformations.e_mail} date_of_birth_ref={this.date_of_birth_ref} gender_ref={this.gender_ref}/>
@@ -183,7 +167,9 @@ class Register extends React.Component{
                <RequiredDocs I1={this.state.fileInputs.I1} warning={this.state.warning} I2={this.state.fileInputs.I2} I3={this.state.fileInputs.I3} I4={this.state.fileInputs.I4} imageHandler={this.imageHandlerFactory}/>
                <Submit circle={this.state.circle}/>  
 
-               </form>    
+               </form>
+
+
          </div>
      )
    }
