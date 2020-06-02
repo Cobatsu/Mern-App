@@ -179,7 +179,6 @@ export const  SearchReportModal =React.memo(({isOpen,close,role,closeModalOnly,s
           style={{width:width<breakPoint ? '90%' : '48%' , margin:'10px 0  0 5px '}}/>
 
         <KeyboardDatePicker disableToolbar
-
           autoOk
           maxDate={new Date()}
           inputProps={{style:{fontSize:14}}}

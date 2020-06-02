@@ -254,7 +254,6 @@ const MainPage = (props)=>{
                               })
                             }
                           
-  
                           </GeneralWrapper>
 
                         }
