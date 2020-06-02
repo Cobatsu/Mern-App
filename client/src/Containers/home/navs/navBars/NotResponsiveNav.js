@@ -117,34 +117,36 @@ const NotResponsiveNav = ({logoutHandler,subMenu,user,setSubLeave,setSubEnter,ma
 
      </Item>
  
- <Item style={{flex:0.2}}>
+    <Item style={ {flex:subMenu.length*0.1} }>
 
-     {
-         subMenu.map((item,index)=>{
-             return   <InnerItemLink key={item.type} isSelected={selectedElement === index}  onMouseOut={()=>setSelectedElement(null)}  onMouseOver={()=>setSelectedElement(index)}>{item.type}
-             </InnerItemLink> 
-         })
-     }
-
-     <SubContainer>
-      {
-
-       subMenu.map((mainItem,index)=>{
-        return  <Sublist onClick={()=>setSelectedElement(null)} isSelected={selectedElement === index}  onMouseEnter={()=>setSelectedElement(index)} onMouseLeave={()=>setSelectedElement(null)}    key={mainItem.type} >                  
             {
-                 mainItem.props.map((item,index)=>{
-                     return   <SublistItem   key={index}><Link to={match.path + '/' + item.split(' ').join('_').toLocaleLowerCase() }  style={{textDecoration:'none',display:'block',width:'100%',height:'100%',color:'white',padding:10}}>{item}</Link>
-                         </SublistItem>
-                 })
-            }                       
-         </Sublist>  
-         
-      })  
+                subMenu.map((item,index)=>{
+                    return   <InnerItemLink key={item.type} isSelected={selectedElement === index}  onMouseOut={()=>setSelectedElement(null)}  onMouseOver={()=>setSelectedElement(index)}>{item.type}
+                    </InnerItemLink> 
+                })
+            }
 
-     }
-     </SubContainer>
+            <SubContainer>
 
-     </Item>
+                {
+
+                subMenu.map((mainItem,index)=>{
+                    return  <Sublist onClick={()=>setSelectedElement(null)} isSelected={selectedElement === index}  onMouseEnter={()=>setSelectedElement(index)} onMouseLeave={()=>setSelectedElement(null)}    key={mainItem.type} >                  
+                        {
+                            mainItem.props.map((item,index)=>{
+                                return   <SublistItem   key={index}><Link to={match.path + '/' + item.split(' ').join('_').toLocaleLowerCase() }  style={{textDecoration:'none',display:'block',width:'100%',height:'100%',color:'white',padding:10}}>{item}</Link>
+                                    </SublistItem>
+                            })
+                        }                       
+                    </Sublist>  
+                    
+                })  
+
+                }
+                
+            </SubContainer>
+
+    </Item>
                     <ItemProfile>
                          <Link to='/home/profil/genel_bilgiler'  style={{textDecoration:'none',display:'flex',alignItems:'center',justifyContent:'center',width:'100%',height:'100%',color:'#707070'}}>
                              <InnerItemText>{user.firstName}</InnerItemText>

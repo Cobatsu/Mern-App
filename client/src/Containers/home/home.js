@@ -27,8 +27,7 @@ class  Home extends React.Component{
               <Nav {...this.props} {...this.context}/>
             <Switch>
               
-              {/* <Route path={'/home/ön_kayıt'}  exact  component={Student}/>   */}
-
+              <Route path={'/home/ön_kayıt'}  exact  component={Student}/>  
               <Route path={'/home'}  exact  component={MainPage}/> 
               <Route path={'/home/personel_listesi'} exact   render={(props)=><PersonelList {...props} isOnlySubBranch={false}  />}/>
               <Route path={'/home/bayi_listesi'} exact render={(props)=> <PersonelList {...props}  isOnlySubBranch={true} />} />

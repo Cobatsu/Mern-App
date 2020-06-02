@@ -131,8 +131,7 @@ const MainPage = (props)=>{
         
     },[]);
 
-
-
+    
     return  <UpdateLoggedin page='MAİN_PAGE' {...props}>
     {
         ( Loading , user )=> Loading ? null : 
