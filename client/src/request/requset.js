@@ -122,22 +122,6 @@ export const makeCurrentUserRequest = (Type,Body,setCurrentUser,setLoggedin,setL
   
 }
 
-export const makeStudentRequest = (type,setStudent,setLoading)=>{
-  setLoading(true);
-  axios[type]('/api/register')
-  .then((res)=>{
-
-        const {students} =  res.data; 
-
-        setStudent(students);
-        setLoading(false);
-   
-  })
-  .catch(()=>{
-
-  })
-
-}
 
 export const makeVerifyRequest = (Type,setUser,setLoggedin,setLoading )=>{
 
@@ -526,14 +510,12 @@ export const makeRelatedAgencyRequest = (Type,id,setLoading,setRelatedAgency,set
  })
  .then((res)=>{
      
-      const {relatedAgency} = res.data;
+      const { relatedAgency } = res.data;
 
-      if(res.data.error && !res.data.isLoggedin)
-      {
+      if(res.data.error && !res.data.isLoggedin){
         setLoggedin(false);
       }
-      else 
-      {
+      else{
         setRelatedAgency(relatedAgency)
         setLoading(false);
       }
@@ -542,5 +524,25 @@ export const makeRelatedAgencyRequest = (Type,id,setLoading,setRelatedAgency,set
  .catch((data)=>{
 
  })
+
+}
+
+
+export const makeStudentSearchRequest = ( Type , setStudent , setLoading  )=>{
+
+  setLoading(true);
+
+  axios[Type]('/api/register')
+  .then((res)=>{
+
+        const {students} =  res.data; 
+
+        setStudent(students);
+        setLoading(false);
+   
+  })
+  .catch(()=>{
+
+  })
 
 }

@@ -287,7 +287,6 @@ const Student = (props) => {
            <BackStage backStage={backStage} loading={!isModalOpen}   close={isModalOpen ? closeModal_1 : null}/>
 
            <SearchReportModal
-
            setMainSearchData={setSearchData}  
            setReports={setReports}
            setSelectedSubPage={setSelectedSubPage}  
@@ -296,9 +295,7 @@ const Student = (props) => {
            closeModalOnly = {setIsModalOpen} 
            setSubPagesCount={setSubPagesCount}
            setNotFound={setNotFound}
-           role={user.role}
-           
-           >
+           role={user.role} >
           
            </SearchReportModal>
 

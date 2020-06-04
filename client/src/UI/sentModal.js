@@ -83,13 +83,14 @@ const SentModal = React.memo(({backStage, type, closeModal, deleteUser}) => {
 
   if (backStage) //if there is no need to use eseffect or  useState pls dont use !
   {
-    modalY = {
-      display: 'flex'
-    };
+      modalY = {
+        display: 'flex'
+      };
+      
   } else if (!backStage) {
-    modalY = {
-      display: 'none'
-    };
+      modalY = {
+        display: 'none'
+      };
   }
 
   if(Object.keys(completedModalTexts).includes(type))

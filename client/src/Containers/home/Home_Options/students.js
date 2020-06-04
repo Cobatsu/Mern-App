@@ -5,6 +5,7 @@ import {UpdateLoggedin} from '../../isLoggedin/action'
 import {Route,Link} from 'react-router-dom'
 import Circle from '../../../UI/Circle'
 import {hasPermission,PermissionsNumbers,IconPermission} from '../../../UI/Permissions/permissionIcon'
+import { SearchStudentModal as SearchModal }  from '../../../UI/SearchModal/SearchStudent'
 
 const ListWrapper = styled.div`
 display:flex;
@@ -237,6 +238,7 @@ const _StudentList = ( { students } )=>{
   const [ notFound , setNotFound ] = useState(null);
 
   refs.current = refs.current.slice(0, students.length);
+
   for (let step = refs.current.length; step < students.length; step++) {
       refs.current[step] = createRef();  //we can use useRef with createRef  ! ;
   }
