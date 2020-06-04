@@ -277,7 +277,6 @@ const Student = (props) => {
 
   }
   
-  console.log(reports)
   return <UpdateLoggedin page='REPORT_LİST' {...props}>
     {
 
@@ -308,7 +307,7 @@ const Student = (props) => {
 
                 <SearchBox>
 
-                <div style={{ fontSize: 18}}> <i style={{ marginRight: 8 }} className="fas fa-file-alt"></i> RAPORLAR  </div>
+                  <div style={{ fontSize: 18}}> <i style={{ marginRight: 8 }} className="fas fa-file-alt"></i> Raporlar  </div>
 
                   <InnerSearch onClick={() => {
                   setBackstage(true);
@@ -328,9 +327,10 @@ const Student = (props) => {
         <Circle Load={loading} position='static' marginTop ={40} />
 
         :
+
         <React.Fragment>
             
-            {!notFound ?  <h1 style={{marginBottom:20,color:'lightblue',fontSize:16,color:'#52de97'}}>( {subPagesCount} ) Sonuç Bulundu </h1> : null }
+            <h1 style={{marginBottom:20,color:'lightblue',fontSize:16,color:'#52de97'}}>( {subPagesCount} ) Sonuç Bulundu </h1> 
             <ReportList reports={reports} id={user._id} currentRole={user.role}  notFound={notFound} refs={refs} SwitchRow={SwitchRow}/>
       
        <SubPagesContainer>

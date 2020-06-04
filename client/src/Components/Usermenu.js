@@ -54,7 +54,7 @@ const pathGenerator = ( item , id ) => ( {
 
    DETAİL_PATH:'/home/personel_listesi/' + item.desc.split(' ').join('_').toLowerCase() + '/' + id
 
-} )
+}  )
  
 
 

@@ -552,6 +552,7 @@ const General_User_Info = ({match,...rest})=>{
               { disable  ? null :
 
               <ButtonWrapper>
+                
                 <SubmitButton type='button' onClick={()=>{  //here we reset the all informations
                 setDisable((prev)=>true);
                 setUserInformations(reuseUser);

@@ -771,10 +771,12 @@ export const ChecBoxes = React.memo(({permissions,handler,tabShow,disabled,width
        var topItems =  document.querySelectorAll('.TopSpans span') ;
             
        var spanWithsLast = [ ...topItems ].map( ( item )=>{ return item.offsetWidth });
+
        setSpanWiths( spanWithsLast )
               
  },[ width ]);
   
+
   var checkBoxes = ( mainItem , item ) => spanWiths.map( ( width , index ) => {
 
     return <WidthCapsules width={ width } >
@@ -784,7 +786,6 @@ export const ChecBoxes = React.memo(({permissions,handler,tabShow,disabled,width
          </WidthCapsules>
   })
 
-  
 
   return <React.Fragment>
 
@@ -806,27 +807,25 @@ export const ChecBoxes = React.memo(({permissions,handler,tabShow,disabled,width
     { 
           Object.keys(permissions).map((mainItem,index)=>{      
 
-          return UserPermissions[Object.keys( UserPermissions)[tabShow]].map((item)=>{
+          return UserPermissions[Object.keys( UserPermissions )[ tabShow ]].map(( item )=>{
 
             return mainItem === item.split(' ').join('_')  ?  
               <InnerPermission key={item}>
 
-              <span style={{flex:0.2,fontSize:'13px',textAlign:'center'}}> {item}</span>
-                
-              <RadioWrapper >  
+                  <span style={{flex:0.2,fontSize:'13px',textAlign:'center'}}> {item}</span>
+                    
+                  <RadioWrapper >  
 
-                {
+                    {
+                        checkBoxes(mainItem,item)
+                    }  
 
-                  checkBoxes(mainItem,item)
-                  
-                }  
+                  </RadioWrapper>
 
-              </RadioWrapper>
+              </InnerPermission> 
 
-        </InnerPermission> 
-
-        : 
-        null
+            : 
+            null
 
           })
 

@@ -52,7 +52,7 @@ const PersonelListIconWrapper = styled.div`
   background:#ff6363;
 }
 font-size:8px;
-flex:0.2;
+flex:0.16;
 `
 const IconInnerSpan = styled.span`
 display:flex;
@@ -297,7 +297,7 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
 
                     <SearchBox>
 
-                                 <div style={{ fontSize: 18}}> <i style={{ marginRight: 8 }} className="fas fa-user-friends"></i>  { isOnlySubBranch  ? 'BAYİLER'  : 'PERSONELLER'}   </div>
+                                 <div style={{ fontSize: 18}}> <i style={{ marginRight: 8 }} className="fas fa-user-friends"></i>  { isOnlySubBranch  ? 'Bayiler'  : 'Personeller'}   </div>
 
                                   <InnerSearch onClick={() => {
                                     
@@ -311,18 +311,20 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
                     </SearchBox>
 
                     
-                    {!notFound ?  <h1 style={{marginBottom:20,color:'lightblue',fontSize:16,color:'#52de97'}}>( {subPagesCount} ) Sonuç Bulundu </h1> : null }
+                    <h1 style={{marginBottom:20,color:'lightblue',fontSize:16,color:'#52de97'}}>( { subPagesCount } ) Sonuç Bulundu </h1> 
                     
                     <_PersonelList currentRole = {user.role}  personels={personels} notFound={notFound} SwitchRow={SwitchRow} refs={refs} />
 
-        <SubPagesContainer>
-              {
-                subPageNumber > 1 && personels.length !== 0 && !notFound ?  new Array(subPageNumber).fill().map((item, index) => { 
-                return <SubPageItem  key={index} selected={ selectedSubPage === index }  onClick={() => nextPage(index)}>{index + 1}</SubPageItem>})
-                :
-                null
-              }
-        </SubPagesContainer>
+                    <SubPagesContainer>
+
+                          {
+                            subPageNumber > 1 && personels.length !== 0 && !notFound ?  new Array(subPageNumber).fill().map((item, index) => { 
+                            return <SubPageItem  key={index} selected={ selectedSubPage === index }  onClick={() => nextPage(index)}>{index + 1}</SubPageItem>})
+                            :
+                            null
+                          }
+                          
+                    </SubPagesContainer>
 
 
         </React.Fragment>     
@@ -425,7 +427,7 @@ export const _PersonelList = ({ personels,notFound,SwitchRow,refs,width,role,isP
                    
                   return <PersonelListIconWrapper key={Mainindex}>
                             
-                      <Link  to={'/home/personel_listesi/'+ subItem.desc.split(' ').join('_').toLowerCase() +'/'+ item._id} style={{display:'flex',flexFlow:'column',justifyContent:'center',alignItems:'center',padding:'6px',fontSize:'12px',color:'white', textDecoration:'none'}}>
+                      <Link  to={'/home/personel_listesi/'+ subItem.desc.split(' ').join('_').toLowerCase() +'/'+ item._id} style={{display:'flex',width:'100%',height:'100%',flexFlow:'column',justifyContent:'center',alignItems:'center',padding:'6px',fontSize:'11.5px',color:'white', textDecoration:'none'}}>
                           {subItem.Icon}
                           <span>{subItem.desc}</span>
                       </Link>
@@ -439,15 +441,18 @@ export const _PersonelList = ({ personels,notFound,SwitchRow,refs,width,role,isP
 
 
           <IconInnerSpan  onClick={SwitchRow(0,refs.current[index])}   style={{flex:'0.1'}}>
+
                     <SwitchButton>
                         <i className="fas fa-arrow-circle-right"></i>
                     </SwitchButton>  
+
           </IconInnerSpan>
 
       </PersonelListItemInnerWrapper>
 
 
       </PersonelListItem>
+
       })
 
       }
