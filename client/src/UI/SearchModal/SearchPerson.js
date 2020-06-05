@@ -85,7 +85,7 @@ const initialSearchState = {
  gender:'',
 }
 
-export const  SearchPersonModal = React.memo(({isOpen,close,role,closeModalOnly,setReports ,setSubPagesCount,setNotFound, setMainSearchData , setSelectedSubPage , isOnlySubBranch , id}) => {
+export const  SearchPersonModal = React.memo(({isOpen,close,role,closeModalOnly,setReports ,setSubPagesCount,setNotFound, setMainSearchData  , isOnlySubBranch , id}) => {
   
     const [searchData,setSearchData] = useState (initialSearchState);
     const [date,setDate] = useState(null);
@@ -109,9 +109,7 @@ export const  SearchPersonModal = React.memo(({isOpen,close,role,closeModalOnly,
         e.preventDefault();
 
         closeModalOnly(false);
-        setSelectedSubPage(0);
-       
-
+        
         let  searchMainData = {...searchData};
 
         for (const key in searchMainData){

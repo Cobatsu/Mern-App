@@ -197,7 +197,7 @@ const TopRows  =  [
   '',
 ]
 
-const PersonelOptions = [
+var  PersonelOptions = [
   {desc:'Genel Bilgiler',Icon:<i className="fas fa-user-friends"></i>},
   {desc:'Bayiler',Icon:<i    className="fas fa-code-branch"/>},
   {desc:'Raporlar',Icon:<i   className="fas fa-sticky-note"></i>},
@@ -213,37 +213,39 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [subPagesCount, setSubPagesCount] = useState(0);
   const [searchData, setSearchData] = useState({});
-  const [selectedSubPage, setSelectedSubPage] = useState(0);
   const [ notFound , setNotFound ] = useState();
 
-  const {isLoggedinf} = useContext(Context);
+  const {isLoggedinf,user} = useContext(Context);
+
+  console.log(user.role)
 
   const closeModal_1 = () => {
     setIsModalOpen(false);
     setBackstage(false);
   }
    
- 
-  const tableInformations = (item)=> {
-      
+  if( user.role !== 'Admin' &&  user.role ) {
+    
+    PersonelOptions = PersonelOptions.filter(({desc})=> desc !== 'Yetkiler' ) ;
+
+  }
+  const tableInformations = ( item )=> {
     return [
+
       item.firstName,
       item.lastName,
       item.role,
-      item.region,
+      item.role === 'Admin' ? '—' : item.region,
       item.contractDate
-    ] 
 
+    ] 
   }  
 
   const pathGenerator = ( item , id ) => '/home/personel_listesi/' + item.split(' ').join('_').toLowerCase() + '/' + id 
 
- 
   const nextPage = (page)=>{
 
-    setSelectedSubPage(page);
-    setLoading(true);
-    
+    setLoading(true);    
           makePersonSearchRequest('post', {
             ...searchData,
             pageNumber: page
@@ -253,10 +255,14 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
  // we can also  use useRef hook for storing value or objects; 
 
     return <UpdateLoggedin page='PERSONEL_LİST' {...rest}  >
+
       {
           ( Loading , user )=> Loading 
+
           ?
-          null       
+
+          null 
+                
           :
               <ListWrapper> 
 
@@ -268,7 +274,6 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
                         id= {user._id}
                         setMainSearchData={setSearchData}  
                         setReports={setPersonels}
-                        setSelectedSubPage={setSelectedSubPage}  
                         isOpen ={isModalOpen} 
                         close={closeModal_1} 
                         closeModalOnly = {setIsModalOpen} 
@@ -278,7 +283,6 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
                
                         
                       <GeneralList 
-
                         data = { personels } 
                         topTitles = {TopRows} 
                         mainTitle = {isOnlySubBranch ? 'Bayiler' : 'Personeller'} 
@@ -292,7 +296,6 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
                         subPagesCount = {subPagesCount}
                         notFoundText ='Herhangi Bir Sonuç Bulunamadı.'
                         notFound = {notFound}
-                        path = {'/home/personel_listesi'}
                         pathGenerator = {pathGenerator}  />
 
           </ListWrapper>

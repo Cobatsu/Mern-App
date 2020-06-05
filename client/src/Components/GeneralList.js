@@ -160,7 +160,7 @@ cursor:pointer;
 }
 `
 
-const GeneralList = ( { data , topTitles , iconOptions , tableInformations , mainTitle , titleIcon , nextPage , setIsModalOpen , setBackstage , notFound , subPagesCount , notFoundText , loading , pathGenerator  } )=>{
+const GeneralList = ( { data , topTitles , iconOptions , tableInformations , mainTitle , titleIcon , nextPage , setIsModalOpen , setBackstage , notFound , subPagesCount , notFoundText , loading , pathGenerator , width  } )=>{
 
     const refs = useRef([]);  // we can also  use useRef hook for storing value or objects; 
     const [selectedSubPage, setSelectedSubPage] = useState(0);
@@ -189,25 +189,28 @@ const GeneralList = ( { data , topTitles , iconOptions , tableInformations , mai
   
     return   <HiddenWrapper>
   
-              <SearchBox>
-  
-                  <div style={{ fontSize: 18}}> {titleIcon} {mainTitle}   </div>
-  
-                  <InnerSearch onClick={() => {
+            {
+                mainTitle &&  <SearchBox>
+    
+                    <div style={{ fontSize: 18}}> {titleIcon} {mainTitle}   </div>
+    
+                    <InnerSearch onClick={() => {
+                        
+                        setBackstage(true);
+                        setIsModalOpen(true);
+    
+                    }}> <i className="fas  fa-search "></i> ARAMA YAP 
                     
-                    setBackstage(true);
-                    setIsModalOpen(true);
+                    </InnerSearch>
+    
+                </SearchBox> 
+
+            }  
   
-                  }}> <i className="fas  fa-search "></i> ARAMA YAP 
-                  
-                  </InnerSearch>
-  
-              </SearchBox>
-  
-              <h1 style={{marginBottom:20,color:'lightblue',fontSize:16,color:'#52de97'}}>( { subPagesCount } ) Sonuç Bulundu </h1> 
+              <h1 style={ { marginBottom:20,color:'lightblue',fontSize:16,color:'#52de97' } }>( { subPagesCount || 0 } ) Sonuç Bulundu </h1> 
       
         {
-                loading ? <Circle position='static' marginTop={50} Load = {loading}  /> : <StudentList>   
+                loading ? <Circle position='static' marginTop={50} Load = {loading}  /> : <StudentList width={width} >   
                     
                     <StudentListItem>
                     
@@ -241,8 +244,8 @@ const GeneralList = ( { data , topTitles , iconOptions , tableInformations , mai
                   <StudentListItemInnerWrapper>
                           
                       {
-                            tableInformations(mainItem).map(( info , index )=>{
-                                return <InnerSpan>{info}</InnerSpan>
+                            tableInformations( mainItem ).map(( info , index )=>{
+                                return <InnerSpan key={ mainItem._id + index } >{info}</InnerSpan>
                             })
                       }
                   
@@ -265,7 +268,7 @@ const GeneralList = ( { data , topTitles , iconOptions , tableInformations , mai
                     {
                           iconOptions.map((item,Mainindex)=>{
   
-                              return   <StudentListIconWrapper key={Mainindex}>
+                              return   <StudentListIconWrapper key={item.desc} >
                                       
                                     <Link  to={ pathGenerator( item.desc , mainItem._id ) } style={{display:'flex',width:'100%',height:'100%',flexFlow:'column',justifyContent:'center',alignItems:'center',padding:'6px',fontSize:'11.5px',color:'white', textDecoration:'none'}}>
 
