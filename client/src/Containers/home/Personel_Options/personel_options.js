@@ -502,14 +502,14 @@ const General_User_Info = ({match,...rest})=>{
                    } />
 
                   <Route path='/home/personel_listesi/raporlar/:id' exact render={()=><InputsWrapper style={{alignSelf:'stretch',justifyContent:'flex-start'}}>  
-                            <PersonelReports role={userInformations.role}    id={match.params.id} setLoggedin={context.isLoggedinf} currentID={user._id} />                
+                            <PersonelReports role={userInformations.role}    id={match.params.id} setLoggedin={context.isLoggedinf} currentID={user._id}  currentRole = {user.role} />                
                    </InputsWrapper> 
                   }
                   />
 
 
                   <Route path='/home/personel_listesi/bayiler/:id' exact render={()=><InputsWrapper style={{alignSelf:'stretch',justifyContent:'flex-start'}}>  
-                            <PersonelSubBranches role={userInformations.role}   id={match.params.id} setLoggedin={context.isLoggedinf} currentID={user._id} />                
+                            <PersonelSubBranches role={userInformations.role}   id={match.params.id} setLoggedin={context.isLoggedinf} currentID={user._id} currentRole = {user.role} />                
                    </InputsWrapper> 
                   }
                   />
@@ -618,7 +618,7 @@ export const PersonelReports = ( { id , setLoggedin , role , notFoundText  , cur
 
 
 
-export const PersonelSubBranches = ({ id , setLoggedin , role , notFoundText  })=>{
+export const PersonelSubBranches = ({ id , setLoggedin , role , notFoundText , currentRole  })=>{
     
   const [ subBranches, setSubBranches ] = useState([]);
   const [ notFound , setNotFound ] = useState(null);
@@ -635,12 +635,13 @@ export const PersonelSubBranches = ({ id , setLoggedin , role , notFoundText  })
     '',
   ]
   
-  const PersonelOptions = [
+  var  PersonelOptions = [
     {desc:'Genel Bilgiler',Icon:<i className="fas fa-user-friends"></i>},
     {desc:'Bayiler',Icon:<i    className="fas fa-code-branch"/>},
     {desc:'Raporlar',Icon:<i   className="fas fa-sticky-note"></i>},
     {desc:'Yetkiler',Icon: <i  className="fas fa-unlock"></i>}, ]
 
+  if( currentRole !== 'Admin' &&  currentRole ) PersonelOptions = PersonelOptions.filter(({desc})=> desc !== 'Yetkiler' ) ;
 
   const tableInformations = (item)=> {
       

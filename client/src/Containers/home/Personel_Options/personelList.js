@@ -64,21 +64,15 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
     setBackstage(false);
   }
    
-  if( user.role !== 'Admin' &&  user.role ) {
-    
-    PersonelOptions = PersonelOptions.filter(({desc})=> desc !== 'Yetkiler' ) ;
+  if( user.role !== 'Admin' &&  user.role ) PersonelOptions = PersonelOptions.filter(({desc})=> desc !== 'Yetkiler' ) ;
 
-  }
   const tableInformations = ( item )=> {
     return [
-
       item.firstName,
       item.lastName,
       item.role,
       item.role === 'Admin' ? '—' : item.region,
-      item.contractDate
-
-    ] 
+      item.contractDate ] 
   }  
 
   const pathGenerator = ( item , id ) => '/home/personel_listesi/' + item.split(' ').join('_').toLowerCase() + '/' + id 
@@ -144,9 +138,6 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
 
     </UpdateLoggedin>
 }
-
-
-
 
 
 export default PersonelList ; 
