@@ -229,7 +229,7 @@ const Student =(props)=>{
   </UpdateLoggedin> 
 }
 
-const _StudentList = ( { students } )=>{
+const _StudentList = ( { students } ) => {
 
   const refs = useRef([]);  // we can also  use useRef hook for storing value or objects; 
   const [backStage, setBackstage] = useState(false);
