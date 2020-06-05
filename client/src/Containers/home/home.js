@@ -27,13 +27,13 @@ class  Home extends React.Component{
               <Nav {...this.props} {...this.context}/>
             <Switch>
               
-              <Route path={'/home/ön_kayıt'}  exact  component={Student}/>  
+              {/* <Route path={'/home/ön_kayıt'}  exact  component={Student}/>   */}
               <Route path={'/home'}  exact  component={MainPage}/> 
               <Route path={'/home/personel_listesi'} exact   render={(props)=><PersonelList {...props} isOnlySubBranch={false}  />}/>
               <Route path={'/home/bayi_listesi'} exact render={(props)=> <PersonelList {...props}  isOnlySubBranch={true} />} />
               <Route path={'/home/personel_ekle'} exact component={AddPerson}/>
               <Route path={'/home/profil'}  exact component={Profile}/>
-              <Route path={'/home/öğrenciler/ön_kayıt_bilgileri/:id'} exact component={Pre_Register_Info}/>
+              {/* <Route path={'/home/öğrenciler/ön_kayıt_bilgileri/:id'} exact component={Pre_Register_Info}/> */}
               <Route path={'/home/personel_listesi/:desc/:id'}  exact  component={Personel_options}/>
               <Route path={'/home/profil/:desc'} exact component={Profile} />
               <Route path={'/home/rapor_ekle'} exact component={AddReport} />
@@ -48,6 +48,7 @@ class  Home extends React.Component{
                }
 
             </Switch>   
+
           </React.Fragment>
        )  
          
