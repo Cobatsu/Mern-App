@@ -93,7 +93,7 @@ const initialSearchState2 = {
  whoseDocument:'',
 }
 
-export const  SearchReportModal = React.memo(( { isOpen , close , role , closeModalOnly , setReports , setSubPagesCount , setNotFound, setMainSearchData , setSelectedSubPage }) => {
+export const  SearchReportModal = React.memo(( { isOpen , close , role , closeModalOnly , setReports , setSubPagesCount , setNotFound, setMainSearchData  }) => {
   
     const [searchData,setSearchData] = useState (null);
     const [date,setDate] = useState(null);
@@ -115,10 +115,10 @@ export const  SearchReportModal = React.memo(( { isOpen , close , role , closeMo
     }, [date2])
   
     const searchSubmitHandler = (e)=>{
+        
         e.preventDefault();
 
         closeModalOnly(false);
-        setSelectedSubPage(0);
         
         const searchMainData = {...searchData};
 

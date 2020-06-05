@@ -19,6 +19,7 @@ import {Admin,Temsilci,Bayi} from './statusArrays/statusArray'
 import {_PersonelList} from  './personelList'
 import UserMenu from '../../../Components/Usermenu'
 import {useViewport} from '../../home/navs/customHooks/viewPortHook'
+import GeneralList from '../../../Components/GeneralList'
 
 const MainWrapper = styled.form`
 display:flex;
@@ -35,21 +36,6 @@ flex-flow:column;
 @media (max-width: 1030px) {
   padding:10px;
 }
-`
-
-const HiddenWrapper = styled.div`
-width:100%;
-@media (max-width: 900px) {  
-  min-width:900px;
-  max-width:900px;
-  position:absolute;
-  left:0;
-}
-flex-direction:column;
-align-items:center;
-position:relative;
-display:flex;
-justify-content:center;
 `
 
 
@@ -145,37 +131,19 @@ margin-right:10px;
     cursor:pointer;
 }
 `
-//--------------------------------------
 
 
-//-------------------------------------
-const SubPagesContainer = styled.div`
+
+const Capsule = styled.div`
 display:flex;
-justify-content:center;
-width:100%;
-margin-top:20px;
-align-items:center;
-padding:10px 0;
-`
-
-const SubPageItem = styled.div`
-margin-right:8px;
-border-radius:2px;
-display:flex;
-width:5px;
-height:5px;
-padding:11px;
-color:${({selected}) => selected ? 'white' : 'grey'};
 align-items:center;
 justify-content:center;
-box-shadow:0 0px 4px  black;
-background:${({selected}) => selected ? '#f57170' : 'white'};
-&:hover{
-cursor:pointer;
-}
-
+border-radius:4px;
+background:#f57b51;
+color:white;
+font-size:12.5px;
+padding:6px;
 `
-
 
 
 //---------------------------------
@@ -534,14 +502,14 @@ const General_User_Info = ({match,...rest})=>{
                    } />
 
                   <Route path='/home/personel_listesi/raporlar/:id' exact render={()=><InputsWrapper style={{alignSelf:'stretch',justifyContent:'flex-start'}}>  
-                            <PersonelReports role={userInformations.role} currentRole={user.role}   id={match.params.id} setLoggedin={context.isLoggedinf} />                
+                            <PersonelReports role={userInformations.role}    id={match.params.id} setLoggedin={context.isLoggedinf} currentID={user._id}  currentRole = {user.role} />                
                    </InputsWrapper> 
                   }
                   />
 
 
                   <Route path='/home/personel_listesi/bayiler/:id' exact render={()=><InputsWrapper style={{alignSelf:'stretch',justifyContent:'flex-start'}}>  
-                            <PersonelSubBranches role={userInformations.role} currentRole={user.role}  id={match.params.id} setLoggedin={context.isLoggedinf} />                
+                            <PersonelSubBranches role={userInformations.role}   id={match.params.id} setLoggedin={context.isLoggedinf} currentID={user._id} currentRole = {user.role} />                
                    </InputsWrapper> 
                   }
                   />
@@ -575,25 +543,45 @@ const General_User_Info = ({match,...rest})=>{
 
 }
 
-export const PersonelReports = ({ id , setLoggedin , role , currentRole , isProfil , currentID })=>{
+export const PersonelReports = ( { id , setLoggedin , role , notFoundText  , currentID } )=>{
     
   const [reports, setReports] = useState([]);
   const [ notFound , setNotFound ] = useState(null);
   const [subPagesCount , setSubPagesCount] = useState(null);
   const [selectedSubPage, setSelectedSubPage] = useState(0);
   const [loading,setLoading] = useState(true);
-  const refs = useRef([]);
   
-  let subPagesLength  = Math.ceil(subPagesCount/10);
+  const TopRows = [
+    'Görüşülen Kişi',
+    'Telefon Numarası',
+    'Görüşme Tipi',
+    'Görüşme Tarihi',
+    'Gönderen Kişi',
+    '',
+  ]
+  
+  const reportOptions = [
+    {
+      desc: 'Görüşme Bilgileri',
+      Icon: <i className="fas fa-user-friends"></i>
+    },
+  ]
 
+  
+  const tableInformations = (item)=> {
+      
+    return [
+      item.relatedPersonName,
+      item.relatedPersonPhoneNumber,
+      item.reportType === 'schoolReport' ? 'Okul Görüşmesi' : 'Öğrenci Görüşmesi'  ,
+      item.meetingDate,
+      item.userID == currentID  ? <Capsule> {item.whoseDocument} </Capsule> : item.whoseDocument
+    ] 
 
-
-  refs.current = refs.current.slice(0, reports.length);
-
-  for (let step = refs.current.length; step < reports.length; step++) {
-    refs.current[step] = createRef(); //we can use useRef with createRef  ! ;
   }
-  
+
+  const pathGenerator = ( item , id )=> '/home/raporlar/' + id ; 
+
   const nextPage = (page) => {
 
     setSelectedSubPage(page);
@@ -607,67 +595,68 @@ export const PersonelReports = ({ id , setLoggedin , role , currentRole , isProf
 
   }
 
-
-  const SwitchRow = (Amount, ref) => event => {
-
-    ref.current.style.transform = `translateX(${Amount}%)`
-
-    if (Amount == -50)
-      for (let i = 0; i < refs.current.length; i++) {
-        if (i !== refs.current.indexOf(ref) && refs.current[i].current) //close all other list items ; 
-        {
-          refs.current[i].current.style.transform = `translateX(0)`
-        }
-    }
-
-  }
-   
   useEffect(()=>{
     if(role) makeReportSearchRequest('post', { personelReportID:id , role:role  } ,setLoggedin,setReports,()=>{},setSubPagesCount,setLoading,setNotFound);
   },[role])
     
-  return loading ? 
-   <Circle Load={loading}  position='static'/>
-  :
-  <HiddenWrapper>
-    
-    {!notFound ? <h1 style={{marginBottom:20,color:'lightblue',fontSize:16,color:'#52de97'}}>({subPagesCount}) Sonuç Bulundu</h1> : null}
-    <ReportList isProfil={isProfil}  width={775} id={currentID} detailID={id} refs={refs} reports={reports} role={role} currentRole={currentRole} notFound={notFound} SwitchRow={SwitchRow}  />
-
-    <SubPagesContainer>
-      
-          {
-          subPagesLength > 1 && reports !== 0 && !notFound ?  new Array(subPagesLength).fill().map((item, index) => {
-          return <SubPageItem  key={index} selected={selectedSubPage === index}  onClick={() => nextPage(index)}>{index + 1}</SubPageItem>})
-          :
-          null
-          }
-
-    </SubPagesContainer>
-
-  </HiddenWrapper>
+  return <GeneralList 
+   
+    width = {780}
+    data = { reports } 
+    topTitles = {TopRows} 
+    loading = {loading} 
+    nextPage = {nextPage}
+    tableInformations = {tableInformations}
+    iconOptions = {reportOptions}
+    subPagesCount = {subPagesCount}
+    notFoundText = { notFoundText || `Bu ${role}ye Ait Rapor Bulunmamaktadir`}
+    notFound = {notFound}
+    path = {'/home/personel_listesi'}
+    pathGenerator = {pathGenerator}  />
 
 }
 
 
-export const PersonelSubBranches = ({id,setLoggedin,role,isProfil,currentRole})=>{
+
+export const PersonelSubBranches = ({ id , setLoggedin , role , notFoundText , currentRole  })=>{
     
-  const [subBranches, setSubBranches] = useState([]);
+  const [ subBranches, setSubBranches ] = useState([]);
   const [ notFound , setNotFound ] = useState(null);
-  const [subPagesCount , setSubPagesCount] = useState(null);
-  const [selectedSubPage, setSelectedSubPage] = useState(0);
-  const [loading,setLoading] = useState(true);
-  const refs = useRef([]);
+  const [ subPagesCount , setSubPagesCount ] = useState(null);
+  const [ selectedSubPage, setSelectedSubPage ] = useState(0);
+  const [ loading,setLoading ] = useState(true);
  
-
-  let subPagesLength = Math.ceil(subPagesCount/10);
-
-  refs.current = refs.current.slice(0, subBranches.length);
-
-  for (let step = refs.current.length; step < subBranches.length; step++) {
-    refs.current[step] = createRef(); //we can use useRef with createRef  ! ;
-  }
+  const TopRows  =  [
+    'İsim',
+    'Soy İsim',
+    'Rol',
+    'Bölge',
+    'Sözleşme Tarihi',
+    '',
+  ]
   
+  var  PersonelOptions = [
+    {desc:'Genel Bilgiler',Icon:<i className="fas fa-user-friends"></i>},
+    {desc:'Bayiler',Icon:<i    className="fas fa-code-branch"/>},
+    {desc:'Raporlar',Icon:<i   className="fas fa-sticky-note"></i>},
+    {desc:'Yetkiler',Icon: <i  className="fas fa-unlock"></i>}, ]
+
+  if( currentRole !== 'Admin' &&  currentRole ) PersonelOptions = PersonelOptions.filter(({desc})=> desc !== 'Yetkiler' ) ;
+
+  const tableInformations = (item)=> {
+      
+    return [
+      item.firstName,
+      item.lastName,
+      item.role,
+      item.region,
+      item.contractDate
+    ] 
+
+  } 
+
+  const pathGenerator = ( item , id ) => '/home/personel_listesi/' + item.split(' ').join('_').toLowerCase() + '/' + id
+
   const nextPage = (page) => {
 
     setSelectedSubPage(page);
@@ -680,44 +669,25 @@ export const PersonelSubBranches = ({id,setLoggedin,role,isProfil,currentRole})=
 
   }
 
-  const SwitchRow = (Amount, ref) => event => {
-
-    ref.current.style.transform = `translateX(${Amount}%)`
-
-    if (Amount == -50)
-      for (let i = 0; i < refs.current.length; i++) {
-        if (i !== refs.current.indexOf(ref) && refs.current[i].current) //close all other list items ; 
-        {
-          refs.current[i].current.style.transform = `translateX(0)`
-        }
-    }
-  }
-   
   useEffect(()=>{
     makePersonSearchRequest('post',{relatedAgencyID:id},setLoggedin,setSubBranches,()=>{},setSubPagesCount,setLoading,setNotFound);
   },[])
     
-  return loading ? 
-   <Circle Load={loading}  position='static'/>
-  :
-  <HiddenWrapper>
+  return <GeneralList 
+   
+    width = {780}
+    data = { subBranches } 
+    topTitles = {TopRows} 
+    loading = {loading} 
+    nextPage = {nextPage}
+    tableInformations = {tableInformations}
+    iconOptions = {PersonelOptions}
+    subPagesCount = {subPagesCount}
+    notFoundText ={ notFoundText || `Bu ${role}ye Bagli Bir  Bayi  Bulunmamaktadir`}
+    notFound = {notFound}
+    path = {'/home/personel_listesi'}
+    pathGenerator = {pathGenerator}  />
 
-     {!notFound ? <h1 style={{marginBottom:20,color:'lightblue',fontSize:16,color:'#52de97'}}>({subPagesCount}) Sonuç Bulundu </h1> : null}
-    
-    <_PersonelList currentRole={currentRole}  width={775} refs={refs} role={role} personels={subBranches} isProfil={isProfil}  notFound={notFound} SwitchRow={SwitchRow} userProfile={true}  />
-
-    <SubPagesContainer>
-      
-          {
-          subPagesLength > 1 && subBranches !== 0 && !notFound ?  new Array(subPagesLength).fill().map((item, index) => {
-          return <SubPageItem  key={index} selected={selectedSubPage === index}  onClick={() => nextPage(index)}>{index + 1}</SubPageItem>})
-          :
-          null
-          }
-
-    </SubPagesContainer>
-
-  </HiddenWrapper>
 }
 
 
