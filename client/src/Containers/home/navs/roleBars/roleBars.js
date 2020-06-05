@@ -4,6 +4,7 @@ export const Admin = ()=>{
         {type:'Rapor',props:['Raporlar']},
         {type:'Öğrenci',props:['Ön Kayıt']},
     ]
+
 }
 
 export const Bayi = ()=>{
