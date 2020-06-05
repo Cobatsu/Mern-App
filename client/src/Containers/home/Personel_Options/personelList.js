@@ -7,6 +7,7 @@ import Circle from '../../../UI/Circle'
 import BackStage from '../../../UI/backStage'
 import {SearchPersonModal as SearchModal} from '../../../UI/SearchModal/SearchPerson'
 import { Context } from '../../../Context/Context';
+import GeneralList from '../../../Components/GeneralList'
 
 const ListWrapper = styled.div`
 display:flex;
@@ -213,36 +214,31 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
   const [subPagesCount, setSubPagesCount] = useState(0);
   const [searchData, setSearchData] = useState({});
   const [selectedSubPage, setSelectedSubPage] = useState(0);
-  const [ notFound , setNotFound ] = useState(null);
-  
-  let subPageNumber =  Math.ceil(subPagesCount/10);
+  const [ notFound , setNotFound ] = useState();
 
   const {isLoggedinf} = useContext(Context);
 
-  const refs = useRef([]);  
-  refs.current = refs.current.slice(0, personels.length);
-  for (let step = refs.current.length; step < personels.length; step++) {
-      refs.current[step] = createRef();  //we can use useRef with createRef  ! ;
-  }
-  
   const closeModal_1 = () => {
     setIsModalOpen(false);
     setBackstage(false);
   }
    
-  const SwitchRow = (Amount,ref)=>event=>{
-    ref.current.style.transform = `translateX(${Amount}%)`
-   if(Amount==-50)  
-      for(let i = 0 ; i<refs.current.length ; i++)
-      {
-            if(i !== refs.current.indexOf(ref) && refs.current[i].current)  //close all other list items ; 
-            {
-              refs.current[i].current.style.transform=`translateX(0)`
-            }
-      }
-  }
-   
+ 
+  const tableInformations = (item)=> {
+      
+    return [
+      item.firstName,
+      item.lastName,
+      item.role,
+      item.region,
+      item.contractDate
+    ] 
 
+  }  
+
+  const pathGenerator = ( item , id ) => '/home/personel_listesi/' + item.split(' ').join('_').toLowerCase() + '/' + id 
+
+ 
   const nextPage = (page)=>{
 
     setSelectedSubPage(page);
@@ -268,97 +264,67 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
 
                       <SearchModal
 
-                      isOnlySubBranch={isOnlySubBranch}
-                      id= {user._id}
-                      setMainSearchData={setSearchData}  
-                      setReports={setPersonels}
-                      setSelectedSubPage={setSelectedSubPage}  
-                      isOpen ={isModalOpen} 
-                      close={closeModal_1} 
-                      closeModalOnly = {setIsModalOpen} 
-                      setSubPagesCount={setSubPagesCount}
-                      setNotFound={setNotFound}
-                      role={user.role}
-
-                      >
-
-                      </SearchModal>
+                        isOnlySubBranch={isOnlySubBranch}
+                        id= {user._id}
+                        setMainSearchData={setSearchData}  
+                        setReports={setPersonels}
+                        setSelectedSubPage={setSelectedSubPage}  
+                        isOpen ={isModalOpen} 
+                        close={closeModal_1} 
+                        closeModalOnly = {setIsModalOpen} 
+                        setSubPagesCount={setSubPagesCount}
+                        setNotFound={setNotFound}
+                        role={user.role} />
                
-                    <HiddenWrapper>            
-      {
+                        
+                      <GeneralList 
 
-                  loading
+                        data = { personels } 
+                        topTitles = {TopRows} 
+                        mainTitle = {isOnlySubBranch ? 'Bayiler' : 'Personeller'} 
+                        titleIcon = {<i style={{ marginRight: 8 }} className="fas fa-user-friends"></i>} 
+                        loading = {loading} 
+                        nextPage = {nextPage}
+                        tableInformations = {tableInformations}
+                        setIsModalOpen = {setIsModalOpen}
+                        setBackstage = {setBackstage}
+                        iconOptions = {PersonelOptions}
+                        subPagesCount = {subPagesCount}
+                        notFoundText ='Herhangi Bir Sonuç Bulunamadı.'
+                        notFound = {notFound}
+                        path = {'/home/personel_listesi'}
+                        pathGenerator = {pathGenerator}  />
 
-                  ?
-                      <Circle Load={loading} position='static' marginTop={30}/>    
-                  :
-
-                  <React.Fragment>
-
-                    <SearchBox>
-
-                                 <div style={{ fontSize: 18}}> <i style={{ marginRight: 8 }} className="fas fa-user-friends"></i>  { isOnlySubBranch  ? 'Bayiler'  : 'Personeller'}   </div>
-
-                                  <InnerSearch onClick={() => {
-                                    
-                                    setBackstage(true);
-                                    setIsModalOpen(true)
-
-                                  }}> <i className="fas  fa-search "></i> ARAMA YAP 
-                                  
-                                  </InnerSearch>
-
-                    </SearchBox>
-
-                    
-                    <h1 style={{marginBottom:20,color:'lightblue',fontSize:16,color:'#52de97'}}>( { subPagesCount } ) Sonuç Bulundu </h1> 
-                    
-                    <_PersonelList currentRole = {user.role}  personels={personels} notFound={notFound} SwitchRow={SwitchRow} refs={refs} />
-
-                    <SubPagesContainer>
-
-                          {
-                            subPageNumber > 1 && personels.length !== 0 && !notFound ?  new Array(subPageNumber).fill().map((item, index) => { 
-                            return <SubPageItem  key={index} selected={ selectedSubPage === index }  onClick={() => nextPage(index)}>{index + 1}</SubPageItem>})
-                            :
-                            null
-                          }
-                          
-                    </SubPagesContainer>
-
-
-        </React.Fragment>     
-      }
-               
-            </HiddenWrapper>
           </ListWrapper>
 
-        
       }
+
     </UpdateLoggedin>
 }
 
+
+
 export const _PersonelList = ({ personels,notFound,SwitchRow,refs,width,role,isProfil,currentRole })=>{
-           
-       
-        if( role && !isProfil )
-        {
-
-           var notFoundText = `Henüz , Bu ${role}ye Bağlı  Bir Bayi  Bulunmamaktadır.`
-
-        }
-        else if( isProfil )
-        {
-
-           var notFoundText = `Henüz , Size  Bağlı  Bir Bayi  Bulunmamaktadır.`
-
-        }
-        else
-        {
-
-            var notFoundText = `Herhangi Bir Sonuç Bulunamadı.`
-
-        }
+                  
+          if( role && !isProfil )
+          {
+          
+            var notFoundText = `Henüz , Bu ${role}ye Bağlı  Bir Bayi  Bulunmamaktadır.`
+          
+          }
+          else if( isProfil )
+          {
+          
+            var notFoundText = `Henüz , Size  Bağlı  Bir Bayi  Bulunmamaktadır.`
+          
+          }
+          else
+          {
+          
+              var notFoundText = `Herhangi Bir Sonuç Bulunamadı.`
+          
+          }
+    
 
         return  <PersonelList_ width={width}>
 

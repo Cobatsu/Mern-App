@@ -8,7 +8,7 @@ import Circle from '../../../UI/Circle'
 import BackStage from '../../../UI/backStage'
 import { hasPermission, PermissionsNumbers, IconPermission } from '../../../UI/Permissions/permissionIcon'
 import { SearchReportModal } from '../../../UI/SearchModal/SearchReport';
-
+import GeneralList from '../../../Components/GeneralList'
 
 const ListWrapper = styled.div`
 display:flex;
@@ -234,34 +234,26 @@ const Student = (props) => {
   const [selectedSubPage, setSelectedSubPage] = useState(0);
   const [ notFound , setNotFound ] = useState(null);
 
-  const refs = useRef([]); // we can also  use useRef hook for storing value or objects; 
-
   const {isLoggedinf,user} = useContext(Context);
   
-  refs.current = refs.current.slice(0, reports.length);
-  for (let step = refs.current.length; step < reports.length; step++) {
-    refs.current[step] = createRef(); //we can use useRef with createRef  ! ;
-  }
-  
-  let subPageNumber  = Math.ceil(subPagesCount/10);
-  
+
+  const tableInformations = (item)=> {
+      
+    return [
+      item.relatedPersonName,
+      item.relatedPersonPhoneNumber,
+      item.reportType === 'schoolReport' ? 'Okul Görüşmesi' : 'Öğrenci Görüşmesi'  ,
+      item.meetingDate,
+      item.whoseDocument
+    ] 
+
+  }  
+
+  const pathGenerator = ( item , id )=> '/home/raporlar/' + id ; 
+
   const closeModal_1 = () => {
     setIsModalOpen(false);
     setBackstage(false);
-  }
-
-  const SwitchRow = (Amount, ref) => event => {
-
-    ref.current.style.transform = `translateX(${Amount}%)`
-
-    if (Amount == -50)
-      for (let i = 0; i < refs.current.length; i++) {
-        if (i !== refs.current.indexOf(ref) && refs.current[i].current) //close all other list items ; 
-        {
-          refs.current[i].current.style.transform = `translateX(0)`
-        }
-    }
-
   }
 
   const nextPage = (page) => {
@@ -284,72 +276,43 @@ const Student = (props) => {
 
       <ListWrapper> 
            
-           <BackStage backStage={backStage} loading={!isModalOpen}   close={isModalOpen ? closeModal_1 : null}/>
+                    <BackStage backStage={backStage} loading={!isModalOpen}   close={isModalOpen ? closeModal_1 : null}/>
 
-           <SearchReportModal
-           setMainSearchData={setSearchData}  
-           setReports={setReports}
-           setSelectedSubPage={setSelectedSubPage}  
-           isOpen ={isModalOpen} 
-           close={closeModal_1} 
-           closeModalOnly = {setIsModalOpen} 
-           setSubPagesCount={setSubPagesCount}
-           setNotFound={setNotFound}
-           role={user.role} >
+                    <SearchReportModal
+                    setMainSearchData={setSearchData}  
+                    setReports={setReports}
+                    setSelectedSubPage={setSelectedSubPage}  
+                    isOpen ={isModalOpen} 
+                    close={closeModal_1} 
+                    closeModalOnly = {setIsModalOpen} 
+                    setSubPagesCount={setSubPagesCount}
+                    setNotFound={setNotFound}
+                    role={user.role} >
+                    
+                    </SearchReportModal>
+
           
-           </SearchReportModal>
+                    <GeneralList 
 
-          
-          <HiddenWrapper>
+                        data = { reports } 
+                        topTitles = {TopRows} 
+                        mainTitle = 'Raporlar' 
+                        titleIcon = {<i style={{ marginRight: 8 }} className="fas fa-user-friends"></i>} 
+                        loading = {loading} 
+                        nextPage = {nextPage}
+                        tableInformations = {tableInformations}
+                        setIsModalOpen = {setIsModalOpen}
+                        setBackstage = {setBackstage}
+                        iconOptions = {reportOptions}
+                        subPagesCount = {subPagesCount}
+                        notFoundText = 'Herhangi Bir Sonuç Bulunamadı.'
+                        notFound = {notFound}
+                        path = {'/home/'}
+                        pathGenerator = {pathGenerator}
 
-                <SearchBox>
-
-                  <div style={{ fontSize: 18}}> <i style={{ marginRight: 8 }} className="fas fa-file-alt"></i> Raporlar  </div>
-
-                  <InnerSearch onClick={() => {
-                  setBackstage(true);
-                  setIsModalOpen(true)
-                  }}> <i className="fas  fa-search "></i> ARAMA YAP 
-                  
-                  </InnerSearch>
-
-                </SearchBox>
-
-      {
-
-      loading
-
-        ?
-
-        <Circle Load={loading} position='static' marginTop ={40} />
-
-        :
-
-        <React.Fragment>
+                    />
             
-            <h1 style={{marginBottom:20,color:'lightblue',fontSize:16,color:'#52de97'}}>( {subPagesCount} ) Sonuç Bulundu </h1> 
-            <ReportList reports={reports} id={user._id} currentRole={user.role}  notFound={notFound} refs={refs} SwitchRow={SwitchRow}/>
-      
-       <SubPagesContainer>
-
-        {
-          subPageNumber > 1 && reports.length !== 0 && !notFound ?  new Array(subPageNumber).fill().map((item, index) => {
-
-          return <SubPageItem  key={index} selected={ selectedSubPage === index }  onClick={() => nextPage(index)}>{index + 1}</SubPageItem>
-
-         })
-
-        :
-        null
-        }
-
-        </SubPagesContainer>
-
-       </React.Fragment>
-      }
-        </HiddenWrapper>
-            
-      </ListWrapper>
+       </ListWrapper>
 
     }
 

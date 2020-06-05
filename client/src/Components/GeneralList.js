@@ -1,5 +1,7 @@
-import React from 'react'
+import React,{useEffect,useState,createRef,useRef,useContext} from 'react'
 import styled from 'styled-components'
+import {Link} from 'react-router-dom'
+import Circle from '../UI/Circle'
 
 //------------------
 const HiddenWrapper = styled.div`
@@ -158,22 +160,21 @@ cursor:pointer;
 }
 `
 
-const GeneralList = ( { data , topTitles , iconOptions , tableInformations   } )=>{
+const GeneralList = ( { data , topTitles , iconOptions , tableInformations , mainTitle , titleIcon , nextPage , setIsModalOpen , setBackstage , notFound , subPagesCount , notFoundText , loading , pathGenerator  } )=>{
 
     const refs = useRef([]);  // we can also  use useRef hook for storing value or objects; 
-    const [backStage, setBackstage] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [subPagesCount, setSubPagesCount] = useState(0);
-    const [ notFound , setNotFound ] = useState(null);
+    const [selectedSubPage, setSelectedSubPage] = useState(0);
+
+    refs.current = refs.current.slice(0, data.length);
   
-    refs.current = refs.current.slice(0, students.length);
-  
-    for (let step = refs.current.length; step < students.length; step++) {
+    for (let step = refs.current.length; step < data.length; step++) {
         refs.current[step] = createRef();  //we can use useRef with createRef  ! ;
     }
-  
+   
+    let subPageNumber  = Math.ceil(subPagesCount/10);
    
     const SwitchRow = (Amount,ref)=> event =>{
+
       ref.current.style.transform = `translateX(${Amount}%)`
      if(Amount==-50)  
         for(let i = 0 ; i<refs.current.length ; i++)
@@ -190,7 +191,7 @@ const GeneralList = ( { data , topTitles , iconOptions , tableInformations   } )
   
               <SearchBox>
   
-                  <div style={{ fontSize: 18}}> <i class="fas fa-user-graduate" style={{marginRight:8}}></i> Ön Kayıt Öğrenciler   </div>
+                  <div style={{ fontSize: 18}}> {titleIcon} {mainTitle}   </div>
   
                   <InnerSearch onClick={() => {
                     
@@ -205,36 +206,42 @@ const GeneralList = ( { data , topTitles , iconOptions , tableInformations   } )
   
               <h1 style={{marginBottom:20,color:'lightblue',fontSize:16,color:'#52de97'}}>( { subPagesCount } ) Sonuç Bulundu </h1> 
       
-              <StudentList>   
+        {
+                loading ? <Circle position='static' marginTop={50} Load = {loading}  /> : <StudentList>   
                     
-                <StudentListItem>
-                  
-                    <StudentListItemInnerWrapper>
-  
-                      {
-                        topTitles.map((item)=>{
-                        return  !item  ? <InnerTopSpan style={{flex:'0.06',maxWidth:'29px',minWidth:'29px'}}  key={item}></InnerTopSpan> :  <InnerTopSpan key={item}>{item}</InnerTopSpan> 
-                        })
-                      }
-                      
-                    </StudentListItemInnerWrapper>
-  
-                </StudentListItem>
+                    <StudentListItem>
+                    
+                        <StudentListItemInnerWrapper>
+    
+                        {
+                            topTitles.map((item)=>{
+                            return  !item  ? <InnerTopSpan style={{flex:'0.06',maxWidth:'29px',minWidth:'29px'}}  key={item}></InnerTopSpan> :  <InnerTopSpan key={item}>{item}</InnerTopSpan> 
+                            })
+                        }
+                        
+                        </StudentListItemInnerWrapper>
+    
+                    </StudentListItem>
   
             { 
               data.length  <= 0 && !notFound ? <h1 style={{textAlign:'center' , padding:20,letterSpacing:1 , fontSize:17, color:'#00909e'}}> <i className="fas fa-search"></i> Lütfen Bir Arama Yapınız.</h1> : null
             }   
+
+            {
+              data.length <= 0  && notFound ? <h1 style={{textAlign:'center' , padding:20,letterSpacing:1 , fontSize:17 , color:'#00909e'}}>{ notFoundText }</h1> : null
+            }
+
   
             {
   
-                data.map((item,index)=>{
+                data.map((mainItem,index)=>{
   
-                  return  <StudentListItem style={{background:index%2==0 ? '#ececec' : '#fcf8f3'}}  key={Studentitem._id} ref={refs.current[index]}>
+                  return  <StudentListItem style={{background:index%2==0 ? '#ececec' : '#fcf8f3'}}  key={mainItem._id} ref={refs.current[index]}>
   
                   <StudentListItemInnerWrapper>
                           
                       {
-                            tableInformations.map(( info , index )=>{
+                            tableInformations(mainItem).map(( info , index )=>{
                                 return <InnerSpan>{info}</InnerSpan>
                             })
                       }
@@ -247,9 +254,7 @@ const GeneralList = ( { data , topTitles , iconOptions , tableInformations   } )
   
                       </IconInnerSpan>
                       
-  
-                    
-  
+
                   </StudentListItemInnerWrapper>    
   
   
@@ -262,12 +267,13 @@ const GeneralList = ( { data , topTitles , iconOptions , tableInformations   } )
   
                               return   <StudentListIconWrapper key={Mainindex}>
                                       
-                              <Link  to={'/home/öğrenciler/'+ item.desc.split(' ').join('_').toLowerCase() +'/'+ Studentitem._id} style={{display:'flex',width:'100%',height:'100%',flexFlow:'column',justifyContent:'center',alignItems:'center',padding:'6px',fontSize:'11.5px',color:'white', textDecoration:'none'}}>
-                                  {item.Icon}
-                                  <span>{item.desc}</span>
-                              </Link>
+                                    <Link  to={ pathGenerator( item.desc , mainItem._id ) } style={{display:'flex',width:'100%',height:'100%',flexFlow:'column',justifyContent:'center',alignItems:'center',padding:'6px',fontSize:'11.5px',color:'white', textDecoration:'none'}}>
+
+                                        {item.Icon}  <span> {item.desc} </span>  
+
+                                    </Link>
                               
-                          </StudentListIconWrapper>   
+                             </StudentListIconWrapper>   
                         
                           })                      
                     }  
@@ -292,16 +298,17 @@ const GeneralList = ( { data , topTitles , iconOptions , tableInformations   } )
             }
               
           </StudentList>
+
+        }
   
   
           <SubPagesContainer>
   
           {
-                  // subPageNumber > 1 && personels.length !== 0 && !notFound ?  new Array(subPageNumber).fill().map((item, index) => { 
+                   ( subPageNumber > 1 && data.length !== 0 && !notFound )  &&  new Array(subPageNumber).fill().map((item, index) => { 
   
-                  //   return <SubPageItem  key={index} selected={ selectedSubPage === index }  onClick={() => nextPage(index)}>{index + 1}</SubPageItem>})
-                  //   :
-                  //   null
+                    return <SubPageItem  key={index} selected={ selectedSubPage === index }  onClick={ () => { nextPage(index) ; setSelectedSubPage(index); } } >  {index + 1} </SubPageItem>})
+
           }
                             
           </SubPagesContainer>
