@@ -184,7 +184,7 @@ class Login  extends React.Component {
     
                             </Inner_Fields>
 
-{/*                             
+                            
                             <SubButtons type='button'>
                                 
                                 <Link to='/register'style={{width:'100%',alignItems:'center',justifyContent:'center',height:'100%',textDecoration:'none',color:'white',padding:5,display:'flex'}}>
@@ -195,7 +195,7 @@ class Login  extends React.Component {
                                 
                                 </Link>
                                
-                            </SubButtons> */}
+                            </SubButtons>
     
                         </Fields>
 
