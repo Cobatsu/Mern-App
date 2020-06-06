@@ -43,21 +43,6 @@ padding:6px;
 `
 
 
-const TopRows = [
-  'Görüşülen Kişi',
-  'Telefon Numarası',
-  'Görüşme Tipi',
-  'Görüşme Tarihi',
-  'Gönderen Kişi',
-  '',
-]
-
-const reportOptions = [
-  {
-    desc: 'Görüşme Bilgileri',
-    Icon: <i className="fas fa-user-friends"></i>
-  },
-]
 
 const Student = (props) => {
 
@@ -71,6 +56,22 @@ const Student = (props) => {
 
   const {isLoggedinf,user} = useContext(Context);
   
+
+  const TopRows = [
+    'Görüşülen Kişi',
+    'Telefon Numarası',
+    'Görüşme Tipi',
+    'Görüşme Tarihi',
+    'Gönderen Kişi',
+    '',
+  ]
+  
+  const reportOptions = [
+    {
+      desc: 'Görüşme Bilgileri',
+      Icon: <i className="fas fa-user-friends"></i>
+    },
+  ]
 
   const tableInformations = ( item  )=> {
     
@@ -112,18 +113,16 @@ const Student = (props) => {
                     <BackStage backStage={backStage} loading={!isModalOpen}   close={isModalOpen ? closeModal_1 : null}/>
 
                     <SearchReportModal
-                    setMainSearchData={setSearchData}  
-                    setReports={setReports} 
-                    isOpen ={isModalOpen} 
-                    close={closeModal_1} 
-                    closeModalOnly = {setIsModalOpen} 
-                    setSubPagesCount={setSubPagesCount}
-                    setNotFound={setNotFound}
-                    role={user.role} >
+                        setMainSearchData={setSearchData}  
+                        setReports={setReports} 
+                        isOpen ={isModalOpen} 
+                        close={closeModal_1} 
+                        closeModalOnly = {setIsModalOpen} 
+                        setSubPagesCount={setSubPagesCount}
+                        setNotFound={setNotFound}
+                        role={user.role} />
                     
-                    </SearchReportModal>
-
-          
+                  
                     <GeneralList 
 
                         data = { reports } 
@@ -140,6 +139,7 @@ const Student = (props) => {
                         notFoundText = 'Herhangi Bir Sonuç Bulunamadı.'
                         notFound = {notFound}
                         pathGenerator = {pathGenerator}
+                        resetSubPage = { !isModalOpen && backStage }
 
                     />
             

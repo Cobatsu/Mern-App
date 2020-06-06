@@ -600,7 +600,6 @@ export const PersonelReports = ( { id , setLoggedin , role , notFoundText  , cur
   },[role])
     
   return <GeneralList 
-   
     width = {780}
     data = { reports } 
     topTitles = {TopRows} 
@@ -612,7 +611,7 @@ export const PersonelReports = ( { id , setLoggedin , role , notFoundText  , cur
     notFoundText = { notFoundText || `Bu ${role}ye Ait Rapor Bulunmamaktadir`}
     notFound = {notFound}
     path = {'/home/personel_listesi'}
-    pathGenerator = {pathGenerator}  />
+    pathGenerator = {pathGenerator}   />
 
 }
 

@@ -8,7 +8,7 @@ justify-content:space-evenly;
 align-items:center;
 flex-flow:column;
 min-width:100%;
-min-height:40px;
+min-height:30px;
 top:${(props)=>props.top + '%'};
 background:#eb4559;
 transition:500ms;

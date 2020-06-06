@@ -160,8 +160,24 @@ cursor:pointer;
 }
 `
 
-const GeneralList = ( { data , topTitles , iconOptions , tableInformations , mainTitle , titleIcon , nextPage , setIsModalOpen , setBackstage , notFound , subPagesCount , notFoundText , loading , pathGenerator , width  } )=>{
-
+const GeneralList = ( 
+    { data, 
+      topTitles, 
+      iconOptions, 
+      tableInformations, 
+      mainTitle, 
+      titleIcon, 
+      nextPage, 
+      setIsModalOpen, 
+      setBackstage, 
+      notFound,
+      subPagesCount, 
+      notFoundText, 
+      loading, 
+      pathGenerator, 
+      width,
+      resetSubPage } )=>{
+ 
     const refs = useRef([]);  // we can also  use useRef hook for storing value or objects; 
     const [selectedSubPage, setSelectedSubPage] = useState(0);
 
@@ -170,12 +186,15 @@ const GeneralList = ( { data , topTitles , iconOptions , tableInformations , mai
     for (let step = refs.current.length; step < data.length; step++) {
         refs.current[step] = createRef();  //we can use useRef with createRef  ! ;
     }
+
+    useEffect(()=>{ setSelectedSubPage(0) },[resetSubPage])
    
     let subPageNumber  = Math.ceil(subPagesCount/10);
    
     const SwitchRow = (Amount,ref)=> event =>{
 
       ref.current.style.transform = `translateX(${Amount}%)`
+
      if(Amount==-50)  
         for(let i = 0 ; i<refs.current.length ; i++)
         {

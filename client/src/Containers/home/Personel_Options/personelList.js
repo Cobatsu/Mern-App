@@ -28,21 +28,7 @@ box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.03
    overflow-x: scroll;
 }
 `
-const TopRows  =  [
-  'İsim',
-  'Soy İsim',
-  'Rol',
-  'Bölge',
-  'Sözleşme Tarihi',
-  '',
-]
 
-var  PersonelOptions = [
-  {desc:'Genel Bilgiler',Icon:<i className="fas fa-user-friends"></i>},
-  {desc:'Bayiler',Icon:<i    className="fas fa-code-branch"/>},
-  {desc:'Raporlar',Icon:<i   className="fas fa-sticky-note"></i>},
-  {desc:'Yetkiler',Icon: <i  className="fas fa-unlock"></i>},
-]
 
 
 const PersonelList  = ({isOnlySubBranch,...rest})=>{
@@ -57,29 +43,46 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
 
   const {isLoggedinf,user} = useContext(Context);
 
-  console.log(user.role)
+  const TopRows  =  [
+    'İsim',
+    'Soy İsim',
+    'Rol',
+    'Bölge',
+    'Sözleşme Tarihi',
+    '',
+  ]
+  
+  var  PersonelOptions = [
+    {desc:'Genel Bilgiler',Icon:<i className="fas fa-user-friends"></i>},
+    {desc:'Bayiler',Icon:<i    className="fas fa-code-branch"/>},
+    {desc:'Raporlar',Icon:<i   className="fas fa-sticky-note"></i>},
+    {desc:'Yetkiler',Icon: <i  className="fas fa-unlock"></i>},
+  ]
 
   const closeModal_1 = () => {
     setIsModalOpen(false);
     setBackstage(false);
   }
    
-  if( user.role !== 'Admin' &&  user.role ) PersonelOptions = PersonelOptions.filter(({desc})=> desc !== 'Yetkiler' ) ;
+  if( user.role !== 'Admin' &&  user.role ) PersonelOptions = PersonelOptions.filter(( { desc } )=> desc !== 'Yetkiler' ) ;
 
   const tableInformations = ( item )=> {
+
     return [
       item.firstName,
       item.lastName,
       item.role,
       item.role === 'Admin' ? '—' : item.region,
-      item.contractDate ] 
+      item.contractDate ]
+
   }  
 
   const pathGenerator = ( item , id ) => '/home/personel_listesi/' + item.split(' ').join('_').toLowerCase() + '/' + id 
 
   const nextPage = (page)=>{
+    
+          setLoading(true);    
 
-    setLoading(true);    
           makePersonSearchRequest('post', {
             ...searchData,
             pageNumber: page
@@ -117,6 +120,7 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
                
                         
                       <GeneralList 
+                      
                         data = { personels } 
                         topTitles = {TopRows} 
                         mainTitle = {isOnlySubBranch ? 'Bayiler' : 'Personeller'} 
@@ -130,7 +134,10 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
                         subPagesCount = {subPagesCount}
                         notFoundText ='Herhangi Bir Sonuç Bulunamadı.'
                         notFound = {notFound}
-                        pathGenerator = {pathGenerator}  />
+                        pathGenerator = {pathGenerator}
+                        resetSubPage = { !isModalOpen && backStage }
+
+                        />
 
           </ListWrapper>
 
