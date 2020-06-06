@@ -39,6 +39,9 @@ width:100%;
 margin-bottom:20px;
 padding:20px 0 5px 0;
 color:#30475e;
+@media (max-width: 1030px) {
+  justify-content:center;
+}
 `
 
 const SubmitButton  = styled.button`
@@ -47,6 +50,9 @@ background:#00bdaa;
 border:none;
 color:white;
 padding:10px 20px ;
+@media (max-width: 1030px) {
+  width:50%;
+}
 &:hover{
     cursor:pointer;
 }
@@ -87,31 +93,23 @@ align-items:center;
 `
 
 
-const initialReportStates={
+const initialReportStateFirst={
   schoolName:'',
   relatedPersonName:'',
   relatedPersonPhoneNumber: '',
-  meetingDate:new Date(Date(Date.now())),
+  meetingDate:new Date(),
   relatedPersonEmail:'',
   meetingDetails:'',
   region:'',
   townShip:'',
 }
 
-const initialReportStates2={
-  relatedPersonName:'',
-  relatedPersonPhoneNumber: '',
-  meetingDate:new Date(Date(Date.now())),
-  relatedPersonEmail:'',
-  meetingDetails:'',
-
-}
 
 
 export const  AddReport = React.memo((props)=>{
   
    const  [reportType , setReportType]  = useState(null);
-   const  [initialReportState ,  setinitialReportState ] = useState({});
+   const  [initialReportState ,  setinitialReportState ] = useState(initialReportStateFirst);
    const  {isLoggedinf,user} = useContext(Context);
    const  [emptyWarning , setEmptyWarning] = useState(false);
    const  [reportAdded ,setReportAdded] = useState(false);
@@ -122,14 +120,7 @@ export const  AddReport = React.memo((props)=>{
       if(reportType) setinitialReportState(prevState =>({...prevState,meetingDate:date}));
     },[date])
 
-    useEffect(()=>{  //this is just because of Date issue //--------  
-
-      if(reportType === 'schoolReport') 
-         setinitialReportState(initialReportStates);
-      else if (reportType === 'studentReport')
-         setinitialReportState(initialReportStates2);    
-
-    },[reportType])
+    console.log(initialReportState);
    
     const closeEmptyModal = ()=>{
          setBackStage(false);
@@ -145,20 +136,23 @@ export const  AddReport = React.memo((props)=>{
       setReportType(e.target.value);
     }
 
-    const SubmitOnChange = type=>event=>{
+    const SubmitOnChange = type => event => {
 
       const prevStateFirst = {...initialReportState}
 
       let value = event.target.value;
        
       if(type==='region'){
+
           prevStateFirst['townShip'] = '' ; 
+
       }
       
       setinitialReportState({...prevStateFirst,[type]:value});
     }
 
-    if( reportType === 'schoolReport' &&  reportType) {
+
+    if( reportType ) {
 
       if(initialReportState.region)
       {
@@ -167,6 +161,7 @@ export const  AddReport = React.memo((props)=>{
           var townships = City.ilceleri;
 
       }
+
     }
 
     const SubmitReport = (e)=>{
@@ -176,18 +171,37 @@ export const  AddReport = React.memo((props)=>{
               for (const key in initialReportState) {
 
                   const element = initialReportState[key];
-                  if(!element)
+                
+                  if(reportType === 'schoolReport')
                   {
-                    return setEmptyWarning(true);
-                  }  
+                      if(!element)
+                      {
+                        return setEmptyWarning(true);
+                      }  
+                      else
+                      {
+                        if (key !== 'meetingDate') initialReportState[key] = initialReportState[key].trim();
+                      }    
+
+                  }
                   else
+
                   {
-                    if (key !== 'meetingDate') initialReportState[key] = initialReportState[key].trim();
-                  }    
+                    
+                        if( !element && key !== 'schoolName')
+                        {
+                          return setEmptyWarning(true);
+                        }  
+                        else
+                        {
+                          if (key !== 'meetingDate') initialReportState[key] = initialReportState[key].trim();
+                        } 
+
+                  }
               }
                
-              if(reportType === 'schoolReport')  setinitialReportState(initialReportStates);
-              else if (reportType === 'studentReport') setinitialReportState(initialReportStates2);   
+              setinitialReportState(initialReportStateFirst);
+            
 
               makeAddReportRequest('post',initialReportState,setReportAdded,isLoggedinf,reportType);     
 
@@ -228,7 +242,10 @@ export const  AddReport = React.memo((props)=>{
 });
 
 export const Report = ({SubmitOnChange,State,setBackStage,setDate,disable,type,reportType,townships})=>{
-    
+  
+
+
+
   return <React.Fragment>
      
      <h6 style={{width:'100%',textAlign:'center',marginTop:10,color:'#dc3545'}}>
@@ -261,29 +278,25 @@ export const Report = ({SubmitOnChange,State,setBackStage,setDate,disable,type,r
                 <TextField value={State['relatedPersonPhoneNumber']}   InputLabelProps={{style:{zIndex:1}}}  disabled={disable}   onChange = {SubmitOnChange('relatedPersonPhoneNumber')}   label='Görüşülen Kişinin Telefon Numarası'  style={{width:'85%',padding:'10px 0'}}  inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}  />
                 <TextField value={State['relatedPersonEmail']}   InputLabelProps={{style:{zIndex:1}}}  disabled={disable}   onChange = {SubmitOnChange('relatedPersonEmail')}   label='Görüşülen Kişinin Mail Adresi'  style={{width:'85%',padding:'10px 0'}} inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}   />
 
-                {
-                    reportType === 'schoolReport' && 
-
-                        <TextField disabled={disable} InputLabelProps={{style:{zIndex:1}}}  disabled={disable}   onChange = {SubmitOnChange('relatedPersonEmail')}    style={{width:'85%',padding:'10px 0'}} inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}  onChange={SubmitOnChange('region')}  id="select" label="Bölge" value={State['region']}  select>
+                        <TextField  InputLabelProps={{style:{zIndex:1}}}  disabled={disable}    style={{width:'85%',padding:'10px 0'}} inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}  onChange={SubmitOnChange('region')}  id="select" label="Bölge" value={State['region']}  select>
 
                           {                 
-                            Regions.map((item)=> <MenuItem value={item.il}>{item.il}</MenuItem>)
+                            Regions.map((item)=> <MenuItem value={item['il'].toString()}>{item['il']}</MenuItem>)
                           }
 
                          </TextField> 
  
-                }
+                        {
 
+                          State.region   && <TextField disabled={disable} InputLabelProps={{style:{zIndex:1}}}  disabled={disable}       style={{width:'85%',padding:'10px 0'}} inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}  onChange={SubmitOnChange('townShip')}  id="select" label="İlçe" value={State['townShip']}  select>
 
-                {
-                        ( reportType === 'schoolReport' && State.region )  && <TextField disabled={disable} InputLabelProps={{style:{zIndex:1}}}  disabled={disable}   onChange = {SubmitOnChange('townShip')}     style={{width:'85%',padding:'10px 0'}} inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}  onChange={SubmitOnChange('townShip')}  id="select" label="İlçe" value={State['townShip']}  select>
+                            {                
+                              townships.map((item)=> <MenuItem value={item}>{item}</MenuItem>)
+                            }
 
-                        {                
-                          townships.map((item)=> <MenuItem value={item}>{item}</MenuItem>)
+                          </TextField> 
+
                         }
-
-                      </TextField> 
-                }
               
 
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>

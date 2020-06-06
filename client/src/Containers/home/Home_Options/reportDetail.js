@@ -104,8 +104,8 @@ const initialGeneralReportState={
 const ReportDetail  = ({match,...rest })=>{
      
     const  [loading , setLoading ]  = useState(true);
-    const  [initalReportStates ,  setInitalReportState ] = useState({});
-    const  [reInitalReportStates ,  reIsetInitalReportState ] = useState({});
+    const  [initalReportStates ,  setInitalReportState ] = useState(initialGeneralReportState);
+    const  [reInitalReportStates ,  reIsetInitalReportState ] = useState(initialGeneralReportState);
     const  [disable,setDisable] = useState(true);
     const  [backStageOpen ,setbackStageOpen]  = useState(false);
     const  [emptyWarning,setEmptyWarning] = useState(false);
@@ -122,6 +122,7 @@ const ReportDetail  = ({match,...rest })=>{
         const {id} = match.params;
         makeSpecificReportRequest('get',id,setLoading,setInitalReportState,reIsetInitalReportState,setNotFoundPage,initialGeneralReportState);
     },[])
+
 
     const SubmitOnChange =Type=>event=>{
 
@@ -163,7 +164,7 @@ const ReportDetail  = ({match,...rest })=>{
         setInitalReportState(prevState =>({...prevState,meetingDate:date}));
     },[date])
   
-    if( initalReportStates.reportType === 'schoolReport' &&  initalReportStates.reportType )
+    if(  initalReportStates.reportType )
     {
       if(initalReportStates.region)
       {
@@ -173,6 +174,8 @@ const ReportDetail  = ({match,...rest })=>{
 
       }
     }
+
+    console.log(initalReportStates)
 
     const submitUpdatedReport = (e)=>{
 
@@ -187,12 +190,10 @@ const ReportDetail  = ({match,...rest })=>{
             if(initalReportStates.reportType === 'schoolReport')
             {
 
-                if(!element)
-                {
+                if(!element){
                     return setEmptyWarning(true);
                 }
-                else
-                {
+                else{
                     if(key !== 'meetingDate')  initalReportStates[key] = initalReportStates[key].trim();
                 }
 
@@ -200,18 +201,16 @@ const ReportDetail  = ({match,...rest })=>{
             else
             {
                 
-                if(!element && key !== 'region' && key!=='townShip' && key!=='schoolName')
-                {
+                if(!element && key!=='schoolName'){
                     return setEmptyWarning(true);
                 }
-                else
-                {
+                else{
                     if(key !== 'meetingDate')  initalReportStates[key] = initalReportStates[key].trim();
                 }
 
             }
         }
-        makeUpdateReportRequest('patch', match.params.id ,{...initalReportStates},context.isLoggedinf,setInitalReportState,reIsetInitalReportState,setUpdatedModal,setDisable);
+        makeUpdateReportRequest('patch', match.params.id ,initalReportStates,context.isLoggedinf,setInitalReportState,reIsetInitalReportState,setUpdatedModal,setDisable);
     }
    
     const deleteReport = ()=>{

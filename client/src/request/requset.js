@@ -349,9 +349,10 @@ export const makeSpecificReportRequest = (Type,id,setLoading,setInitialReport,re
     }
 
     const {specificReport} =res.data;
+
     setLoading(false);
-    setInitialReport({...initialGeneralReportState,...specificReport});
-    reIsetInitalReport({...initialGeneralReportState,...specificReport});
+    setInitialReport((prevState)=>({...prevState,...specificReport}));
+    reIsetInitalReport((prevState)=>({...prevState,...specificReport}));
     
   })
   .catch((res)=>{

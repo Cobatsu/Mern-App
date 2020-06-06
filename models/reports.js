@@ -44,11 +44,11 @@ const Reports = mongoose.Schema({
     },
     region:{
         type:String,
-        required:false,
+        required:true,
     },
     townShip:{
         type:String,
-        required:false,
+        required:true,
     }
 
 });
