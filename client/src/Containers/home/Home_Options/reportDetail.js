@@ -159,8 +159,6 @@ const ReportDetail  = ({match,...rest })=>{
         rest.history.push('/home/raporlar');
     }
    
-    
-
     useEffect(()=>{  //this is just because of Date issue //--------
         setInitalReportState(prevState =>({...prevState,meetingDate:date}));
     },[date])
@@ -186,13 +184,31 @@ const ReportDetail  = ({match,...rest })=>{
 
             const element = initalReportStates[key];
 
-            if(!element)
+            if(initalReportStates.reportType === 'schoolReport')
             {
-                return setEmptyWarning(true);
+
+                if(!element)
+                {
+                    return setEmptyWarning(true);
+                }
+                else
+                {
+                    if(key !== 'meetingDate')  initalReportStates[key] = initalReportStates[key].trim();
+                }
+
             }
             else
             {
-                if(key !== 'meetingDate')  initalReportStates[key] = initalReportStates[key].trim();
+                
+                if(!element && key !== 'region' && key!=='townShip' && key!=='schoolName')
+                {
+                    return setEmptyWarning(true);
+                }
+                else
+                {
+                    if(key !== 'meetingDate')  initalReportStates[key] = initalReportStates[key].trim();
+                }
+
             }
         }
         makeUpdateReportRequest('patch', match.params.id ,{...initalReportStates},context.isLoggedinf,setInitalReportState,reIsetInitalReportState,setUpdatedModal,setDisable);
