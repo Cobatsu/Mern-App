@@ -41,6 +41,14 @@ const Reports = mongoose.Schema({
     whoseDocument:{
         type:String,
         required:true,
+    },
+    region:{
+        type:String,
+        required:false,
+    },
+    townShip:{
+        type:String,
+        required:false,
     }
 
 });

@@ -463,28 +463,6 @@ const AddPerson  = React.memo((props)=>{
 
                     <PermissionsTabs value={tabShow} handler={tabsHandle} />  
 
-                        {/* {
-                            userInformations['role'] 
-                            
-                            ?
-
-                            <InnerPermission>
-
-                                <span style={{flex:0.4}}></span>
-                                <RadioWrapper style={{fontSize:'14px'}}>
-                                        <PermissionTopSpan >Silme</PermissionTopSpan >
-                                        <PermissionTopSpan >Düzenleme</PermissionTopSpan>
-                                        <PermissionTopSpan >Yazma</PermissionTopSpan>
-                                        <PermissionTopSpan >Okuma</PermissionTopSpan >
-                                </RadioWrapper>
-                                
-                            </InnerPermission>
-          
-                          :
-
-                          <h6 style={{textAlign:'center',color:'#00909e',marginBottom:'7px',flex:0.2}}>LÜTFEN ROL SEÇİNİZ</h6>
-                          
-                        }   */}
 
                         {
                           userInformations['role']  ? <ChecBoxes permissions={permissions} handler={permissionHandler} tabShow={tabShow}/>  : <h6 style={{textAlign:'center',color:'#00909e',marginBottom:'7px',flex:0.2}}>LÜTFEN ROL SEÇİNİZ</h6>
@@ -719,6 +697,7 @@ export const UserInputs = React.memo(({userInformations,townships,textChangeHand
            {item[0] === 'region' && userInformations['role'] ?   
 
            <TextField InputLabelProps={{style:{color:'black',zIndex:1}}} inputProps={{style:{background:'grey'}}}  disabled={ userInformations.relatedAgencyID  ? true : disabled }  onChange={textChangeHandler(item[0])}  id="select" label={userInformations['role'] === 'Bayi' ? 'Bayi Bölge' : 'Temsilci Bölge'} value={userInformations[item[0]]} style={{width:'100%',margin:'10px 0'}}  select>{
+             
                 userInformations['role'] === 'Bayi' ?  
 
                 Regions.map((item)=> <MenuItem value={item.il}>{item.il}</MenuItem> ) 

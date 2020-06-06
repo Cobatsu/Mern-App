@@ -548,7 +548,6 @@ export const PersonelReports = ( { id , setLoggedin , role , notFoundText  , cur
   const [reports, setReports] = useState([]);
   const [ notFound , setNotFound ] = useState(null);
   const [subPagesCount , setSubPagesCount] = useState(null);
-  const [selectedSubPage, setSelectedSubPage] = useState(0);
   const [loading,setLoading] = useState(true);
   
   const TopRows = [
@@ -591,9 +590,7 @@ export const PersonelReports = ( { id , setLoggedin , role , notFoundText  , cur
 
   const nextPage = (page) => {
 
-    setSelectedSubPage(page);
     setLoading(true);
-
     makeReportSearchRequest('post', {
       role:role,
       personelReportID:id,
@@ -629,7 +626,6 @@ export const PersonelSubBranches = ({ id , setLoggedin , role , notFoundText , c
   const [ subBranches, setSubBranches ] = useState([]);
   const [ notFound , setNotFound ] = useState(null);
   const [ subPagesCount , setSubPagesCount ] = useState(null);
-  const [ selectedSubPage, setSelectedSubPage ] = useState(0);
   const [ loading,setLoading ] = useState(true);
  
   const TopRows  =  [
@@ -676,8 +672,6 @@ export const PersonelSubBranches = ({ id , setLoggedin , role , notFoundText , c
   const pathGenerator = ( item , id ) => '/home/personel_listesi/' + item.split(' ').join('_').toLowerCase() + '/' + id
 
   const nextPage = (page) => {
-
-    setSelectedSubPage(page);
     setLoading(true);
 
     makePersonSearchRequest('post', {

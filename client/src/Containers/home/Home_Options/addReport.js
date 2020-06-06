@@ -7,12 +7,12 @@ import  {UserInputs}  from './addPerson';
 import Generator  from 'generate-password';
 import DateFnsUtils from '@date-io/date-fns';
 import {MuiPickersUtilsProvider,KeyboardDatePicker } from '@material-ui/pickers'
-import {Regions}  from '../../../Regions/regions'
 import Circle from '../../../UI/Circle';
 import Modal from '../../../UI/sentModal';
 import Stage from '../../../UI/backStage';
 import {Checkbox,TextField,Tab,Tabs,Paper,InputLabel,MenuItem,Selec} from '@material-ui/core'
 import {makeAddReportRequest}  from '../../../request/requset'
+import {Regions} from '../../../Regions/regions'
 
 const MainWrapper = styled.form`
 display:flex;
@@ -94,6 +94,8 @@ const initialReportStates={
   meetingDate:new Date(Date(Date.now())),
   relatedPersonEmail:'',
   meetingDetails:'',
+  region:'',
+  townShip:'',
 }
 
 const initialReportStates2={
@@ -102,13 +104,14 @@ const initialReportStates2={
   meetingDate:new Date(Date(Date.now())),
   relatedPersonEmail:'',
   meetingDetails:'',
+
 }
 
 
 export const  AddReport = React.memo((props)=>{
   
    const  [reportType , setReportType]  = useState(null);
-   const  [initialReportState ,  setinitialReportState ] = useState(null);
+   const  [initialReportState ,  setinitialReportState ] = useState({});
    const  {isLoggedinf,user} = useContext(Context);
    const  [emptyWarning , setEmptyWarning] = useState(false);
    const  [reportAdded ,setReportAdded] = useState(false);
@@ -143,8 +146,27 @@ export const  AddReport = React.memo((props)=>{
     }
 
     const SubmitOnChange = type=>event=>{
+
+      const prevStateFirst = {...initialReportState}
+
       let value = event.target.value;
-      setinitialReportState((prevState)=>({...prevState,[type]:value}));
+       
+      if(type==='region'){
+          prevStateFirst['townShip'] = '' ; 
+      }
+      
+      setinitialReportState({...prevStateFirst,[type]:value});
+    }
+
+    if( reportType === 'schoolReport' &&  reportType) {
+
+      if(initialReportState.region)
+      {
+
+          const City = Regions.find((item)=> item['il'] === initialReportState.region);  //just get first one matched
+          var townships = City.ilceleri;
+
+      }
     }
 
     const SubmitReport = (e)=>{
@@ -193,9 +215,11 @@ export const  AddReport = React.memo((props)=>{
               </div> 
                 
               <form style={{width:'100%'}} onSubmit={SubmitReport}>
-              {
-                (reportType && initialReportState) && <Report SubmitOnChange={SubmitOnChange} State={initialReportState} setBackStage={setBackStage} date={date} setDate={setDate} reportType={reportType} />
-              } 
+
+                {
+                  (reportType && initialReportState) && <Report townships={townships} SubmitOnChange={SubmitOnChange} State={initialReportState} setBackStage={setBackStage} date={date} setDate={setDate} reportType={reportType} />
+                } 
+
               </form>
 
        </MainWrapper>
@@ -203,7 +227,7 @@ export const  AddReport = React.memo((props)=>{
    </UpdateLoggedin> 
 });
 
-export const Report = ({SubmitOnChange,State,setBackStage,setDate,disable,type,reportType})=>{
+export const Report = ({SubmitOnChange,State,setBackStage,setDate,disable,type,reportType,townships})=>{
     
   return <React.Fragment>
      
@@ -236,6 +260,31 @@ export const Report = ({SubmitOnChange,State,setBackStage,setDate,disable,type,r
                 <TextField value={State['relatedPersonName']}   InputLabelProps={{style:{zIndex:1}}}  disabled={disable}   onChange = {SubmitOnChange('relatedPersonName')}   label='Görüşülen Kişinin İsmi'  style={{width:'85%',padding:'10px 0',marginBottom:5}} inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}   />
                 <TextField value={State['relatedPersonPhoneNumber']}   InputLabelProps={{style:{zIndex:1}}}  disabled={disable}   onChange = {SubmitOnChange('relatedPersonPhoneNumber')}   label='Görüşülen Kişinin Telefon Numarası'  style={{width:'85%',padding:'10px 0'}}  inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}  />
                 <TextField value={State['relatedPersonEmail']}   InputLabelProps={{style:{zIndex:1}}}  disabled={disable}   onChange = {SubmitOnChange('relatedPersonEmail')}   label='Görüşülen Kişinin Mail Adresi'  style={{width:'85%',padding:'10px 0'}} inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}   />
+
+                {
+                    reportType === 'schoolReport' && 
+
+                        <TextField disabled={disable} InputLabelProps={{style:{zIndex:1}}}  disabled={disable}   onChange = {SubmitOnChange('relatedPersonEmail')}    style={{width:'85%',padding:'10px 0'}} inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}  onChange={SubmitOnChange('region')}  id="select" label="Bölge" value={State['region']}  select>
+
+                          {                 
+                            Regions.map((item)=> <MenuItem value={item.il}>{item.il}</MenuItem>)
+                          }
+
+                         </TextField> 
+ 
+                }
+
+
+                {
+                        ( reportType === 'schoolReport' && State.region )  && <TextField disabled={disable} InputLabelProps={{style:{zIndex:1}}}  disabled={disable}   onChange = {SubmitOnChange('townShip')}     style={{width:'85%',padding:'10px 0'}} inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}  onChange={SubmitOnChange('townShip')}  id="select" label="İlçe" value={State['townShip']}  select>
+
+                        {                
+                          townships.map((item)=> <MenuItem value={item}>{item}</MenuItem>)
+                        }
+
+                      </TextField> 
+                }
+              
 
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
 

@@ -89,11 +89,23 @@ export const PermissionsNumbers = {
     READ: 4,
 }
 
+
+const initialGeneralReportState={
+    schoolName:'',
+    relatedPersonName:'',
+    relatedPersonPhoneNumber: '',
+    meetingDate:new Date(Date(Date.now())),
+    relatedPersonEmail:'',
+    meetingDetails:'',
+    region:'',
+    townShip:'',
+  }
+
 const ReportDetail  = ({match,...rest })=>{
      
     const  [loading , setLoading ]  = useState(true);
-    const  [initalReportStates ,  setInitalReportState ] = useState(null);
-    const  [reInitalReportStates ,  reIsetInitalReportState ] = useState(null);
+    const  [initalReportStates ,  setInitalReportState ] = useState({});
+    const  [reInitalReportStates ,  reIsetInitalReportState ] = useState({});
     const  [disable,setDisable] = useState(true);
     const  [backStageOpen ,setbackStageOpen]  = useState(false);
     const  [emptyWarning,setEmptyWarning] = useState(false);
@@ -108,12 +120,18 @@ const ReportDetail  = ({match,...rest })=>{
      
     useEffect(()=>{
         const {id} = match.params;
-        makeSpecificReportRequest('get',id,setLoading,setInitalReportState,reIsetInitalReportState,setNotFoundPage);
+        makeSpecificReportRequest('get',id,setLoading,setInitalReportState,reIsetInitalReportState,setNotFoundPage,initialGeneralReportState);
     },[])
 
     const SubmitOnChange =Type=>event=>{
+
+         const prevStateFirst = {...initalReportStates}
+
          let value =  event.target.value ;
-         setInitalReportState((prevState)=>({...prevState,[Type]:value}));
+
+         if( Type === 'region' ) prevStateFirst['townShip']=''; 
+
+         setInitalReportState({...prevStateFirst,[Type]:value});
     }
 
     const closeModal_1 = ()=>{
@@ -142,12 +160,21 @@ const ReportDetail  = ({match,...rest })=>{
     }
    
     
-   
 
     useEffect(()=>{  //this is just because of Date issue //--------
         setInitalReportState(prevState =>({...prevState,meetingDate:date}));
     },[date])
   
+    if( initalReportStates.reportType === 'schoolReport' &&  initalReportStates.reportType )
+    {
+      if(initalReportStates.region)
+      {
+
+          const City = Regions.find((item)=> item['il'] === initalReportStates.region);  //just get first one matched
+          var townships = City.ilceleri;
+
+      }
+    }
 
     const submitUpdatedReport = (e)=>{
 
@@ -225,7 +252,7 @@ const ReportDetail  = ({match,...rest })=>{
 
                    </InnerItems>
 
-                    <Report State={initalReportStates} SubmitOnChange={SubmitOnChange} disable={disable} setDate={setDate}  type='detail' reportType={initalReportStates.reportType}/>
+                    <Report State={initalReportStates} townships={townships} SubmitOnChange={SubmitOnChange} disable={disable} setDate={setDate}  type='detail' reportType={initalReportStates.reportType}/>
 
                     {
                         disable

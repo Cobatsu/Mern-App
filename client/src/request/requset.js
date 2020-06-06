@@ -338,7 +338,7 @@ export const makeReportsRequest = (Type,setReports,setLoading)=>{
 
 
 
-export const makeSpecificReportRequest = (Type,id,setLoading,setInitialReport,reIsetInitalReport,setNotFoundPage)=>{
+export const makeSpecificReportRequest = (Type,id,setLoading,setInitialReport,reIsetInitalReport,setNotFoundPage,initialGeneralReportState)=>{
 
   axios[Type]('/api/profile/report/'+id)
   .then((res)=>{
@@ -350,8 +350,8 @@ export const makeSpecificReportRequest = (Type,id,setLoading,setInitialReport,re
 
     const {specificReport} =res.data;
     setLoading(false);
-    setInitialReport(specificReport);
-    reIsetInitalReport(specificReport);
+    setInitialReport({...initialGeneralReportState,...specificReport});
+    reIsetInitalReport({...initialGeneralReportState,...specificReport});
     
   })
   .catch((res)=>{
