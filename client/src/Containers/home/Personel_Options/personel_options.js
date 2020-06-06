@@ -560,13 +560,20 @@ export const PersonelReports = ( { id , setLoggedin , role , notFoundText  , cur
     '',
   ]
   
-  const reportOptions = [
-    {
-      desc: 'Görüşme Bilgileri',
-      Icon: <i className="fas fa-user-friends"></i>
-    },
-  ]
 
+  
+  const filterIconOptions = (report)=>{
+
+    var  reportOptions = [
+      {
+        desc: 'Görüşme Bilgileri',
+        Icon: <i className="fas fa-user-friends"></i>
+      },
+    ]
+
+    return reportOptions ; //just for now
+
+  }
   
   const tableInformations = (item)=> {
       
@@ -575,7 +582,7 @@ export const PersonelReports = ( { id , setLoggedin , role , notFoundText  , cur
       item.relatedPersonPhoneNumber,
       item.reportType === 'schoolReport' ? 'Okul Görüşmesi' : 'Öğrenci Görüşmesi'  ,
       item.meetingDate,
-      item.userID == currentID  ? <Capsule> {item.whoseDocument} </Capsule> : item.whoseDocument
+      item.userID == id  ? <Capsule> {item.whoseDocument} </Capsule> : item.whoseDocument
     ] 
 
   }
@@ -606,9 +613,9 @@ export const PersonelReports = ( { id , setLoggedin , role , notFoundText  , cur
     loading = {loading} 
     nextPage = {nextPage}
     tableInformations = {tableInformations}
-    iconOptions = {reportOptions}
+    iconOptions = {filterIconOptions}
     subPagesCount = {subPagesCount}
-    notFoundText = { notFoundText || `Bu ${role}ye Ait Rapor Bulunmamaktadir`}
+    notFoundText = { notFoundText || `Bu ${role}ye Ait Bir Rapor Bulunmamaktadir`}
     notFound = {notFound}
     path = {'/home/personel_listesi'}
     pathGenerator = {pathGenerator}   />
@@ -634,13 +641,25 @@ export const PersonelSubBranches = ({ id , setLoggedin , role , notFoundText , c
     '',
   ]
   
-  var  PersonelOptions = [
-    {desc:'Genel Bilgiler',Icon:<i className="fas fa-user-friends"></i>},
-    {desc:'Bayiler',Icon:<i    className="fas fa-code-branch"/>},
-    {desc:'Raporlar',Icon:<i   className="fas fa-sticky-note"></i>},
-    {desc:'Yetkiler',Icon: <i  className="fas fa-unlock"></i>}, ]
+  const filterIconOptions = (user)=>{
 
-  if( currentRole !== 'Admin' &&  currentRole ) PersonelOptions = PersonelOptions.filter(({desc})=> desc !== 'Yetkiler' ) ;
+    var  PersonelOptions = [
+      {desc:'Genel Bilgiler',Icon:<i className="fas fa-user-friends"></i>},
+      {desc:'Bayiler',Icon:<i    className="fas fa-code-branch"/>},
+      {desc:'Raporlar',Icon:<i   className="fas fa-sticky-note"></i>},
+      {desc:'Yetkiler',Icon: <i  className="fas fa-unlock"></i>},
+    ]
+
+    const { role } = user ; 
+    
+    if( currentRole !== 'Admin' &&  currentRole ) PersonelOptions =  PersonelOptions.filter(( { desc } )=> desc !== 'Yetkiler' ) ;
+
+    if( role !== "Temsilci" ) PersonelOptions =  PersonelOptions.filter(( { desc } )=> desc !== 'Bayiler' ) ;
+    
+
+    return PersonelOptions ; 
+
+  }
 
   const tableInformations = (item)=> {
       
@@ -680,7 +699,7 @@ export const PersonelSubBranches = ({ id , setLoggedin , role , notFoundText , c
     loading = {loading} 
     nextPage = {nextPage}
     tableInformations = {tableInformations}
-    iconOptions = {PersonelOptions}
+    iconOptions = {filterIconOptions}
     subPagesCount = {subPagesCount}
     notFoundText ={ notFoundText || `Bu ${role}ye Bagli Bir  Bayi  Bulunmamaktadir`}
     notFound = {notFound}

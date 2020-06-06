@@ -31,6 +31,7 @@ box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.03
 
 
 
+
 const PersonelList  = ({isOnlySubBranch,...rest})=>{
 
   const [personels,setPersonels] = useState([]);
@@ -41,7 +42,7 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
   const [searchData, setSearchData] = useState({});
   const [ notFound , setNotFound ] = useState();
 
-  const {isLoggedinf,user} = useContext(Context);
+  const {isLoggedinf,user:currentUser} = useContext(Context);
 
   const TopRows  =  [
     'İsim',
@@ -51,20 +52,35 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
     'Sözleşme Tarihi',
     '',
   ]
-  
-  var  PersonelOptions = [
-    {desc:'Genel Bilgiler',Icon:<i className="fas fa-user-friends"></i>},
-    {desc:'Bayiler',Icon:<i    className="fas fa-code-branch"/>},
-    {desc:'Raporlar',Icon:<i   className="fas fa-sticky-note"></i>},
-    {desc:'Yetkiler',Icon: <i  className="fas fa-unlock"></i>},
-  ]
 
+  
+  
+ 
   const closeModal_1 = () => {
     setIsModalOpen(false);
     setBackstage(false);
   }
    
-  if( user.role !== 'Admin' &&  user.role ) PersonelOptions = PersonelOptions.filter(( { desc } )=> desc !== 'Yetkiler' ) ;
+
+  const filterIconOptions = (user)=>{
+
+    var  PersonelOptions = [
+      {desc:'Genel Bilgiler',Icon:<i className="fas fa-user-friends"></i>},
+      {desc:'Bayiler',Icon:<i    className="fas fa-code-branch"/>},
+      {desc:'Raporlar',Icon:<i   className="fas fa-sticky-note"></i>},
+      {desc:'Yetkiler',Icon: <i  className="fas fa-unlock"></i>},
+    ]
+
+    const { role } = user ; 
+    
+    if( currentUser.role !== 'Admin' &&  currentUser.role ) PersonelOptions =  PersonelOptions.filter(( { desc } )=> desc !== 'Yetkiler' ) ;
+
+    if( role !== "Temsilci" ) PersonelOptions =  PersonelOptions.filter(( { desc } )=> desc !== 'Bayiler' ) ;
+    
+
+    return PersonelOptions ; 
+
+  }
 
   const tableInformations = ( item )=> {
 
@@ -130,7 +146,7 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
                         tableInformations = {tableInformations}
                         setIsModalOpen = {setIsModalOpen}
                         setBackstage = {setBackstage}
-                        iconOptions = {PersonelOptions}
+                        iconOptions = {filterIconOptions}
                         subPagesCount = {subPagesCount}
                         notFoundText ='Herhangi Bir Sonuç Bulunamadı.'
                         notFound = {notFound}

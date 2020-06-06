@@ -285,14 +285,15 @@ const GeneralList = (
                   <div  style={{display:'flex',flex:1}} >
   
                     {
-                          iconOptions.map((item,Mainindex)=>{
+                          iconOptions( mainItem ).map( ( item,Mainindex )=>{
   
                               return   <StudentListIconWrapper key={item.desc} >
                                       
                                     <Link  to={ pathGenerator( item.desc , mainItem._id ) } style={{display:'flex',width:'100%',height:'100%',flexFlow:'column',justifyContent:'center',alignItems:'center',padding:'6px',fontSize:'11.5px',color:'white', textDecoration:'none'}}>
 
-                                        {item.Icon}  <span> {item.desc} </span>  
-
+                                     <span>{item.Icon}</span>   
+                                     <span> {item.desc} </span>  
+ 
                                     </Link>
                               
                              </StudentListIconWrapper>   

@@ -317,14 +317,14 @@ const Profile = ({match,...rest})=>{
 
                           <Route path='/home/profil/bayiler' exact   render={()=><InputsWrapper> 
                           
-                               <PersonelSubBranches id={ user._id } role={ user.role } setLoggedin={restContext.isLoggedinf} notFoundText = 'Size Bağlı Bir Bayi Bulunmamaktadır' currentRole={ user.role }  />
+                               <PersonelSubBranches id={ user._id }  currentID={user._id}  role={ user.role } setLoggedin={restContext.isLoggedinf} notFoundText = 'Size Bağlı Bir Bayi Bulunmamaktadır' currentRole={ user.role }  />
 
                             </InputsWrapper>
                            } />
 
                           <Route path='/home/profil/raporlar' exact   render={()=><InputsWrapper> 
                           
-                               <PersonelReports currentRole={ user.role } role = { user.role }   currentID={user._id} notFoundText = 'Size Ait Bir Rapor Bulunmamaktadır' setLoggedin={restContext.isLoggedinf}  />
+                               <PersonelReports currentRole={ user.role } role = { user.role } id={ user._id }  currentID={user._id} notFoundText = 'Size Ait Bir Rapor Bulunmamaktadır' setLoggedin={restContext.isLoggedinf}  />
 
                             </InputsWrapper>
                           } />

@@ -66,12 +66,20 @@ const Student = (props) => {
     '',
   ]
   
-  const reportOptions = [
-    {
-      desc: 'Görüşme Bilgileri',
-      Icon: <i className="fas fa-user-friends"></i>
-    },
-  ]
+
+
+  const filterIconOptions = (report)=>{
+
+    var  reportOptions = [
+      {
+        desc: 'Görüşme Bilgileri',
+        Icon: <i className="fas fa-user-friends"></i>
+      },
+    ]
+
+    return reportOptions ; //just for now
+
+  }
 
   const tableInformations = ( item  )=> {
     
@@ -134,7 +142,7 @@ const Student = (props) => {
                         tableInformations = {tableInformations}
                         setIsModalOpen = {setIsModalOpen}
                         setBackstage = {setBackstage}
-                        iconOptions = {reportOptions}
+                        iconOptions = {filterIconOptions}
                         subPagesCount = {subPagesCount}
                         notFoundText = 'Herhangi Bir Sonuç Bulunamadı.'
                         notFound = {notFound}
