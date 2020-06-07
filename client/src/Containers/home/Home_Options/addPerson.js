@@ -3,6 +3,7 @@ import Generator  from 'generate-password';
 import {UpdateLoggedin} from '../../isLoggedin/action'
 import styled from 'styled-components';
 import {Checkbox,TextField,Tab,Tabs,Paper,InputLabel,MenuItem,IconButton,InputAdornment} from '@material-ui/core'
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
@@ -28,6 +29,7 @@ align-items:center;
 justify-content:center;
 padding:0;
 margin-top:2%;
+margin-bottom:30px;
 padding:30px;
 @media (max-width: 1030px) {
   padding:10px;
@@ -198,6 +200,7 @@ const UserInformations = [
   {0:'role',1:'Rol'},
   {0:'region',1:'Bölge'},
   {0:'township',1:'İlçe'},
+  {0:'responsibleCities' , 1:'Sorumlu Olduğu İller'},
   {0:'gender',1:'Cinsiyet'},
   {0:'contractDate',1:'Sözleşme Tarihi'},
 
@@ -220,6 +223,7 @@ const initialState = {
     phoneNumber:'',
     region:'',
     township:'',
+    responsibleCities:[],
     contractDate:new Date(),
     role:'',
 }
@@ -267,10 +271,6 @@ const AddPerson  = React.memo((props)=>{
   const [BackStage,setBackStage]  = useState(false);
   const [spanWiths , setSpanWiths] = useState([]);
 
- 
-   
-  
-  
   const tabsHandle = (event, newValue) => {
     setTabShow(newValue);
   };
@@ -305,27 +305,28 @@ const AddPerson  = React.memo((props)=>{
    makePermissionRequest('get',setFetchPermission);
   },[]);
 
-  const textChangeHandler = React.useCallback((Type) => event => {
+  const textChangeHandler = (Type,multipleInput) => (event) => {
 
     let value = event.target.value;
-    const oldState = { ...userInformations };
-    oldState[Type]=value 
 
-    if(Type=='region') //whenever we want to change region , we have to assign unf value to township
+    const oldState = { ...userInformations };
+    oldState[Type] = value 
+
+    if(Type === 'responsibleCities' ){ oldState[Type] = multipleInput ;}
+
+    if(Type === 'region') //whenever we want to change region , we have to assign unf value to township
     {
        oldState['township']='';
     }
 
-    if(value==='Admin' || value==='Temsilci' || value==='Bayi') //we have to reset regions and smaltowns
-    {
+    if(value === 'Admin' || value === 'Temsilci' || value === 'Bayi'){ //we have to reset regions and smaltowns
           oldState['township']='';
           oldState['region']='';
           oldState['relatedAgency']='';
     }
     //we are doing override here;
     setUserInformations(oldState);
-  },[userInformations]);
-
+  };
 
   const closeModal_1 = event=>{
     setUserInformations(initialState);
@@ -362,7 +363,7 @@ const AddPerson  = React.memo((props)=>{
 
     if(!event.target.checked)
     {
-      oldPermissions[Type].splice( oldPermissions[Type].indexOf(value),1);
+      oldPermissions[Type].splice( oldPermissions[Type].indexOf(value) , 1 );
     }
     else
     {
@@ -392,7 +393,7 @@ const AddPerson  = React.memo((props)=>{
           
           if(role === 'Bayi' && currentUser.role === 'Temsilci')
           {  
-             if(!element && key !== 'relatedAgency' )
+             if( ( !element && key !== 'relatedAgency' )  ||  userInformations['responsibleCities'].length <= 0)
              {
                return setwarningPopUp(true);
              }  
@@ -489,22 +490,65 @@ const AddPerson  = React.memo((props)=>{
 
 
 export const UserInputs = React.memo(({userInformations,townships,textChangeHandler,setDate,GeneratePassword,disabled,isProfil,user,relatedAgency,relatedAgencyLoading})=>{
+
   const [showPassword, setShowPassword] = useState(false);
 
-  var relatedAgencyIcon = ()=> null;
+  var relatedAgencyIcon = (item) => null;
+  var responsibleForCities = (item) => null;
+
+  var controlRegion = (mainItem)=>  userInformations['role']  ?     <InnerInputWrapper key={mainItem}><TextField InputLabelProps={{style:{color:'black',zIndex:1}}} inputProps={{style:{background:'grey'}}}  disabled={ userInformations.relatedAgencyID  ? true : disabled }  onChange={textChangeHandler(mainItem)}  id="select" label={userInformations['role'] === 'Bayi' ? 'Bayi Bölge' : 'Temsilci Bölge'} value={userInformations[mainItem]} style={{width:'100%',margin:'10px 0'}}  select>{
+             
+        userInformations['role'] === 'Bayi' ?  
+
+        Regions.map(( item )=> <MenuItem value={item.il}>{item.il}</MenuItem> ) 
+        
+        :
+
+        AgencyRegions.map(( item )=> <MenuItem value={item}>{item}</MenuItem>) } 
+
+  </TextField> </InnerInputWrapper> : null
+
 
   if(user.role === 'Admin')
   {
-      if(isProfil)
-      {
+
+      if(isProfil){
+
             var Statuses =  DetailStatuses.map((statu , index)=>{ 
-               return <MenuItem key={index} value={statu}>{statu}</MenuItem> 
+               return <MenuItem key={statu} value={statu}>{statu}</MenuItem> 
             })
+
       }
-      else
-      {  
+      else{  
           if(userInformations.relatedAgencyID)
           {
+
+            var responsibleForCities =(item)=> <InnerInputWrapper key={item}>
+              
+            <Autocomplete
+
+              multiple
+              value={userInformations[item]}
+              onChange={(event,newValue)=>{textChangeHandler(item,newValue)(event)}}
+              id="tags-standard"
+              disabled={disabled}
+              options={Regions.map((Region)=>Region.il)}
+              style={{width:'100%'}}
+              getOptionLabel={(option) => option }
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  InputLabelProps={{style:{color:'black',zIndex:1}}} 
+                  variant="standard"
+                  label="Sorumlu Olduğu İller"
+                />
+              )}
+    
+            />
+
+            </InnerInputWrapper>
+            
+          
             if(!relatedAgencyLoading)
             {
               var relatedAgencyIcon = (index) => <InnerInputWrapperIcon key={index}>  
@@ -533,14 +577,14 @@ export const UserInputs = React.memo(({userInformations,townships,textChangeHand
 
             }
 
-            else
+            else {
 
-            {
-              var relatedAgencyIcon =(index)=> <InnerInputWrapperIcon key={index}>
+              var relatedAgencyIcon = (index) => <InnerInputWrapperIcon key={index}>
 
                   <Circle key={index} Load={relatedAgencyLoading} position='static'/>
 
               </InnerInputWrapperIcon>
+
             }
             
             var Statuses =  DetailStatuses.map((statu , index)=>{ 
@@ -551,70 +595,115 @@ export const UserInputs = React.memo(({userInformations,townships,textChangeHand
           else
           {
             var Statuses =  AddPersonStatuses.map((statu , index)=>{ 
-                  return <MenuItem key={index}  value={statu}>{statu}</MenuItem> 
+                  return <MenuItem key={statu}  value={statu}>{statu}</MenuItem> 
             })
 
           }
 
       }
   }
-  else if (user.role === 'Temsilci' )
-  {  
-      if(isProfil)
+  else if (user.role === 'Temsilci' ){
+
+      if(isProfil) {
         var Statuses = <MenuItem  value='Temsilci'>Temsilci</MenuItem>
-      else
+      }
+      else {
+
         var Statuses = <MenuItem  value='Bayi'>Bayi</MenuItem>
+
+        var responsibleForCities = ( item )=> <InnerInputWrapper key={item}>
+
+       <Autocomplete
+          multiple
+          value={userInformations[item]}
+          disabled={disabled}
+          onChange={(event,newValue)=>{textChangeHandler(item,newValue)(event)}}
+          id="tags-standard"
+          options={Regions.map((Region)=>Region.il)}
+          style={ {width:'100%' , color:'black'} }
+          getOptionLabel={(option) => option }
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              InputLabelProps={{style:{color:'black',zIndex:1}}} 
+              variant="standard"
+              label="Sorumlu Olduğu İller"
+            />
+          )} />  
+      
+      </InnerInputWrapper>
+      }
   }
   else
   {
       var Statuses = <MenuItem  value='Bayi'>Bayi</MenuItem>
 
-      if(isProfil)
-      {
-        
-        if(!relatedAgencyLoading)
-          {
-                var relatedAgencyIcon = (index)=> <InnerInputWrapperIcon key={index}>  
-                
-                <span>  Bağlı Olduğu Temsilci :   </span>
+      if(isProfil) {
 
-                <Icon>
-                    <div  style={{width:'100%',height:'100%',textDecoration:'none',color:'white',display:'block',padding:'5px 10px'}}>
-                              <span > {relatedAgency.firstName} </span>
-                              <span >  {relatedAgency.lastName}  </span> 
-                              <i class="fas fa-user" style={{marginLeft:5}}></i> 
-                    </div>   
-                </Icon>
+        var responsibleForCities = ( item )=> <InnerInputWrapper key={item}>
 
-                <Icon style={{padding:'5px 10px',background:'#1eb2a6'}}>
+              <Autocomplete
+
+                      multiple
+                      value={userInformations[item]}
+                      disabled={disabled}
+                      onChange={(event,newValue)=>{textChangeHandler(item,newValue)(event)}}
+                      id="tags-standard"
+                      options={Regions.map((Region)=>Region.il)}
+                      style={ {width:'100%' , color:'black'} }
+                      getOptionLabel={(option) => option }
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          InputLabelProps={{style:{color:'black',zIndex:1}}} 
+                          variant="standard"
+                          label="Sorumlu Olduğu İller"
+                        />
+                      )} />   
+
+            </InnerInputWrapper>
+
+            if(!relatedAgencyLoading) {
+
+                    var relatedAgencyIcon = (index)=> <InnerInputWrapperIcon key={index}>  
                     
-                  <span>{relatedAgency.region} Bölge Temsilcisi</span>
+                    <span>  Bağlı Olduğu Temsilci :   </span>
 
-                </Icon>
+                    <Icon>
+                        <div  style={{width:'100%',height:'100%',textDecoration:'none',color:'white',display:'block',padding:'5px 10px'}}>
+                                  <span > {relatedAgency.firstName} </span>
+                                  <span >  {relatedAgency.lastName}  </span> 
+                                  <i class="fas fa-user" style={{marginLeft:5}}></i> 
+                        </div>   
+                    </Icon>
 
-            </InnerInputWrapperIcon>
-        }
-        else
-        {
-            var relatedAgencyIcon =(index)=> <InnerInputWrapperIcon key={index}>
+                    <Icon style={{padding:'5px 10px',background:'#1eb2a6'}}>
+                        
+                      <span>{relatedAgency.region} Bölge Temsilcisi</span>
 
-                <Circle key={index} Load={relatedAgencyLoading} position='static'/>
+                    </Icon>
 
-            </InnerInputWrapperIcon>
-        }
+                </InnerInputWrapperIcon>
+            }
+            else
+            {
+                var relatedAgencyIcon = (index)=> <InnerInputWrapperIcon key={index}>
+
+                    <Circle key={index} Load={relatedAgencyLoading} position='static'/>
+
+                </InnerInputWrapperIcon>
+            }
         
       }
     
   }
  
 
+  return UserInformations.map((item,index)=>{
 
-
-  return UserInformations.map((item,index)=>{    
-    if(item[0] === 'township' ||  item[0] === 'relatedAgency' )
+    if(item[0] === 'township' ||  item[0] === 'relatedAgency' || item[0] === 'responsibleCities' )
     {
-       if(item[0] === 'township' && townships && userInformations['region'] && userInformations['role'] !== 'Admin')
-       {
+       if(item[0] === 'township' && townships && userInformations['region'] && userInformations['role'] !== 'Admin'){
               return  <InnerInputWrapper key={item[0]}> <TextField disabled={ userInformations.relatedAgencyID  ? true : disabled } InputLabelProps={{style:{color:'black',zIndex:1}}}  inputProps={{style:{padding:14,background:disabled ?  '#eeeeee' : 'white',color:'#333'}}}  onChange={textChangeHandler(item[0])}  id="select" label="İlçe" value={userInformations[item[0]]} style={{width:'100%',margin:'10px 0'}}  select>
                        {
                          townships.map((item)=>{
@@ -625,10 +714,8 @@ export const UserInputs = React.memo(({userInformations,townships,textChangeHand
 
               </InnerInputWrapper> 
        }
-       if(item[0] === 'relatedAgency')
-       {
-              return  relatedAgencyIcon(index);
-       } 
+       if( item[0] === 'relatedAgency' ){ return  relatedAgencyIcon(index); } 
+       if( item[0] === 'responsibleCities' &&  userInformations['role']) {  return  responsibleForCities(item[0]); }
             
     }
     else
@@ -646,18 +733,20 @@ export const UserInputs = React.memo(({userInformations,townships,textChangeHand
 
         ? 
         <React.Fragment>
-              <TextField type={showPassword ?  "text" : "password"}   InputProps={{ // <-- This is where the toggle button is added.
-    endAdornment: (
-      <InputAdornment position="end">
-        <IconButton
-          aria-label="toggle password visibility"
-          onClick={()=>setShowPassword(prev=>!prev)}
-        >
-          {showPassword ? <Visibility /> : <VisibilityOff />}
-        </IconButton>
-      </InputAdornment>
-    )
-  }}  InputLabelProps={{style:{color:'black',zIndex:1}}}  inputProps={{style:{padding:10,background:disabled ?  '#eeeeee' : 'white',color:'#333'}}}   value={userInformations[item[0]]} disabled={disabled}  onChange={textChangeHandler(item[0])}  id="outlined-basic" label={item[1]}  style={{width:'100%'}} />
+              <TextField type={showPassword ?  "text" : "password"}   InputProps={{ 
+                // <-- This is where the toggle button is added.
+         endAdornment: (
+          <InputAdornment position="end">
+            <IconButton
+              aria-label="toggle password visibility"
+              onClick={()=>setShowPassword(prev=>!prev)}
+            >
+              {showPassword ? <Visibility /> : <VisibilityOff />}
+            </IconButton>
+          </InputAdornment>
+        )
+
+        }}  InputLabelProps={{style:{color:'black',zIndex:1}}}  inputProps={{style:{padding:10,background:disabled ?  '#eeeeee' : 'white',color:'#333'}}}   value={userInformations[item[0]]} disabled={disabled}  onChange={textChangeHandler(item[0])}  id="outlined-basic" label={item[1]}  style={{width:'100%'}} />
               {!disabled ?  <GeneratePasswrd type='button'  onClick={GeneratePassword}>Şifre Ver</GeneratePasswrd> : null}
         </React.Fragment>  
          :
@@ -672,11 +761,12 @@ export const UserInputs = React.memo(({userInformations,townships,textChangeHand
         <InnerInputWrapper key={item[0]}>  
         {
 
+            
             item[0] === 'phoneNumber' 
             ?   
             <TextField   InputLabelProps={{style:{color:'black',zIndex:1}}}  inputProps={{style:{padding:10,background:disabled ?  '#eeeeee' : 'white',color:'#333'}}}   value={userInformations[item[0]]} disabled={disabled}  onChange={textChangeHandler(item[0])}  id="outlined-basic" label={item[1]}  style={{width:'100%'}} />
             :
-            item[0] !== 'password' ? 
+            item[0] !== 'password' &&  item[0] !== 'responsibleCities' ? 
             <TextField    value={userInformations[item[0]]} disabled={disabled}  onChange={textChangeHandler(item[0])}  id="outlined-basic" InputLabelProps={{style:{color:'black',zIndex:1}}}  label={item[1]} inputProps={{style:{padding:10,background:disabled ?  '#eeeeee' : 'white',color:'#333'}}} style={{width:'100%'}}   /> 
             :
             null
@@ -691,23 +781,16 @@ export const UserInputs = React.memo(({userInformations,townships,textChangeHand
 
             null
 
-           :
+            :
+
+            userInformations['role'] !== 'Admin'  && item[0] === 'region' ? 
+
+            controlRegion(item[0])
+
+            :
+
            <InnerInputWrapper key={item[0]}>
 
-           {item[0] === 'region' && userInformations['role'] ?   
-
-           <TextField InputLabelProps={{style:{color:'black',zIndex:1}}} inputProps={{style:{background:'grey'}}}  disabled={ userInformations.relatedAgencyID  ? true : disabled }  onChange={textChangeHandler(item[0])}  id="select" label={userInformations['role'] === 'Bayi' ? 'Bayi Bölge' : 'Temsilci Bölge'} value={userInformations[item[0]]} style={{width:'100%',margin:'10px 0'}}  select>{
-             
-                userInformations['role'] === 'Bayi' ?  
-
-                Regions.map((item)=> <MenuItem value={item.il}>{item.il}</MenuItem> ) 
-                
-                :
-
-                AgencyRegions.map((item)=> <MenuItem value={item}>{item}</MenuItem>) } 
-
-            </TextField> 
-            : null}   
            {item[0] === 'gender' ?   <TextField InputLabelProps={{style:{color:'black',zIndex:1}}}  inputProps={{style:{padding:14,background:disabled ?  '#eeeeee' : 'white',color:'#333'}}} disabled={disabled}   onChange={textChangeHandler(item[0])}  id="select" label="Cinsiyet" value={userInformations[item[0]]} style={{width:'100%',margin:'10px 0'}}  select> <MenuItem value="Male">Erkek</MenuItem> <MenuItem value="Female">Kadın</MenuItem> </TextField> : null}
            {item[0] === 'contractDate' ? <KeyboardDatePicker disableToolbar
            
@@ -718,7 +801,7 @@ export const UserInputs = React.memo(({userInformations,townships,textChangeHand
                 format="dd/MM/yyyy"
                 margin="normal"
                 id="date-picker-inline"
-                label="Sözleşme Tarihi"   v
+                label="Sözleşme Tarihi"   
                 value={userInformations[item[0]]} 
                 onChange={setDate} 
                 style={{width:'100%',margin:'10px 0'}}/> : null}
@@ -727,7 +810,7 @@ export const UserInputs = React.memo(({userInformations,townships,textChangeHand
                            item[0] === 'role' ?    <TextField InputLabelProps={{style:{color:'black',zIndex:1}}}  inputProps={{style:{padding:14,background:disabled ?  '#eeeeee' : 'white',color:'#333'}}} onChange={textChangeHandler(item[0])} disabled={ userInformations.relatedAgencyID  ? true : disabled }   id="select" label="Rol" value={userInformations[item[0]]}  style={{width:'100%',margin:'10px 0'}}  select>
                                 
                                 {
-                                  Statuses
+                                   Statuses
                                 }
                              
                           </TextField>

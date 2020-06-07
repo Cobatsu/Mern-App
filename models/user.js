@@ -54,6 +54,10 @@ const User = mongoose.Schema({
     relatedAgencyID:{
      type:String,
      required:false,
+    },
+    responsibleCities : {
+     type:Array,
+     required:false,
     }
 })
 

@@ -169,6 +169,7 @@ const  initialUserInformations = {
   mailAddress:'',
   township:'',
   contractDate:new Date(),
+  responsibleCities:[],
   role:'',
   permissions:{},
 }
@@ -318,10 +319,10 @@ const General_User_Info = ({match,...rest})=>{
         {  
             const element = rest[key];   
 
-          if(role === 'Bayi')
+          if(role === 'Bayi' )
           {
             
-             if(!element)
+             if(!element ||  userInformations['responsibleCities'].length <= 0)
              {
               return setwarningPopUp(true);
              }  
@@ -348,11 +349,13 @@ const General_User_Info = ({match,...rest})=>{
 
    
 
-    const textChangeHandler = React.useCallback((Type) => event => {
+    const textChangeHandler = (Type,multipleInput) => event => {
         let value = event.target.value;
         const oldState = {...userInformations};
         oldState[Type]=value 
-    
+
+        if(Type === 'responsibleCities' ){ oldState[Type] = multipleInput ;}
+
         if(Type==='region')
         {
           oldState['township']='';
@@ -365,7 +368,7 @@ const General_User_Info = ({match,...rest})=>{
         }
         //we are doing override here;
         setUserInformations(oldState);
-    },[userInformations]);
+    }
 
     const permissionHandler =React.useCallback((Type,value)=>event=>{
 
@@ -582,7 +585,7 @@ export const PersonelReports = ( { id , setLoggedin , role , notFoundText  , cur
       item.relatedPersonPhoneNumber,
       item.reportType === 'schoolReport' ? 'Okul Görüşmesi' : 'Öğrenci Görüşmesi'  ,
       item.meetingDate,
-      item.userID == id  ? <Capsule> {restrictWord(item.whoseDocument,13)} </Capsule> : restrictWord(item.whoseDocument,13)
+      item.userID == id  ? <Capsule> { restrictWord(item.whoseDocument,13) } </Capsule> : restrictWord(item.whoseDocument,13)
     ] 
 
   }
