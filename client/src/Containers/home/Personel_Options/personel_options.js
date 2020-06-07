@@ -20,6 +20,7 @@ import {_PersonelList} from  './personelList'
 import UserMenu from '../../../Components/Usermenu'
 import {useViewport} from '../../home/navs/customHooks/viewPortHook'
 import GeneralList from '../../../Components/GeneralList'
+import {restrictWord} from '../../../Utilities/utilities' 
 
 const MainWrapper = styled.form`
 display:flex;
@@ -577,11 +578,11 @@ export const PersonelReports = ( { id , setLoggedin , role , notFoundText  , cur
   const tableInformations = (item)=> {
       
     return [
-      item.relatedPersonName,
+      restrictWord( item.relatedPersonName , 13 ),
       item.relatedPersonPhoneNumber,
       item.reportType === 'schoolReport' ? 'Okul Görüşmesi' : 'Öğrenci Görüşmesi'  ,
       item.meetingDate,
-      item.userID == id  ? <Capsule> {item.whoseDocument} </Capsule> : item.whoseDocument
+      item.userID == id  ? <Capsule> {restrictWord(item.whoseDocument,13)} </Capsule> : restrictWord(item.whoseDocument,13)
     ] 
 
   }
@@ -660,8 +661,8 @@ export const PersonelSubBranches = ({ id , setLoggedin , role , notFoundText , c
   const tableInformations = (item)=> {
       
     return [
-      item.firstName,
-      item.lastName,
+      restrictWord( item.firstName , 13) , 
+      restrictWord( item.lastName , 13),
       item.role,
       item.region,
       item.contractDate

@@ -173,7 +173,7 @@ export const  AddReport = React.memo((props)=>{
                   const element = initialReportState[key];
                 
                   if(reportType === 'schoolReport')
-                  {
+                    {
                       if(!element)
                       {
                         return setEmptyWarning(true);
@@ -185,18 +185,15 @@ export const  AddReport = React.memo((props)=>{
 
                   }
                   else
-
-                  {
-                    
-                        if( !element && key !== 'schoolName')
-                        {
-                          return setEmptyWarning(true);
-                        }  
-                        else
-                        {
-                          if (key !== 'meetingDate') initialReportState[key] = initialReportState[key].trim();
-                        } 
-
+                    {
+                      if( !element && key !== 'schoolName')
+                      {
+                        return setEmptyWarning(true);
+                      }  
+                      else
+                      {
+                        if (key !== 'meetingDate') initialReportState[key] = initialReportState[key].trim();
+                      } 
                   }
               }
                

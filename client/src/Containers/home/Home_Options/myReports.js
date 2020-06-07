@@ -9,6 +9,7 @@ import BackStage from '../../../UI/backStage'
 import { hasPermission, PermissionsNumbers, IconPermission } from '../../../UI/Permissions/permissionIcon'
 import { SearchReportModal } from '../../../UI/SearchModal/SearchReport';
 import GeneralList from '../../../Components/GeneralList'
+import {restrictWord} from '../../../Utilities/utilities'
 
 const ListWrapper = styled.div`
 display:flex;
@@ -84,11 +85,11 @@ const Student = (props) => {
   const tableInformations = ( item  )=> {
     
     return [
-      item.relatedPersonName,
+      restrictWord( item.relatedPersonName , 13 ) , 
       item.relatedPersonPhoneNumber,
       item.reportType === 'schoolReport' ? 'Okul Görüşmesi' : 'Öğrenci Görüşmesi'  ,
       item.meetingDate,
-      item.userID == user._id  ? <Capsule> {item.whoseDocument} </Capsule> : item.whoseDocument
+      item.userID == user._id  ? <Capsule> {restrictWord(item.whoseDocument,13)} </Capsule> : restrictWord(item.whoseDocument,13)
     ] 
 
   }  

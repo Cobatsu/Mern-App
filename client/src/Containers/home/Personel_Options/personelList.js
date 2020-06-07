@@ -8,6 +8,7 @@ import BackStage from '../../../UI/backStage'
 import {SearchPersonModal as SearchModal} from '../../../UI/SearchModal/SearchPerson'
 import { Context } from '../../../Context/Context';
 import GeneralList from '../../../Components/GeneralList'
+import {restrictWord} from '../../../Utilities/utilities'
 
 const ListWrapper = styled.div`
 display:flex;
@@ -85,8 +86,8 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
   const tableInformations = ( item )=> {
 
     return [
-      item.firstName,
-      item.lastName,
+      restrictWord( item.firstName , 13) , 
+      restrictWord( item.lastName , 13),
       item.role,
       item.role === 'Admin' ? '—' : item.region,
       item.contractDate ]

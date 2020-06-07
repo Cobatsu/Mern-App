@@ -82,6 +82,7 @@ display:flex;
 text-align:center;
 align-items:center;
 justify-content:center;
+text-transform: capitalize;
 padding:10px;
 position:relative;
 flex:0.8;

@@ -1,6 +1,7 @@
 import React,{useMemo,useState,useEffect,useCallback,useRef} from 'react';
 import styled from 'styled-components';
 import {Link} from 'react-router-dom'
+import {restrictWord}  from '../../../../Utilities/utilities'
 
 const NavWrapper = styled.div`
 display:flex;
@@ -96,6 +97,7 @@ const InnerItemText  = styled.span`
 font-size:15px;
 margin-right:4px;
 text-align:center;
+text-transform: capitalize;
 `
 
 const ResponsiveNav = ({ user,subMenu,match,logOutHandler })=>{
@@ -121,8 +123,7 @@ const ResponsiveNav = ({ user,subMenu,match,logOutHandler })=>{
 
                     <ItemProfile>   
                                     <Link onClick={()=>setSideBarStatus(false)}  className='responsiveLink'  to='/home/profil/genel_bilgiler'  style={{textDecoration:'none',flex:1,display:'flex',alignItems:'center',justifyContent:'center',color:'black'}}>
-                                        <InnerItemText>{user.firstName}</InnerItemText>
-                                        <InnerItemText>{user.lastName}</InnerItemText>
+                                        <InnerItemText>{restrictWord(user.firstName,10)}</InnerItemText>
                                     </Link>  
 
                     </ItemProfile>

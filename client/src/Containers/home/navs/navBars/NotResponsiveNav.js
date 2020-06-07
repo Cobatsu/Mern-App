@@ -1,6 +1,7 @@
 import React,{useContext,useState,useEffect,useRef,createRef,useMemo,useCallback} from 'react';
 import styled from 'styled-components';
 import {Link} from 'react-router-dom'
+import {restrictWord}  from '../../../../Utilities/utilities'
 
 const NavWrapper = styled.div`
 display:flex;
@@ -69,6 +70,7 @@ const InnerItemText  = styled.span`
 font-size:15px;
 margin-right:4px;
 text-align:center;
+text-transform: capitalize;
 `
 
 const Sublist  =  styled.ul`
@@ -148,10 +150,11 @@ const NotResponsiveNav = ({logoutHandler,subMenu,user,setSubLeave,setSubEnter,ma
 
     </Item>
                     <ItemProfile>
+
                          <Link to='/home/profil/genel_bilgiler'  style={{textDecoration:'none',display:'flex',alignItems:'center',justifyContent:'center',width:'100%',height:'100%',color:'#707070'}}>
-                             <InnerItemText>{user.firstName}</InnerItemText>
-                             <InnerItemText>{user.lastName}</InnerItemText>
+                                   <InnerItemText>{restrictWord(user.firstName,10)}</InnerItemText>
                          </Link>    
+
                      </ItemProfile>
   </NavWrapper>
 
