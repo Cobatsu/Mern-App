@@ -592,16 +592,16 @@ export const PersonelReports = ( { id , setLoggedin , role , notFoundText  , cur
 
   const pathGenerator = ( item , id )=> '/home/raporlar/' + id ; 
 
-  const nextPage = (page) => {
+  // const nextPage = (page) => {
 
-    setLoading(true);
-    makeReportSearchRequest('post', {
-      role:role,
-      personelReportID:id,
-      pageNumber: page
-    },setLoggedin , setReports, ()=>{}, setSubPagesCount, setLoading);
+  //   setLoading(true);
+  //   makeReportSearchRequest('post', {
+  //     role:role,
+  //     personelReportID:id,
+  //     pageNumber: page
+  //   },setLoggedin , setReports, ()=>{}, setSubPagesCount, setLoading);
 
-  }
+  // }
 
   useEffect(()=>{
     if(role) makeReportSearchRequest('post', { personelReportID:id , role:role  } ,setLoggedin,setReports,()=>{},setSubPagesCount,setLoading,setNotFound);
@@ -612,7 +612,6 @@ export const PersonelReports = ( { id , setLoggedin , role , notFoundText  , cur
     data = { reports } 
     topTitles = {TopRows} 
     loading = {loading} 
-    nextPage = {nextPage}
     tableInformations = {tableInformations}
     iconOptions = {filterIconOptions}
     subPagesCount = {subPagesCount}
@@ -675,15 +674,15 @@ export const PersonelSubBranches = ({ id , setLoggedin , role , notFoundText , c
 
   const pathGenerator = ( item , id ) => '/home/personel_listesi/' + item.split(' ').join('_').toLowerCase() + '/' + id
 
-  const nextPage = (page) => {
-    setLoading(true);
+  // const nextPage = (page) => {
+  //   setLoading(true);
 
-    makePersonSearchRequest('post', {
-      relatedAgencyID:id,
-      pageNumber: page
-    } , setLoggedin , setSubBranches, ()=>{}, setSubPagesCount, setLoading);
+  //   makePersonSearchRequest('post', {
+  //     relatedAgencyID:id,
+  //     pageNumber: page
+  //   } , setLoggedin , setSubBranches, ()=>{}, setSubPagesCount, setLoading);
 
-  }
+  // }
 
   useEffect(()=>{
     makePersonSearchRequest('post',{relatedAgencyID:id},setLoggedin,setSubBranches,()=>{},setSubPagesCount,setLoading,setNotFound);
@@ -695,7 +694,6 @@ export const PersonelSubBranches = ({ id , setLoggedin , role , notFoundText , c
     data = { subBranches } 
     topTitles = {TopRows} 
     loading = {loading} 
-    nextPage = {nextPage}
     tableInformations = {tableInformations}
     iconOptions = {filterIconOptions}
     subPagesCount = {subPagesCount}

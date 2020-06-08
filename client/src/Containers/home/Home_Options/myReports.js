@@ -42,7 +42,7 @@ color:white;
 font-size:12.5px;
 padding:6px;
 `
-const useQuery = () => new URLSearchParams(useLocation().search);
+ const useQuery = () => new URLSearchParams(useLocation().search);
 
 
 const Student = (props) => {
@@ -57,7 +57,7 @@ const Student = (props) => {
 
   const { isLoggedinf , user  } = useContext(Context);
 
-  const query = useQuery();
+   const query = useQuery();
 
   const TopRows = [
     'Görüşülen Kişi',

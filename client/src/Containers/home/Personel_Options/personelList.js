@@ -1,7 +1,7 @@
 import React,{useEffect,useState,createRef,useRef,useContext} from 'react';
 import {UpdateLoggedin} from '../../isLoggedin/action'
 import styled from 'styled-components';
-import {Link} from 'react-router-dom'
+import { Link , useLocation } from 'react-router-dom'
 import {makePersonelRequest, makePersonSearchRequest} from '../../../request/requset';
 import Circle from '../../../UI/Circle'
 import BackStage from '../../../UI/backStage'
@@ -31,7 +31,7 @@ box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.03
 `
 
 
-
+const useQuery = () => new URLSearchParams(useLocation().search);
 
 const PersonelList  = ({isOnlySubBranch,...rest})=>{
 
@@ -44,6 +44,8 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
   const [ notFound , setNotFound ] = useState();
 
   const { isLoggedinf , user:currentUser } = useContext(Context);
+
+  const query = useQuery();
 
   const TopRows  =  [
     'İsim',
@@ -110,16 +112,21 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
 
   const pathGenerator = ( item , id ) => '/home/personel_listesi/' + item.split(' ').join('_').toLowerCase() + '/' + id 
 
-  const nextPage = (page)=>{
+  useEffect(()=>{
+          
+    if(query.get('page')) {
+
+      makePersonSearchRequest('post', {
+        ...searchData,
+        pageNumber: query.get('page')
+      }, isLoggedinf, setPersonels, closeModal_1, setSubPagesCount, setLoading , setNotFound);
+
+    }
     
-          setLoading(true);    
+  },[query.get('page')])
 
-          makePersonSearchRequest('post', {
-            ...searchData,
-            pageNumber: page
-          }, isLoggedinf, setPersonels, closeModal_1, setSubPagesCount, setLoading , setNotFound);
 
-  }
+
  // we can also  use useRef hook for storing value or objects; 
 
     return <UpdateLoggedin page='PERSONEL_LİST' {...rest}  >
@@ -158,7 +165,6 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
                         mainTitle = {isOnlySubBranch ? 'Bayiler' : 'Personeller'} 
                         titleIcon = {<i style={{ marginRight: 8 }} className="fas fa-user-friends"></i>} 
                         loading = {loading} 
-                        nextPage = {nextPage}
                         tableInformations = {tableInformations}
                         setIsModalOpen = {setIsModalOpen}
                         setBackstage = {setBackstage}
