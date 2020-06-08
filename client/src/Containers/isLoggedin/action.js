@@ -42,8 +42,7 @@ export const UpdateLoggedin = ({page,children,history,isLoggedin,location,match}
         case 'PERSONEL_LİST':
         case 'ADD_USER':      // this is how I control  whether user is allowed to go into  the page or not
 
-        if(Loggedin || Loading)
-            {  
+        if(Loggedin || Loading) {  
 
                 if(!Loading)
                 {

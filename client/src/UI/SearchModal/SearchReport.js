@@ -98,7 +98,7 @@ export const  SearchReportModal = React.memo(( { isOpen , close , role , closeMo
     const [searchData,setSearchData] = useState (null);
     const [date,setDate] = useState(null);
     const [date2,setDate2] = useState(null);
-    const {isLoggedinf}  = useContext(Context);
+    const { isLoggedinf , dispatch }  = useContext(Context);
     const { width }  = useViewport(); 
     const breakPoint = 1030 ;
 
@@ -128,7 +128,9 @@ export const  SearchReportModal = React.memo(( { isOpen , close , role , closeMo
 
         setMainSearchData(searchMainData);  //we can also send trimmed data to parent component;
 
-        makeReportSearchRequest('post',{...searchMainData,role}, isLoggedinf , setReports , close , setSubPagesCount,()=>{},setNotFound);      
+        dispatch({ type:'SET_SEARCH_DATA' , payload : searchMainData })
+
+        makeReportSearchRequest('post',{...searchMainData,role}, isLoggedinf , setReports , close , setSubPagesCount,()=>{},setNotFound,dispatch);      
         
     }
 

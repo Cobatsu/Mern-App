@@ -1,7 +1,8 @@
-import React,{useMemo,useState,useEffect,useCallback,useRef} from 'react';
+import React,{useMemo,useState,useEffect,useCallback,useRef,useContext} from 'react';
 import styled from 'styled-components';
 import {Link} from 'react-router-dom'
 import {restrictWord}  from '../../../../Utilities/utilities'
+import {Context} from '../../../../Context/Context'
 
 const NavWrapper = styled.div`
 display:flex;
@@ -142,7 +143,8 @@ const ResponsiveNav = ({ user,subMenu,match,logOutHandler })=>{
 const SideBar  = ({sideBarStatus,subMenu,match,setSideBarStatus,logOutHandler})=>{
 
     const [subLinks , setSubLinks ] = useState([]);
-     
+    const { state , dispatch } = useContext(Context);
+
      const onClickSubLink  = (index)=>{
         subLinks.includes(index) 
         ? 
@@ -194,6 +196,7 @@ const SideBar  = ({sideBarStatus,subMenu,match,setSideBarStatus,logOutHandler})=
                                    <Link 
                                    
                                    onClick={()=>{
+                                    dispatch({type:'RESET'});
                                     setSideBarStatus(false);      
                                    }}
                                    to={match.path + '/' + subItem.split(' ').join('_').toLocaleLowerCase() }

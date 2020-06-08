@@ -35,15 +35,15 @@ box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.03
 
 const PersonelList  = ({isOnlySubBranch,...rest})=>{
 
-  const [personels,setPersonels] = useState([]);
-  const [loading , setLoading] = useState(false);
-  const [backStage, setBackstage] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [subPagesCount, setSubPagesCount] = useState(0);
-  const [searchData, setSearchData] = useState({});
+  const [ personels,setPersonels ] = useState([]);
+  const [ loading , setLoading ] = useState(false);
+  const [ backStage, setBackstage ] = useState(false);
+  const [ isModalOpen, setIsModalOpen ] = useState(false);
+  const [ subPagesCount, setSubPagesCount ] = useState(0);
+  const [ searchData, setSearchData ] = useState({});
   const [ notFound , setNotFound ] = useState();
 
-  const {isLoggedinf,user:currentUser} = useContext(Context);
+  const { isLoggedinf , user:currentUser , state , dispatch} = useContext(Context);
 
   const TopRows  =  [
     'İsim',
@@ -54,15 +54,30 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
     '',
   ]
 
+  useEffect( ()=>{
+
+    const { searchData , pageNumber , dataLength  } = state ; 
+    
+    if( personels.length === 0 && !notFound  && searchData ) {
+      
+      setSubPagesCount(dataLength);
+      
+      setLoading(true);
+      
+      makePersonSearchRequest('post', {
+        ...searchData,
+        pageNumber: pageNumber
+      }, isLoggedinf, setPersonels, closeModal_1, setSubPagesCount, setLoading);
+
+    }
+
+  },[])
   
-  
- 
   const closeModal_1 = () => {
     setIsModalOpen(false);
     setBackstage(false);
   }
    
-
   const filterIconOptions = (user)=>{
 
     var  PersonelOptions = [
@@ -77,10 +92,8 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
     if( currentUser.role !== 'Admin' &&  currentUser.role ) PersonelOptions =  PersonelOptions.filter(( { desc } )=> desc !== 'Yetkiler' ) ;
 
     if( role !== "Temsilci" ) PersonelOptions =  PersonelOptions.filter(( { desc } )=> desc !== 'Bayiler' ) ;
-    
 
     return PersonelOptions ; 
-
   }
 
   const tableInformations = ( item )=> {
@@ -99,6 +112,8 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
   const nextPage = (page)=>{
     
           setLoading(true);    
+
+          dispatch({ type:'SET_SELECTED_PAGE' , payload : page });
 
           makePersonSearchRequest('post', {
             ...searchData,

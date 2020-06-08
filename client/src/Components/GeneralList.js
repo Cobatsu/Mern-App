@@ -2,6 +2,7 @@ import React,{useEffect,useState,createRef,useRef,useContext} from 'react'
 import styled from 'styled-components'
 import {Link} from 'react-router-dom'
 import Circle from '../UI/Circle'
+import {Context} from '../Context/Context'
 
 //------------------
 const HiddenWrapper = styled.div`
@@ -180,30 +181,34 @@ const GeneralList = (
       resetSubPage } )=>{
  
     const refs = useRef([]);  // we can also  use useRef hook for storing value or objects; 
-    const [selectedSubPage, setSelectedSubPage] = useState(0);
 
-    refs.current = refs.current.slice(0, data.length);
+    const { state : { pageNumber } }  = useContext( Context );
+
+    const [ selectedSubPage, setSelectedSubPage ] = useState( typeof pageNumber === 'number' ? pageNumber : 0 );
+    
+    refs.current = refs.current.slice(0,data.length);
   
     for (let step = refs.current.length; step < data.length; step++) {
         refs.current[step] = createRef();  //we can use useRef with createRef  ! ;
     }
 
-    useEffect(()=>{ setSelectedSubPage(0) },[resetSubPage])
-   
+    useEffect(()=>{ if(resetSubPage) setSelectedSubPage(0) },[resetSubPage]) // here we reset the sub page
+    
     let subPageNumber  = Math.ceil(subPagesCount/10);
-   
+
     const SwitchRow = (Amount,ref)=> event =>{
 
       ref.current.style.transform = `translateX(${Amount}%)`
 
-     if(Amount==-50)  
-        for(let i = 0 ; i<refs.current.length ; i++)
-        {
-              if(i !== refs.current.indexOf(ref) && refs.current[i].current)  //close all other list items ; 
-              {
+      if(Amount==-50)  
+        for(let i = 0 ; i<refs.current.length ; i++) {
+
+              if(i !== refs.current.indexOf(ref) && refs.current[i].current){  //close all other list items ; 
                 refs.current[i].current.style.transform=`translateX(0)`
               }
+
         }
+
     }
     
   

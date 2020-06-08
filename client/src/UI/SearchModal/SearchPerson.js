@@ -90,7 +90,7 @@ export const  SearchPersonModal = React.memo(({isOpen,close,role,closeModalOnly,
     const [searchData,setSearchData] = useState (initialSearchState);
     const [date,setDate] = useState(null);
     const [date2,setDate2] = useState(null);
-    const {isLoggedinf}  = useContext(Context); 
+    const { isLoggedinf , dispatch }  = useContext(Context); 
     
     const { width } = useViewport();
     const breakPoint = 1030;
@@ -118,13 +118,14 @@ export const  SearchPersonModal = React.memo(({isOpen,close,role,closeModalOnly,
         
         setMainSearchData(searchMainData);  //we can also send trim data to parent component;
 
-        if(isOnlySubBranch) 
-        {
+        if(isOnlySubBranch){
             let { role , ...updatedSearchData } = searchData;
             searchMainData={...updatedSearchData,relatedAgencyID:id}
         }
+
+        dispatch({ type:'SET_SEARCH_DATA' , payload : searchMainData })
         
-        makePersonSearchRequest('post',searchMainData, isLoggedinf , setReports , close , setSubPagesCount,()=>{} , setNotFound);      
+        makePersonSearchRequest('post',searchMainData, isLoggedinf , setReports , close , setSubPagesCount,()=>{} , setNotFound , dispatch);      
     }
 
     const submitChangeHandler = Type => event => {

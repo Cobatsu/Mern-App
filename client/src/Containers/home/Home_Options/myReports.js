@@ -55,7 +55,7 @@ const Student = (props) => {
   const [searchData, setSearchData] = useState({});
   const [ notFound , setNotFound ] = useState(null);
 
-  const {isLoggedinf,user} = useContext(Context);
+  const { isLoggedinf , user ,  state , dispatch } = useContext(Context);
   
 
   const TopRows = [
@@ -67,7 +67,6 @@ const Student = (props) => {
     '',
   ]
   
-
 
   const filterIconOptions = (report)=>{
 
@@ -89,7 +88,7 @@ const Student = (props) => {
       item.relatedPersonPhoneNumber,
       item.reportType === 'schoolReport' ? 'Okul Görüşmesi' : 'Öğrenci Görüşmesi'  ,
       item.meetingDate,
-      item.userID == user._id  ? <Capsule> {restrictWord(item.whoseDocument,13)} </Capsule> : restrictWord(item.whoseDocument,13)
+      item.userID == user._id  ? <Capsule> { restrictWord(item.whoseDocument,13) } </Capsule> : restrictWord(item.whoseDocument,13)
     ] 
 
   }  
@@ -101,8 +100,30 @@ const Student = (props) => {
     setBackstage(false);
   }
 
+  useEffect(()=>{
+
+    const { searchData , pageNumber , dataLength  } = state ; 
+    
+    if( reports.length === 0 && !notFound  && searchData ) {
+      
+      setSubPagesCount(dataLength)
+      setLoading(true);
+      
+      makeReportSearchRequest('post', {
+        ...searchData,
+        role:user.role,
+        pageNumber:pageNumber,
+      }, isLoggedinf, setReports, closeModal_1, setSubPagesCount, setLoading);
+
+    }
+
+  },[])
+
   const nextPage = (page) => {
+
     setLoading(true);
+
+    dispatch( { type:'SET_SELECTED_PAGE' , payload : page } );
 
     makeReportSearchRequest('post', {
       ...searchData,

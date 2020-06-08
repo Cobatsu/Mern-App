@@ -37,6 +37,7 @@ padding:30px;
 border-radius:3px;
 flex-flow:column;
 `
+
 const InnerContainer = styled.div`
 display:flex;
 width:100%;

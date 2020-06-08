@@ -2,6 +2,7 @@ import React,{useContext,useState,useEffect,useRef,createRef,useMemo,useCallback
 import styled from 'styled-components';
 import {Link} from 'react-router-dom'
 import {restrictWord}  from '../../../../Utilities/utilities'
+import {Context} from '../../../../Context/Context'
 
 const NavWrapper = styled.div`
 display:flex;
@@ -100,7 +101,7 @@ z-index:200;
 const NotResponsiveNav = ({logoutHandler,subMenu,user,setSubLeave,setSubEnter,match,hideSubList})=>{
     
      const [selectedElement , setSelectedElement] = useState(null);
-     
+     const { dispatch } = useContext(Context) ; 
     
      return <NavWrapper>
 
@@ -136,7 +137,11 @@ const NotResponsiveNav = ({logoutHandler,subMenu,user,setSubLeave,setSubEnter,ma
                     return  <Sublist onClick={()=>setSelectedElement(null)} isSelected={selectedElement === index}  onMouseEnter={()=>setSelectedElement(index)} onMouseLeave={()=>setSelectedElement(null)}    key={mainItem.type} >                  
                         {
                             mainItem.props.map((item,index)=>{
-                                return   <SublistItem   key={index}><Link to={match.path + '/' + item.split(' ').join('_').toLocaleLowerCase() }  style={{textDecoration:'none',display:'block',width:'100%',height:'100%',color:'white',padding:10}}>{item}</Link>
+                                return   <SublistItem   key={index}>
+                                    
+                                    <Link to={match.path + '/' + item.split(' ').join('_').toLocaleLowerCase() } onClick={()=> dispatch({type:'RESET'})} style={{textDecoration:'none',display:'block',width:'100%',height:'100%',color:'white',padding:10}}>{item}
+                                    </Link>
+
                                     </SublistItem>
                             })
                         }                       
