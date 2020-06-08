@@ -145,7 +145,7 @@ const MainPage = (props)=>{
 
                                 <GeneralWrapper>
                                         
-                                        <GeneralItem1>
+                                        {/* <GeneralItem1>
 
                                             <i class="fas fa-circle" style={{ marginRight:10 , fontSize:6 , color:'#707070'}}></i>
                                             Şimdilik , uygulamamızda sadece " Rapor Bilgilendirme " sistemi bulunmaktadır . Yeni güncellemeler için çalışmalarımız devam etmektedir . 
@@ -159,14 +159,39 @@ const MainPage = (props)=>{
                                                     Yetkilendirme sistemimiz şimdilik  kısıtlı bölgelere etki etmektedir . 
                                                 
                                                 </GeneralItem1> 
-                                            }
+                                            } */}
 
                                             <GeneralItem1>
 
-                                            <i class="fas fa-circle" style={{ marginRight:10 , fontSize:6 , color:'#707070'}}></i>
+                                            <i class="fas fa-circle" style={{ marginRight:10 , fontSize:8 , color:'#42e6a4'}}></i>
 
-                                                Lütfen Uygulamamızla ilgili şikayetlerinizi veya isteklerinizi bu e-posta adresine
-                                                iletiniz : bexfg@hotmail.com. 
+                                                Sayfa içi  ileri geri yaparken verinin kaybolma sorunu çözüldü . 
+
+                                            </GeneralItem1>
+
+                                            <GeneralItem1>
+
+                                            <i class="fas fa-circle" style={{ marginRight:10 , fontSize:8 , color:'#42e6a4'}}></i>
+
+                                                Personel eklerken çoklu il seçim bölümü eklendi .  
+
+                                            </GeneralItem1>
+
+
+                                             <GeneralItem1>
+
+                                            <i class="fas fa-circle" style={{ marginRight:10 , fontSize:8 , color:'#42e6a4'}}></i>
+
+                                                Öğrenci ve Okul raporlarına Bölge  ve İlçe bölümü eklendi .   
+
+                                            </GeneralItem1>
+
+
+                                            <GeneralItem1>
+
+                                            <i class="fas fa-circle" style={{ marginRight:10 , fontSize:8 , color:'#42e6a4'}}></i>
+
+                                                Raporlarınızın Bölge ve İlçe kısımlarını güncelleyebilirsiniz .    
 
                                             </GeneralItem1>
                                         

@@ -74,16 +74,9 @@ align-self:flex-end;
    width:90%;
 }
 `
-const initialSearchState = {
- reportType:'',
- relatedPersonName:'',
- relatedPersonPhoneNumber:'',
- dateIntervalStart:'',
- dateIntervalEnd:'',
- schoolName:'',
-}
 
-const initialSearchState2 = {
+
+const initialSearchState = {
  reportType:'',
  relatedPersonName:'',
  relatedPersonPhoneNumber:'',
@@ -95,16 +88,13 @@ const initialSearchState2 = {
 
 export const  SearchReportModal = React.memo(( { isOpen , close , role , closeModalOnly , setReports , setSubPagesCount , setNotFound, setMainSearchData  }) => {
   
-    const [searchData,setSearchData] = useState (null);
+   
     const [date,setDate] = useState(null);
     const [date2,setDate2] = useState(null);
-    const { isLoggedinf , dispatch }  = useContext(Context);
+    const { isLoggedinf , dispatch ,state }  = useContext(Context);
+    const [searchData,setSearchData] = useState ( state['reportSearchData'] || initialSearchState );
     const { width }  = useViewport(); 
     const breakPoint = 1030 ;
-
-    useEffect(()=>{ 
-        role === 'Admin' ? setSearchData(initialSearchState2) : setSearchData(initialSearchState);   
-    },[role])
 
     useEffect(() => {
         setSearchData((prev)=>({...prev,dateIntervalStart:date}))
@@ -128,7 +118,9 @@ export const  SearchReportModal = React.memo(( { isOpen , close , role , closeMo
 
         setMainSearchData(searchMainData);  //we can also send trimmed data to parent component;
 
-        dispatch({ type:'SET_SEARCH_DATA' , payload : searchMainData })
+
+        dispatch({ type:'SET_SEARCH_DATA' , payload : searchMainData , listType:'report'})
+       
 
         makeReportSearchRequest('post',{...searchMainData,role}, isLoggedinf , setReports , close , setSubPagesCount,()=>{},setNotFound,dispatch);      
         

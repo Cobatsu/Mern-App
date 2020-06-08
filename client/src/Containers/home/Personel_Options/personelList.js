@@ -56,17 +56,17 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
 
   useEffect( ()=>{
 
-    const { searchData , pageNumber , dataLength  } = state ; 
+    const { personSearchData , personPageNumber , personDataLength  } = state ; 
     
-    if( personels.length === 0 && !notFound  && searchData ) {
+    if( personels.length === 0 && !notFound  && personSearchData ) {
       
-      setSubPagesCount(dataLength);
-      
+      setSubPagesCount(personDataLength);
+      setSearchData(personSearchData);
       setLoading(true);
       
       makePersonSearchRequest('post', {
-        ...searchData,
-        pageNumber: pageNumber
+        ...personSearchData,
+        pageNumber: personPageNumber
       }, isLoggedinf, setPersonels, closeModal_1, setSubPagesCount, setLoading);
 
     }
@@ -113,7 +113,7 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
     
           setLoading(true);    
 
-          dispatch({ type:'SET_SELECTED_PAGE' , payload : page });
+          dispatch({ type:'SET_SELECTED_PAGE' , payload : page , listType : 'person' });
 
           makePersonSearchRequest('post', {
             ...searchData,
@@ -153,6 +153,7 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
                         
                       <GeneralList 
                       
+                        listType = 'person'
                         data = { personels } 
                         topTitles = {TopRows} 
                         mainTitle = {isOnlySubBranch ? 'Bayiler' : 'Personeller'} 

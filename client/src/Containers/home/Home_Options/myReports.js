@@ -100,19 +100,22 @@ const Student = (props) => {
     setBackstage(false);
   }
 
+  console.log(state);
+
   useEffect(()=>{
 
-    const { searchData , pageNumber , dataLength  } = state ; 
+    const { reportSearchData , reportPageNumber , reportDataLength  } = state ; 
     
-    if( reports.length === 0 && !notFound  && searchData ) {
+    if( reports.length === 0 && !notFound  && reportSearchData ) {
       
-      setSubPagesCount(dataLength)
+      setSubPagesCount(reportDataLength)
+      setSearchData(reportSearchData)
       setLoading(true);
       
       makeReportSearchRequest('post', {
-        ...searchData,
+        ...reportSearchData,
         role:user.role,
-        pageNumber:pageNumber,
+        pageNumber:reportPageNumber,
       }, isLoggedinf, setReports, closeModal_1, setSubPagesCount, setLoading);
 
     }
@@ -123,7 +126,7 @@ const Student = (props) => {
 
     setLoading(true);
 
-    dispatch( { type:'SET_SELECTED_PAGE' , payload : page } );
+    dispatch( { type:'SET_SELECTED_PAGE' , payload : page , listType:'report'} );
 
     makeReportSearchRequest('post', {
       ...searchData,
@@ -155,6 +158,7 @@ const Student = (props) => {
                   
                     <GeneralList 
 
+                        listType = 'report'
                         data = { reports } 
                         topTitles = {TopRows} 
                         mainTitle = 'Raporlar' 

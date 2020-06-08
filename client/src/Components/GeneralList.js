@@ -163,6 +163,7 @@ cursor:pointer;
 `
 
 const GeneralList = ( 
+
     { data, 
       topTitles, 
       iconOptions, 
@@ -178,11 +179,16 @@ const GeneralList = (
       loading, 
       pathGenerator, 
       width,
-      resetSubPage } )=>{
+      resetSubPage,
+      listType } 
+      
+      )=>{
  
     const refs = useRef([]);  // we can also  use useRef hook for storing value or objects; 
 
-    const { state : { pageNumber } }  = useContext( Context );
+    const { state }  = useContext( Context );
+
+    const pageNumber = state [ listType+'PageNumber' ];
 
     const [ selectedSubPage, setSelectedSubPage ] = useState( typeof pageNumber === 'number' ? pageNumber : 0 );
     
