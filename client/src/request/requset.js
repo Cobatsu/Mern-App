@@ -450,7 +450,7 @@ export const makeReportSearchRequest = (Type,searchData,setLoggedin , setReport 
 
 }
 
-export const makePersonSearchRequest = (Type,searchData,setLoggedin , setReport , close , setCount , setLoading , setNotFound , dispatch=()=>{} )=>{
+export const makePersonSearchRequest = (Type,searchData,setLoggedin , setReport , close , setCount , setLoading , setNotFound = ()=>{} , dispatch=()=>{} )=>{
   axios[Type]('/api/user/person_search',searchData,{
     headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`} 
   })
