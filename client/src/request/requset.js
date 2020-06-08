@@ -405,7 +405,7 @@ export const makeDeleteReportRequest =(Type,id,setLoggedin,setDeleted)=>{
   })
 }
 
-export const makeReportSearchRequest = (Type,searchData,setLoggedin , setReport , close , setCount , setLoading , setNotFound , dispatch = ()=>{} )=>{
+export const makeReportSearchRequest = (Type , searchData , setLoggedin , setReport , close , setCount , setLoading , setNotFound  , dispatch = ()=>{} )=>{
   
   axios[Type]('/api/profile/report_search',searchData,{
     headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`} 
@@ -415,34 +415,33 @@ export const makeReportSearchRequest = (Type,searchData,setLoggedin , setReport 
     const {sortedData,documentCount} = res.data;
     
 
-    if(res.data.error && !res.data.isLoggedin)
-    {
+    if(res.data.error && !res.data.isLoggedin){
       return setLoggedin(false);
     }
-    else if (sortedData.length > 0)
-    {
+    else if (sortedData.length > 0) {
       
       if(!Object.keys(searchData).includes('pageNumber'))
       {
         setCount(documentCount);
         dispatch ({ type:'SET_CURRENT_DATA_LENGTH' , payload:documentCount , listType : 'report' })
       }
+
+      setNotFound(null)
       close();
       setReport(sortedData);
     }
-    else
-    {
+    else {
 
-      setCount(documentCount);
-      dispatch ({ type:'SET_CURRENT_DATA_LENGTH' , payload:documentCount , listType : 'report' })
-      setLoading(false);
-      setNotFound('Herhangi Bir Sonuç Bulunamadı.')
+      setCount( 0 );
+      dispatch ({ type:'SET_CURRENT_DATA_LENGTH' , payload:0 , listType : 'report' })
+      setNotFound(true)
       close();
       setReport([]);
+
     }
+    
     setLoading(false);
     
-
   })
   .catch((err)=>{
       console.log(err);
@@ -469,6 +468,7 @@ export const makePersonSearchRequest = (Type,searchData,setLoggedin , setReport 
     {
       close();
       setReport(sortedData);
+      setNotFound(null)
 
       if(!Object.keys(searchData).includes('pageNumber'))
       {
@@ -478,10 +478,10 @@ export const makePersonSearchRequest = (Type,searchData,setLoggedin , setReport 
     }
     else
     {
-      setCount(documentCount);
-      dispatch ({ type:'SET_CURRENT_DATA_LENGTH' , payload:documentCount , listType : 'report' })
+      setCount(0);
+      dispatch ({ type:'SET_CURRENT_DATA_LENGTH' , payload:0 , listType : 'person' })
       
-      setNotFound('Herhangi Bir Sonuç Bulunamadı.')
+      setNotFound(true)
       close();
       setReport([]);
 

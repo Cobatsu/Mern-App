@@ -175,8 +175,6 @@ const ReportDetail  = ({match,...rest })=>{
       }
     }
 
-    console.log(initalReportStates)
-
     const submitUpdatedReport = (e)=>{
 
         e.preventDefault();

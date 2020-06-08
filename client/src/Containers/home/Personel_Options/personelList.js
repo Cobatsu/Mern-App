@@ -67,7 +67,7 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
       makePersonSearchRequest('post', {
         ...personSearchData,
         pageNumber: personPageNumber
-      }, isLoggedinf, setPersonels, closeModal_1, setSubPagesCount, setLoading);
+      }, isLoggedinf, setPersonels, closeModal_1, setSubPagesCount, setLoading , setNotFound);
 
     }
 
@@ -118,7 +118,7 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
           makePersonSearchRequest('post', {
             ...searchData,
             pageNumber: page
-          }, isLoggedinf, setPersonels, closeModal_1, setSubPagesCount, setLoading);
+          }, isLoggedinf, setPersonels, closeModal_1, setSubPagesCount, setLoading , setNotFound);
 
   }
  // we can also  use useRef hook for storing value or objects; 

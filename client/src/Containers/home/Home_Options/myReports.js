@@ -100,8 +100,6 @@ const Student = (props) => {
     setBackstage(false);
   }
 
-  console.log(state);
-
   useEffect(()=>{
 
     const { reportSearchData , reportPageNumber , reportDataLength  } = state ; 
@@ -116,7 +114,7 @@ const Student = (props) => {
         ...reportSearchData,
         role:user.role,
         pageNumber:reportPageNumber,
-      }, isLoggedinf, setReports, closeModal_1, setSubPagesCount, setLoading);
+      }, isLoggedinf, setReports, closeModal_1, setSubPagesCount, setLoading , setNotFound);
 
     }
 
@@ -132,7 +130,7 @@ const Student = (props) => {
       ...searchData,
       role:user.role,
       pageNumber: page,
-    }, isLoggedinf, setReports, closeModal_1, setSubPagesCount, setLoading);
+    }, isLoggedinf, setReports, closeModal_1, setSubPagesCount, setLoading , setNotFound);
 
   }
   

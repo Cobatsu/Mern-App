@@ -192,15 +192,15 @@ const GeneralList = (
 
     const [ selectedSubPage, setSelectedSubPage ] = useState( typeof pageNumber === 'number' ? pageNumber : 0 );
     
-    refs.current = refs.current.slice(0,data.length);
+    refs.current = refs.current.slice( 0 , data.length );
   
     for (let step = refs.current.length; step < data.length; step++) {
         refs.current[step] = createRef();  //we can use useRef with createRef  ! ;
     }
 
-    useEffect(()=>{ if(resetSubPage) setSelectedSubPage(0) },[resetSubPage]) // here we reset the sub page
-    
-    let subPageNumber  = Math.ceil(subPagesCount/10);
+    useEffect(()=>{ if( resetSubPage ) setSelectedSubPage(0) },[ resetSubPage ] ) // here we reset the sub page
+  
+    let subPageNumber  = Math.ceil( subPagesCount/10 );
 
     const SwitchRow = (Amount,ref)=> event =>{
 
