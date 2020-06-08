@@ -1,6 +1,6 @@
 import React,{useEffect,useState,createRef,useRef,useContext} from 'react'
 import styled from 'styled-components'
-import {Link} from 'react-router-dom'
+import { Link , useLocation , useRouteMatch } from 'react-router-dom'
 import Circle from '../UI/Circle'
 import {Context} from '../Context/Context'
 
@@ -151,7 +151,6 @@ border-radius:2px;
 display:flex;
 width:5px;
 height:5px;
-padding:11px;
 color:${({selected}) => selected ? 'white' : 'grey'};
 align-items:center;
 justify-content:center;
@@ -342,7 +341,15 @@ const GeneralList = (
           {
                    ( subPageNumber > 1 && data.length !== 0 && !notFound )  &&  new Array(subPageNumber).fill().map((item, index) => { 
   
-                    return <SubPageItem  key={index} selected={ selectedSubPage === index }  onClick={ () => { nextPage(index) ; setSelectedSubPage(index); } } >  {index + 1} </SubPageItem>})
+                    return <SubPageItem  key={index} selected={ selectedSubPage === index }  onClick={ () => { nextPage(index) ; setSelectedSubPage(index); } } >  {index + 1} 
+                        
+                        <Link to = {useLocation().pathname + `/?page=${index+1}` } style={{ padding:'11px' , display:'block' , width: '100%' , height: '100%' }}>
+                        
+                            
+
+                        </Link>
+
+                     </SubPageItem>})
 
           }
                             
