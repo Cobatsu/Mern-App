@@ -90,7 +90,7 @@ export const  SearchPersonModal = React.memo(({isOpen,close,role,closeModalOnly,
     const [date,setDate] = useState(null);
     const [date2,setDate2] = useState(null);
     const { isLoggedinf , dispatch ,state }  = useContext(Context); 
-    const [searchData,setSearchData] = useState ( state['personSearchData'] || initialSearchState );
+    const [searchData,setSearchData] = useState ( initialSearchState );
     
     const { width } = useViewport();
     const breakPoint = 1030;
@@ -123,9 +123,8 @@ export const  SearchPersonModal = React.memo(({isOpen,close,role,closeModalOnly,
             searchMainData={...updatedSearchData,relatedAgencyID:id}
         }
 
-        dispatch({ type:'SET_SEARCH_DATA' , payload : searchMainData , listType : 'person' })
         
-        makePersonSearchRequest('post',searchMainData, isLoggedinf , setReports , close , setSubPagesCount,()=>{} , setNotFound , dispatch);      
+        makePersonSearchRequest('post',searchMainData, isLoggedinf , setReports , close , setSubPagesCount,()=>{} , setNotFound );      
     }
 
     const submitChangeHandler = Type => event => {

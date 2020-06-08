@@ -143,7 +143,6 @@ const ResponsiveNav = ({ user,subMenu,match,logOutHandler })=>{
 const SideBar  = ({sideBarStatus,subMenu,match,setSideBarStatus,logOutHandler})=>{
 
     const [subLinks , setSubLinks ] = useState([]);
-    const { state , dispatch } = useContext(Context);
 
      const onClickSubLink  = (index)=>{
         subLinks.includes(index) 
@@ -196,7 +195,6 @@ const SideBar  = ({sideBarStatus,subMenu,match,setSideBarStatus,logOutHandler})=
                                    <Link 
                                    
                                    onClick={()=>{
-                                    dispatch({type:'RESET'});
                                     setSideBarStatus(false);      
                                    }}
                                    to={match.path + '/' + subItem.split(' ').join('_').toLocaleLowerCase() }

@@ -3,7 +3,7 @@ import { makeReportsRequest, makeReportSearchRequest } from '../../../request/re
 import { Context } from '../../../Context/Context'
 import styled from 'styled-components';
 import { UpdateLoggedin } from '../../isLoggedin/action'
-import { Route, Link } from 'react-router-dom'
+import { Route, Link , useLocation} from 'react-router-dom'
 import Circle from '../../../UI/Circle'
 import BackStage from '../../../UI/backStage'
 import { hasPermission, PermissionsNumbers, IconPermission } from '../../../UI/Permissions/permissionIcon'
@@ -42,7 +42,7 @@ color:white;
 font-size:12.5px;
 padding:6px;
 `
-
+const useQuery = () => new URLSearchParams(useLocation().search);
 
 
 const Student = (props) => {
@@ -55,8 +55,9 @@ const Student = (props) => {
   const [searchData, setSearchData] = useState({});
   const [ notFound , setNotFound ] = useState(null);
 
-  const { isLoggedinf , user ,  state , dispatch } = useContext(Context);
-  
+  const { isLoggedinf , user  } = useContext(Context);
+
+  const query = useQuery();
 
   const TopRows = [
     'Görüşülen Kişi',
@@ -100,39 +101,41 @@ const Student = (props) => {
     setBackstage(false);
   }
 
-  useEffect(()=>{
+  // useEffect(()=>{
 
-    const { reportSearchData , reportPageNumber , reportDataLength  } = state ; 
+  //   const { reportSearchData , reportPageNumber , reportDataLength  } = state ; 
     
-    if( reports.length === 0 && !notFound  && reportSearchData ) {
+  //   if( reports.length === 0 && !notFound  && reportSearchData ) {
       
-      setSubPagesCount(reportDataLength)
-      setSearchData(reportSearchData)
-      setLoading(true);
+  //     setSubPagesCount(reportDataLength)
+  //     setSearchData(reportSearchData)
+  //     setLoading(true);
       
+  //     makeReportSearchRequest('post', {
+  //       ...reportSearchData,
+  //       role:user.role,
+  //       pageNumber:query.get,
+  //     }, isLoggedinf, setReports, closeModal_1, setSubPagesCount, setLoading , setNotFound);
+
+  //   }
+
+  // },[])
+
+
+  useEffect(()=>{
+          
+    if(query.get('page')) {
+
       makeReportSearchRequest('post', {
-        ...reportSearchData,
+        ...searchData,
         role:user.role,
-        pageNumber:reportPageNumber,
+        pageNumber: query.get('page'),
       }, isLoggedinf, setReports, closeModal_1, setSubPagesCount, setLoading , setNotFound);
 
     }
+    
+  },[query.get('page')])
 
-  },[])
-
-  const nextPage = (page) => {
-
-    setLoading(true);
-
-    dispatch( { type:'SET_SELECTED_PAGE' , payload : page , listType:'report'} );
-
-    makeReportSearchRequest('post', {
-      ...searchData,
-      role:user.role,
-      pageNumber: page,
-    }, isLoggedinf, setReports, closeModal_1, setSubPagesCount, setLoading , setNotFound);
-
-  }
   
   return <UpdateLoggedin page='REPORT_LİST' {...props}>
     {
@@ -162,7 +165,6 @@ const Student = (props) => {
                         mainTitle = 'Raporlar' 
                         titleIcon = {<i style={{marginRight:8}} class="fas fa-file-alt"></i>} 
                         loading = {loading} 
-                        nextPage = {nextPage}
                         tableInformations = {tableInformations}
                         setIsModalOpen = {setIsModalOpen}
                         setBackstage = {setBackstage}

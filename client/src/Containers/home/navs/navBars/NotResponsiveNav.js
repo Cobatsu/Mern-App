@@ -101,8 +101,7 @@ z-index:200;
 const NotResponsiveNav = ({logoutHandler,subMenu,user,setSubLeave,setSubEnter,match,hideSubList})=>{
     
      const [selectedElement , setSelectedElement] = useState(null);
-     const { dispatch } = useContext(Context) ; 
-    
+
      return <NavWrapper>
 
      <Item style={{flex:0.16 , alignItems:'stretch',justifyContent:'flex-start'}}>
@@ -139,7 +138,7 @@ const NotResponsiveNav = ({logoutHandler,subMenu,user,setSubLeave,setSubEnter,ma
                             mainItem.props.map((item,index)=>{
                                 return   <SublistItem   key={index}>
                                     
-                                    <Link to={match.path + '/' + item.split(' ').join('_').toLocaleLowerCase() } onClick={()=> dispatch({type:'RESET'})} style={{textDecoration:'none',display:'block',width:'100%',height:'100%',color:'white',padding:10}}>{item}
+                                    <Link to={match.path + '/' + item.split(' ').join('_').toLocaleLowerCase() }  style={{textDecoration:'none',display:'block',width:'100%',height:'100%',color:'white',padding:10}}>{item}
                                     </Link>
 
                                     </SublistItem>

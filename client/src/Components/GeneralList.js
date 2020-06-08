@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { Link , useLocation , useRouteMatch } from 'react-router-dom'
 import Circle from '../UI/Circle'
 import {Context} from '../Context/Context'
+import { query } from 'express'
 
 //------------------
 const HiddenWrapper = styled.div`
@@ -149,8 +150,8 @@ const SubPageItem = styled.div`
 margin-right:8px;
 border-radius:2px;
 display:flex;
-width:5px;
-height:5px;
+width:25px;
+height:25px;
 color:${({selected}) => selected ? 'white' : 'grey'};
 align-items:center;
 justify-content:center;
@@ -161,6 +162,8 @@ cursor:pointer;
 }
 `
 
+const useQuery = () => new URLSearchParams(useLocation().search);
+
 const GeneralList = ( 
 
     { data, 
@@ -169,7 +172,6 @@ const GeneralList = (
       tableInformations, 
       mainTitle, 
       titleIcon, 
-      nextPage, 
       setIsModalOpen, 
       setBackstage, 
       notFound,
@@ -184,13 +186,12 @@ const GeneralList = (
       )=>{
  
     const refs = useRef([]);  // we can also  use useRef hook for storing value or objects; 
-
-    const { state }  = useContext( Context );
-
-    const pageNumber = state [ listType+'PageNumber' ];
-
-    const [ selectedSubPage, setSelectedSubPage ] = useState( typeof pageNumber === 'number' ? pageNumber : 0 );
-    
+    const query = useQuery();
+    const pathName = useLocation().pathname ; 
+ 
+ 
+    const [ selectedSubPage , setSelectedSubPage ] = useState(0);
+        
     refs.current = refs.current.slice( 0 , data.length );
   
     for (let step = refs.current.length; step < data.length; step++) {
@@ -216,6 +217,7 @@ const GeneralList = (
 
     }
     
+   
   
     return   <HiddenWrapper>
   
@@ -341,11 +343,11 @@ const GeneralList = (
           {
                    ( subPageNumber > 1 && data.length !== 0 && !notFound )  &&  new Array(subPageNumber).fill().map((item, index) => { 
   
-                    return <SubPageItem  key={index} selected={ selectedSubPage === index }  onClick={ () => { nextPage(index) ; setSelectedSubPage(index); } } >  {index + 1} 
+                    return <SubPageItem  key={index} selected={ selectedSubPage === index }  onClick={ () => {  setSelectedSubPage(index); } } > 
                         
-                        <Link to = {useLocation().pathname + `/?page=${index+1}` } style={{ padding:'11px' , display:'block' , width: '100%' , height: '100%' }}>
+                        <Link className='responsiveLink'  to = { pathName + `?page=${index}` } style={ { display:'flex',alignItems:'center',justifyContent:'center' , width:'100%', height:'100%' , textDecoration:'none' , color:selectedSubPage === index ? 'white' : 'grey'}}>
                         
-                            
+                            {index+1}
 
                         </Link>
 

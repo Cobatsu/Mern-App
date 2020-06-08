@@ -43,7 +43,7 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
   const [ searchData, setSearchData ] = useState({});
   const [ notFound , setNotFound ] = useState();
 
-  const { isLoggedinf , user:currentUser , state , dispatch} = useContext(Context);
+  const { isLoggedinf , user:currentUser } = useContext(Context);
 
   const TopRows  =  [
     'İsim',
@@ -54,24 +54,24 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
     '',
   ]
 
-  useEffect( ()=>{
+  // useEffect( ()=>{
 
-    const { personSearchData , personPageNumber , personDataLength  } = state ; 
+  //   const { personSearchData , personPageNumber , personDataLength  } = state ; 
     
-    if( personels.length === 0 && !notFound  && personSearchData ) {
+  //   if( personels.length === 0 && !notFound  && personSearchData ) {
       
-      setSubPagesCount(personDataLength);
-      setSearchData(personSearchData);
-      setLoading(true);
+  //     setSubPagesCount(personDataLength);
+  //     setSearchData(personSearchData);
+  //     setLoading(true);
       
-      makePersonSearchRequest('post', {
-        ...personSearchData,
-        pageNumber: personPageNumber
-      }, isLoggedinf, setPersonels, closeModal_1, setSubPagesCount, setLoading , setNotFound);
+  //     makePersonSearchRequest('post', {
+  //       ...personSearchData,
+  //       pageNumber: personPageNumber
+  //     }, isLoggedinf, setPersonels, closeModal_1, setSubPagesCount, setLoading , setNotFound);
 
-    }
+  //   }
 
-  },[])
+  // },[])
   
   const closeModal_1 = () => {
     setIsModalOpen(false);
@@ -99,6 +99,7 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
   const tableInformations = ( item )=> {
 
     return [
+      
       restrictWord( item.firstName , 13) , 
       restrictWord( item.lastName , 13),
       item.role,
@@ -112,8 +113,6 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
   const nextPage = (page)=>{
     
           setLoading(true);    
-
-          dispatch({ type:'SET_SELECTED_PAGE' , payload : page , listType : 'person' });
 
           makePersonSearchRequest('post', {
             ...searchData,

@@ -405,7 +405,7 @@ export const makeDeleteReportRequest =(Type,id,setLoggedin,setDeleted)=>{
   })
 }
 
-export const makeReportSearchRequest = (Type , searchData , setLoggedin , setReport , close , setCount , setLoading , setNotFound  , dispatch = ()=>{} )=>{
+export const makeReportSearchRequest = (Type , searchData , setLoggedin , setReport , close , setCount , setLoading , setNotFound   )=>{
   
   axios[Type]('/api/profile/report_search',searchData,{
     headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`} 
@@ -423,7 +423,6 @@ export const makeReportSearchRequest = (Type , searchData , setLoggedin , setRep
       if(!Object.keys(searchData).includes('pageNumber'))
       {
         setCount(documentCount);
-        dispatch ({ type:'SET_CURRENT_DATA_LENGTH' , payload:documentCount , listType : 'report' })
       }
 
       setNotFound(null)
@@ -433,7 +432,6 @@ export const makeReportSearchRequest = (Type , searchData , setLoggedin , setRep
     else {
 
       setCount( 0 );
-      dispatch ({ type:'SET_CURRENT_DATA_LENGTH' , payload:0 , listType : 'report' })
       setNotFound(true)
       close();
       setReport([]);
@@ -449,7 +447,7 @@ export const makeReportSearchRequest = (Type , searchData , setLoggedin , setRep
 
 }
 
-export const makePersonSearchRequest = (Type,searchData,setLoggedin , setReport , close , setCount , setLoading , setNotFound = ()=>{} , dispatch=()=>{} )=>{
+export const makePersonSearchRequest = (Type,searchData,setLoggedin , setReport , close , setCount , setLoading , setNotFound  ) =>{
   axios[Type]('/api/user/person_search',searchData,{
     headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`} 
   })
@@ -470,17 +468,13 @@ export const makePersonSearchRequest = (Type,searchData,setLoggedin , setReport 
       setReport(sortedData);
       setNotFound(null)
 
-      if(!Object.keys(searchData).includes('pageNumber'))
-      {
-        dispatch ({ type:'SET_CURRENT_DATA_LENGTH' , payload:documentCount , listType:'person'})
+      if(!Object.keys(searchData).includes('pageNumber')){
         setCount(documentCount);
       }
     }
     else
     {
-      setCount(0);
-      dispatch ({ type:'SET_CURRENT_DATA_LENGTH' , payload:0 , listType : 'person' })
-      
+      setCount(0);    
       setNotFound(true)
       close();
       setReport([]);
