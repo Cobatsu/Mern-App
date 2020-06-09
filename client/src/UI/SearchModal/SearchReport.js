@@ -155,6 +155,7 @@ export const  SearchReportModal = React.memo(( { isOpen , close , role , closeMo
 
         queryString = queryString.join('&') ; 
 
+        if(Object.keys(queryObject).length === 0 ) { return history.push( location.pathname + ( queryString ?  queryString + '&pageNumber=1'  :  '?pageNumber=1')) };
 
         for ( const key in searchMainData ) {
           
@@ -187,7 +188,7 @@ export const  SearchReportModal = React.memo(( { isOpen , close , role , closeMo
 
         },{})
 
-        if( Object.keys(notUndefinedObject).length !== Object.keys(querySearchData)){ return history.push( location.pathname  +    ( queryString ? queryString +  '&pageNumber=1' : '?pageNumber=1' ) );}
+        if( Object.keys(notUndefinedObject).length !== Object.keys(querySearchData).length){ return history.push( location.pathname  +    ( queryString ? queryString +  '&pageNumber=1' : '?pageNumber=1' ) );}
     
         
         close(); 

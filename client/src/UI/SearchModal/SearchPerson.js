@@ -144,8 +144,6 @@ export const  SearchPersonModal = React.memo(({ isOpen , close , role ,  closeMo
             searchMainData={...updatedSearchData,relatedAgencyID:id}
         }
 
-        if(Object.keys(queryObject).length === 0 ) { return history.push( location.pathname   + '?pageNumber=1' ); }
-
         var  queryString = Object.keys(searchMainData).reduce( ( init ,  currentValue , currentIndex )=>{
             
             if( !searchMainData[currentValue] ) return init ;
@@ -153,13 +151,16 @@ export const  SearchPersonModal = React.memo(({ isOpen , close , role ,  closeMo
             else   return '?' + `${currentValue}=${searchMainData[currentValue]}` + '&' + init.slice(1) ;
 
         },'')
+        
 
         queryString = queryString.split('&')
 
         queryString.pop();
 
-        queryString = queryString.join('&')
-    
+        queryString = queryString.join('&');
+
+        if(Object.keys(queryObject).length === 0 ) { return history.push( location.pathname + ( queryString ?  queryString + '&pageNumber=1'  :  '?pageNumber=1')) };
+
         for ( const key in searchMainData ) {
           
             if(searchMainData[key]) {
@@ -182,7 +183,7 @@ export const  SearchPersonModal = React.memo(({ isOpen , close , role ,  closeMo
             }
 
         }
-         
+           
         var notUndefinedObject = Object.keys(searchMainData).reduce((init,curr)=>{
         
                 if(searchMainData[curr]) return {...init,[curr]:searchMainData[curr]} ; 
@@ -191,7 +192,8 @@ export const  SearchPersonModal = React.memo(({ isOpen , close , role ,  closeMo
 
         },{})
 
-        if( Object.keys(notUndefinedObject).length !== Object.keys(querySearchData)){ return history.push( location.pathname  +    ( queryString ? queryString +  '&pageNumber=1' : '?pageNumber=1' ) );}
+
+        if( Object.keys(notUndefinedObject).length !== Object.keys(querySearchData).length ){ return history.push( location.pathname  +    ( queryString ? queryString +  '&pageNumber=1' : '?pageNumber=1' ) );}
 
         close();
 
