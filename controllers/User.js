@@ -6,35 +6,38 @@ const isPermissionSame = async (permissions,type,updatedPermission)=>{
      
     if( type === 'ADD_PHASE' ) {
 
+     
       var originalPermissions = await Permission.findOne({ _id :"5ea5ea1421f697326c0c53f0" }) ; 
 
-      var  { agencyDefault } = originalPermissions;
+      var  { subBranchDefault:SourcePermission } = originalPermissions; 
 
     }
 
-    if( type === 'UPDATE_PHASE'){ 
+    if( type === 'UPDATE_PHASE') { 
 
-      var agencyDefault  = permissions;
+      var SourcePermission  = permissions;
 
     }
+
+    if( Object.keys(SourcePermission).length !==  Object.keys( updatedPermission || permissions ).length){ return false ;  }
 
     for ( const key in ( updatedPermission || permissions )  ) {
 
-       if( Object.keys(agencyDefault).includes( key ) ) {
+        if( Object.keys(SourcePermission).includes( key ) ) {
+
+            if(( updatedPermission || permissions )[ key ].length !== SourcePermission[ key ].length ){ return false } ; 
       
-            let isSame  =  ( updatedPermission || permissions )[ key ].every( ( value,index)=> agencyDefault[key].includes(value) );    
+            let isSame = ( updatedPermission || permissions )[ key ].every( ( value , index )=>{ return SourcePermission[ key ].includes( value ) })
 
-            if(!isSame) return  isSame  ; 
+            if( !isSame ) return  isSame  ; 
 
-       }
-       else {
-            return  false ;
-       }
+        }
+
+       else {  return  false ; }
         
     }
 
     return true ; 
-
 }
 
 module.exports.addUser = async (req,res,next)=>{
@@ -58,7 +61,7 @@ module.exports.addUser = async (req,res,next)=>{
    
    if( currentUser.role !== 'Admin' ){ 
 
-      const result  = await isPermissionSame( permissions , 'ADD_PHASE' , null);
+      const result  = await isPermissionSame( permissions , 'ADD_PHASE' , null , AddedUser.role);
         
       if( !result ) return res.json({error:'Server Error'}) ;
 

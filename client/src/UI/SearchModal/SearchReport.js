@@ -149,6 +149,13 @@ export const  SearchReportModal = React.memo(( { isOpen , close , role , closeMo
 
         },'')
 
+        queryString = queryString.split('&') ; 
+
+        queryString.pop();
+
+        queryString = queryString.join('&') ; 
+
+        if(Object.keys(queryObject).length === 0 ) { return history.push( location.pathname + ( queryString ?  queryString + '&pageNumber=1'  :  '?pageNumber=1')) };
 
         for ( const key in searchMainData ) {
           
@@ -158,14 +165,14 @@ export const  SearchReportModal = React.memo(( { isOpen , close , role , closeMo
                    
                     if( querySearchData[key] !== searchMainData[key]){
                         
-                        return  history.push( location.pathname  +  queryString   + 'pageNumber=1' ); 
+                        return  history.push( location.pathname  +  queryString   + '&pageNumber=1' ); 
 
                     }
 
                 }
                 else {
 
-                   return  history.push( location.pathname  +   queryString  + 'pageNumber=1' );
+                   return  history.push( location.pathname  +   queryString  + '&pageNumber=1' );
 
                 }
 
@@ -173,11 +180,19 @@ export const  SearchReportModal = React.memo(( { isOpen , close , role , closeMo
 
         }
    
-        if(Object.keys(queryObject).length === 0 ) { return history.push( location.pathname   + '?pageNumber=1' ); }
-          
-        else {   close(); }
-      
-         
+        var notUndefinedObject = Object.keys(searchMainData).reduce((init,curr)=>{
+        
+            if(searchMainData[curr]) return {...init,[curr]:searchMainData[curr]} ; 
+
+            else return init ; 
+
+        },{})
+
+        if( Object.keys(notUndefinedObject).length !== Object.keys(querySearchData).length){ return history.push( location.pathname  +    ( queryString ? queryString +  '&pageNumber=1' : '?pageNumber=1' ) );}
+    
+        
+        close(); 
+    
     }
 
     const submitChangeHandler = Type => event => {

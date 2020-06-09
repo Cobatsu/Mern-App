@@ -194,14 +194,9 @@ const GeneralList = (
     const [ oldQueryObject, setOldQueryObject ] = useState({});
     const [ oldLoactionSearch , setOldLoactionSearch ] = useState('');
     
-  
     useEffect(()=>{ 
-      
-       if( queryObject.pageNumber !== null ) {
 
-         setSelectedSubPage( queryObject.pageNumber - 1 )
-
-       }
+       if(queryObject.pageNumber) {  setSelectedSubPage( queryObject.pageNumber - 1 ) }
 
        if( resetSubPage ) {
 
@@ -210,7 +205,7 @@ const GeneralList = (
 
        }
 
-       if( Object.keys(queryObject).length>0 && !resetSubPage ) {
+       if( Object.keys(queryObject).length >0 && !resetSubPage ) {
 
           setOldQueryObject( queryObject )
           setOldLoactionSearch( loactionSearch )

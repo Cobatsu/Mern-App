@@ -258,9 +258,7 @@ const General_User_Info = ({match,...rest})=>{
           setDeletePopUP(false);
         },[])
 
-        const closeModal_5 =useCallback(event =>{
-          rest.history.push('/home/personel_listesi');
-        },[])
+        const closeModal_5 =useCallback(event =>{ rest.history.goBack(); },[])
         
         const openModal  = useCallback(event =>{
           setbackStageOpen(true);
