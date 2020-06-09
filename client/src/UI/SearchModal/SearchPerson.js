@@ -188,19 +188,6 @@ export const  SearchPersonModal = React.memo(({ isOpen , close , role ,  closeMo
         
                 if(searchMainData[curr]) return {...init,[curr]:searchMainData[curr]} ; 
 
-<<<<<<< HEAD
-        for (const key in searchMainData) {
-            
-            if (object.hasOwnProperty(key)) {
-                const element = object[key];
-                
-            }
-        }
-
-        if( Object.keys(queryObject).length === 0 ) { return history.push( location.pathname   + '?pageNumber=1' ); }
-          
-        else {   return close(); }
-=======
                 else return init ; 
 
         },{})
@@ -209,7 +196,6 @@ export const  SearchPersonModal = React.memo(({ isOpen , close , role ,  closeMo
         if( Object.keys(notUndefinedObject).length !== Object.keys(querySearchData).length ){ return history.push( location.pathname  +    ( queryString ? queryString +  '&pageNumber=1' : '?pageNumber=1' ) );}
 
         close();
->>>>>>> 7efbbd3600d2b5e8a1aa441f0e7d5de70cb0339a
 
     }
 
