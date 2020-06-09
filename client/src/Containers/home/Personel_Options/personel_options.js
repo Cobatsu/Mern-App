@@ -259,7 +259,7 @@ const General_User_Info = ({match,...rest})=>{
         },[])
 
         const closeModal_5 =useCallback(event =>{ rest.history.goBack(); },[])
-  
+        
         const openModal  = useCallback(event =>{
           setbackStageOpen(true);
           setDeletePopUP(true);

@@ -144,6 +144,8 @@ export const  SearchPersonModal = React.memo(({ isOpen , close , role ,  closeMo
             searchMainData={...updatedSearchData,relatedAgencyID:id}
         }
 
+        if(Object.keys(queryObject).length === 0 ) { return history.push( location.pathname   + '?pageNumber=1' ); }
+
         var  queryString = Object.keys(searchMainData).reduce( ( init ,  currentValue , currentIndex )=>{
             
             if( !searchMainData[currentValue] ) return init ;
@@ -152,7 +154,12 @@ export const  SearchPersonModal = React.memo(({ isOpen , close , role ,  closeMo
 
         },'')
 
+        queryString = queryString.split('&')
 
+        queryString.pop();
+
+        queryString = queryString.join('&')
+    
         for ( const key in searchMainData ) {
           
             if(searchMainData[key]) {
@@ -161,24 +168,32 @@ export const  SearchPersonModal = React.memo(({ isOpen , close , role ,  closeMo
                    
                     if( querySearchData[key] !== searchMainData[key]){
                         
-                        return  history.push( location.pathname  +   queryString   + 'pageNumber=1' ); 
+                        return  history.push( location.pathname  +   queryString   + '&pageNumber=1' ); 
 
                     }
 
                 }
                 else{
 
-                   return  history.push( location.pathname  +    queryString   + 'pageNumber=1' );
+                   return  history.push( location.pathname  +    queryString   + '&pageNumber=1' );
 
                 }
 
             }
 
         }
+         
+        var notUndefinedObject = Object.keys(searchMainData).reduce((init,curr)=>{
+        
+                if(searchMainData[curr]) return {...init,[curr]:searchMainData[curr]} ; 
 
-        if( Object.keys(queryObject).length === 0 ) { return history.push( location.pathname   + '?pageNumber=1' ); }
-          
-        else {   return close(); }
+                else return init ; 
+
+        },{})
+
+        if( Object.keys(notUndefinedObject).length !== Object.keys(querySearchData)){ return history.push( location.pathname  +    ( queryString ? queryString +  '&pageNumber=1' : '?pageNumber=1' ) );}
+
+        close();
 
     }
 
