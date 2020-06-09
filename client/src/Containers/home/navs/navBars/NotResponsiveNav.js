@@ -138,7 +138,7 @@ const NotResponsiveNav = ({logoutHandler,subMenu,user,setSubLeave,setSubEnter,ma
                             mainItem.props.map((item,index)=>{
                                 return   <SublistItem   key={index}>
                                     
-                                    <Link to={match.path + '/' + item.split(' ').join('_').toLocaleLowerCase() }  style={{textDecoration:'none',display:'block',width:'100%',height:'100%',color:'white',padding:10}}>{item}
+                                    <Link to={ match.path + '/' + item.split(' ').join('_').toLocaleLowerCase() }  style={{textDecoration:'none',display:'block',width:'100%',height:'100%',color:'white',padding:10}}>{item}
                                     </Link>
 
                                     </SublistItem>

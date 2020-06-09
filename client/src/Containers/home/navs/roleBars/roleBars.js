@@ -1,7 +1,7 @@
 export const Admin = ()=>{
     return [
         {type:'Personel',props:['Personel Listesi','Personel Ekle']},
-        {type:'Rapor',props:['Raporlar']},
+        {type:'Rapor',props:['Raporlar'] },
         // {type:'Öğrenci',props:['Ön Kayıt']},
     ]
 
@@ -9,7 +9,7 @@ export const Admin = ()=>{
 
 export const Bayi = ()=>{
     return [
-        {type:'Rapor',props:['Rapor Ekle','Raporlar']},
+        {type:'Rapor',props:['Rapor Ekle','Raporlar'] },
     ]
 }
 

@@ -405,7 +405,7 @@ export const makeDeleteReportRequest =(Type,id,setLoggedin,setDeleted)=>{
   })
 }
 
-export const makeReportSearchRequest = (Type , searchData , setLoggedin , setReport , close , setCount , setLoading , setNotFound   )=>{
+export const makeReportSearchRequest = (Type , searchData , setLoggedin , setReport , close , setCount , setLoading , setNotFound , subPagesCount  )=>{
   
   axios[Type]('/api/profile/report_search',searchData,{
     headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`} 
@@ -419,15 +419,12 @@ export const makeReportSearchRequest = (Type , searchData , setLoggedin , setRep
       return setLoggedin(false);
     }
     else if (sortedData.length > 0) {
-      
-      if(!Object.keys(searchData).includes('pageNumber'))
-      {
-        setCount(documentCount);
-      }
-
+        
+      setCount(documentCount);
       setNotFound(null)
       close();
       setReport(sortedData);
+
     }
     else {
 
@@ -447,7 +444,7 @@ export const makeReportSearchRequest = (Type , searchData , setLoggedin , setRep
 
 }
 
-export const makePersonSearchRequest = (Type,searchData,setLoggedin , setReport , close , setCount , setLoading , setNotFound  ) =>{
+export const makePersonSearchRequest = (Type,searchData,setLoggedin , setReport , close , setCount , setLoading , setNotFound , subPagesCount  ) =>{
   axios[Type]('/api/user/person_search',searchData,{
     headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`} 
   })
@@ -464,13 +461,13 @@ export const makePersonSearchRequest = (Type,searchData,setLoggedin , setReport 
 
     else if (sortedData.length > 0)
     {
+      
+      setCount(documentCount);
       close();
       setReport(sortedData);
       setNotFound(null)
 
-      if(!Object.keys(searchData).includes('pageNumber')){
-        setCount(documentCount);
-      }
+      
     }
     else
     {

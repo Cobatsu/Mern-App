@@ -97,7 +97,7 @@ module.exports.reportSearch = async (req,res,next)=>{
 
         if( personelReportID && role === 'Bayi')  searchData={...searchData,userID:personelReportID};
                 
-        if(!pageNumber && role !== 'Temsilci')  var documentCount = await Reports.countDocuments( searchData );     
+        var documentCount = await Reports.countDocuments( searchData );     
         
         if ( role === 'Temsilci' )
         {

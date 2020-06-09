@@ -9,6 +9,7 @@ import {SearchPersonModal as SearchModal} from '../../../UI/SearchModal/SearchPe
 import { Context } from '../../../Context/Context';
 import GeneralList from '../../../Components/GeneralList'
 import {restrictWord} from '../../../Utilities/utilities'
+import queryString from 'querystring' 
 
 const ListWrapper = styled.div`
 display:flex;
@@ -31,7 +32,7 @@ box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.03
 `
 
 
-const useQuery = () => new URLSearchParams(useLocation().search);
+
 
 const PersonelList  = ({isOnlySubBranch,...rest})=>{
 
@@ -40,12 +41,13 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
   const [ backStage, setBackstage ] = useState(false);
   const [ isModalOpen, setIsModalOpen ] = useState(false);
   const [ subPagesCount, setSubPagesCount ] = useState(0);
-  const [ searchData, setSearchData ] = useState({});
   const [ notFound , setNotFound ] = useState();
 
   const { isLoggedinf , user:currentUser } = useContext(Context);
 
-  const query = useQuery();
+  const location = useLocation() ; 
+  const searchData = queryString.parse(location.search.slice(1)) ; 
+
 
   const TopRows  =  [
     'İsim',
@@ -114,17 +116,28 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
 
   useEffect(()=>{
           
-    if(query.get('page')) {
+    if( Object.keys( searchData ).length  > 0 ) {
+
+      setLoading(true);
 
       makePersonSearchRequest('post', {
         ...searchData,
-        pageNumber: query.get('page')
-      }, isLoggedinf, setPersonels, closeModal_1, setSubPagesCount, setLoading , setNotFound);
+        pageNumber: searchData.pageNumber - 1
+      }, isLoggedinf, setPersonels, closeModal_1, setSubPagesCount, setLoading , setNotFound , subPagesCount);
+
+    }
+    else if( Object.keys(searchData).length === 1 ) {
+
+      setLoading(true);
+
+      makePersonSearchRequest('post', {
+        ...searchData,
+      }, isLoggedinf, setPersonels, closeModal_1, setSubPagesCount, setLoading , setNotFound , subPagesCount);
+
 
     }
     
-  },[query.get('page')])
-
+  },[ location.search ])
 
 
  // we can also  use useRef hook for storing value or objects; 
@@ -147,7 +160,6 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
 
                         isOnlySubBranch={isOnlySubBranch}
                         id= {user._id}
-                        setMainSearchData={setSearchData}  
                         setReports={setPersonels}
                         isOpen ={isModalOpen} 
                         close={closeModal_1} 

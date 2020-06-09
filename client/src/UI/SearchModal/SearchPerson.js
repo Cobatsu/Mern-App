@@ -6,6 +6,8 @@ import {Context} from '../../Context/Context';
 import DateFnsUtils from '@date-io/date-fns';
 import {MuiPickersUtilsProvider,KeyboardDatePicker} from '@material-ui/pickers'
 import {useViewport} from '../../Containers/home/navs/customHooks/viewPortHook'
+import { useHistory , useLocation } from 'react-router-dom'
+import queryString from 'querystring'
 
 const SearchModalContainer = styled.form`
 position:fixed;
@@ -85,15 +87,36 @@ const initialSearchState = {
  gender:'',
 }
 
-export const  SearchPersonModal = React.memo(({isOpen,close,role,closeModalOnly,setReports ,setSubPagesCount,setNotFound, setMainSearchData  , isOnlySubBranch , id}) => {
+export const  SearchPersonModal = React.memo(({isOpen,close,role, closeModalOnly , setReports , setSubPagesCount , setNotFound , isOnlySubBranch , id}) => {
   
     const [date,setDate] = useState(null);
     const [date2,setDate2] = useState(null);
-    const { isLoggedinf , dispatch ,state }  = useContext(Context); 
+    const { isLoggedinf }  = useContext(Context); 
     const [searchData,setSearchData] = useState ( initialSearchState );
     
     const { width } = useViewport();
     const breakPoint = 1030;
+
+    const history = useHistory();
+    const location = useLocation();
+
+    
+    const queryObject =  queryString.parse(location.search.slice(1)) ; 
+
+    const querySearchData = Object.keys(queryObject).reduce((init,key) => {
+
+        if(key !== 'pageNumber')  return { ...init ,[key]:queryObject[key]}
+
+        else return init
+
+    },{})
+
+
+    useEffect(()=>{ 
+   
+        if( Object.keys(queryObject).length > 1 ) {  setSearchData((prevState)=>({...prevState,...querySearchData})) }
+
+    },[])
 
     useEffect(() => {
         setSearchData((prev)=>({...prev,contractDateStart:date}))
@@ -116,15 +139,21 @@ export const  SearchPersonModal = React.memo(({isOpen,close,role,closeModalOnly,
             if(searchMainData[key] && key !== 'contractDateStart' && key !== 'contractDateEnd')   searchMainData[key]  = searchMainData[key].trim();            
         }
         
-        setMainSearchData(searchMainData);  //we can also send trim data to parent component;
-
         if(isOnlySubBranch){
             let { role , ...updatedSearchData } = searchData;
             searchMainData={...updatedSearchData,relatedAgencyID:id}
         }
 
+        var  queryString = Object.keys(searchMainData).reduce( ( init ,  currentValue , currentIndex )=>{
+            
+            if( !searchMainData[currentValue] ) return init ;
+
+            else   return '?' + `${currentValue}=${searchMainData[currentValue]}` + '&' + init.slice(1) ;
+
+        },'')
+
+        history.push( location.pathname  +   ( queryString || '?' )  + 'pageNumber=1' );
         
-        makePersonSearchRequest('post',searchMainData, isLoggedinf , setReports , close , setSubPagesCount,()=>{} , setNotFound );      
     }
 
     const submitChangeHandler = Type => event => {

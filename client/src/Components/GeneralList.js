@@ -1,9 +1,9 @@
 import React,{useEffect,useState,createRef,useRef,useContext} from 'react'
 import styled from 'styled-components'
-import { Link , useLocation , useRouteMatch } from 'react-router-dom'
+import { Link , useLocation , useRouteMatch , useHistory } from 'react-router-dom'
 import Circle from '../UI/Circle'
 import {Context} from '../Context/Context'
-import { query } from 'express'
+import queryString from 'querystring'
 
 //------------------
 const HiddenWrapper = styled.div`
@@ -162,7 +162,6 @@ cursor:pointer;
 }
 `
 
-const useQuery = () => new URLSearchParams(useLocation().search);
 
 const GeneralList = ( 
 
@@ -180,29 +179,58 @@ const GeneralList = (
       loading, 
       pathGenerator, 
       width,
-      resetSubPage,
-      listType } 
-      
+      resetSubPage, } 
       )=>{
  
     const refs = useRef([]);  // we can also  use useRef hook for storing value or objects; 
-    const query = useQuery();
+
     const pathName = useLocation().pathname ; 
- 
- 
-    const [ selectedSubPage , setSelectedSubPage ] = useState(0);
-        
+    const loactionSearch = useLocation().search ; 
+    const history = useHistory() ;
+
+    const queryObject = queryString.parse(loactionSearch.slice(1)) ; 
+
+    const [ selectedSubPage , setSelectedSubPage ]  = useState(0);
+    const [ oldQueryObject, setOldQueryObject ] = useState({});
+    const [ oldLoactionSearch , setOldLoactionSearch ] = useState('');
+    
+  
+    useEffect(()=>{ 
+      
+       if( queryObject.pageNumber !== null ) {
+
+         setSelectedSubPage( queryObject.pageNumber - 1 )
+
+       }
+
+       if( resetSubPage ) {
+
+         setOldQueryObject( queryObject )
+         setOldLoactionSearch( loactionSearch )
+
+       }
+
+       if(Object.keys(queryObject).length>0 && !resetSubPage) {
+
+          setOldQueryObject( queryObject )
+          setOldLoactionSearch( loactionSearch )
+
+       }
+      
+    } ,[ loactionSearch  ] )
+
+  
     refs.current = refs.current.slice( 0 , data.length );
   
     for (let step = refs.current.length; step < data.length; step++) {
         refs.current[step] = createRef();  //we can use useRef with createRef  ! ;
     }
 
-    useEffect(()=>{ if( resetSubPage ) setSelectedSubPage(0) },[ resetSubPage ] ) // here we reset the sub page
+         // here we reset the sub page
   
     let subPageNumber  = Math.ceil( subPagesCount/10 );
 
-    const SwitchRow = (Amount,ref)=> event =>{
+    const SwitchRow = (Amount,ref)=> event => {
 
       ref.current.style.transform = `translateX(${Amount}%)`
 
@@ -216,9 +244,8 @@ const GeneralList = (
         }
 
     }
-    
-   
   
+   
     return   <HiddenWrapper>
   
             {
@@ -343,9 +370,9 @@ const GeneralList = (
           {
                    ( subPageNumber > 1 && data.length !== 0 && !notFound )  &&  new Array(subPageNumber).fill().map((item, index) => { 
   
-                    return <SubPageItem  key={index} selected={ selectedSubPage === index }  onClick={ () => {  setSelectedSubPage(index); } } > 
+                    return <SubPageItem  key={index} selected={ index === selectedSubPage   }  > 
                         
-                        <Link className='responsiveLink'  to = { pathName + `?page=${index}` } style={ { display:'flex',alignItems:'center',justifyContent:'center' , width:'100%', height:'100%' , textDecoration:'none' , color:selectedSubPage === index ? 'white' : 'grey'}}>
+                        <Link className='responsiveLink'  to = { pathName +  ( ( Object.keys(oldQueryObject).length === 1 ) ?  `?pageNumber=${index+1}` : oldLoactionSearch.split('&').slice(0,oldLoactionSearch.split('&').length-1).join('&') + `&pageNumber=${index+1}` )   } style={ { display:'flex',alignItems:'center',justifyContent:'center' , width:'100%', height:'100%' , textDecoration:'none' , color:index === selectedSubPage  ? 'white' : 'grey'}}>
                         
                             {index+1}
 

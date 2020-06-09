@@ -3,13 +3,14 @@ import { makeReportsRequest, makeReportSearchRequest } from '../../../request/re
 import { Context } from '../../../Context/Context'
 import styled from 'styled-components';
 import { UpdateLoggedin } from '../../isLoggedin/action'
-import { Route, Link , useLocation} from 'react-router-dom'
+import { Route, Link , useLocation , useHistory } from 'react-router-dom'
 import Circle from '../../../UI/Circle'
 import BackStage from '../../../UI/backStage'
 import { hasPermission, PermissionsNumbers, IconPermission } from '../../../UI/Permissions/permissionIcon'
 import { SearchReportModal } from '../../../UI/SearchModal/SearchReport';
 import GeneralList from '../../../Components/GeneralList'
 import {restrictWord} from '../../../Utilities/utilities'
+import queryString from 'querystring' 
 
 const ListWrapper = styled.div`
 display:flex;
@@ -42,7 +43,7 @@ color:white;
 font-size:12.5px;
 padding:6px;
 `
- const useQuery = () => new URLSearchParams(useLocation().search);
+
 
 
 const Student = (props) => {
@@ -52,13 +53,12 @@ const Student = (props) => {
   const [backStage, setBackstage] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [subPagesCount, setSubPagesCount] = useState(0);
-  const [searchData, setSearchData] = useState({});
   const [ notFound , setNotFound ] = useState(null);
 
   const { isLoggedinf , user  } = useContext(Context);
-
-   const query = useQuery();
-
+  const location = useLocation() ; 
+  const searchData = queryString.parse(location.search.slice(1)) ; 
+ 
   const TopRows = [
     'Görüşülen Kişi',
     'Telefon Numarası',
@@ -92,7 +92,7 @@ const Student = (props) => {
       item.userID == user._id  ? <Capsule> { restrictWord(item.whoseDocument,13) } </Capsule> : restrictWord(item.whoseDocument,13)
     ] 
 
-  }  
+  } 
 
   const pathGenerator = ( _ , id )=> '/home/raporlar/' + id ; 
 
@@ -101,40 +101,29 @@ const Student = (props) => {
     setBackstage(false);
   }
 
-  // useEffect(()=>{
-
-  //   const { reportSearchData , reportPageNumber , reportDataLength  } = state ; 
-    
-  //   if( reports.length === 0 && !notFound  && reportSearchData ) {
-      
-  //     setSubPagesCount(reportDataLength)
-  //     setSearchData(reportSearchData)
-  //     setLoading(true);
-      
-  //     makeReportSearchRequest('post', {
-  //       ...reportSearchData,
-  //       role:user.role,
-  //       pageNumber:query.get,
-  //     }, isLoggedinf, setReports, closeModal_1, setSubPagesCount, setLoading , setNotFound);
-
-  //   }
-
-  // },[])
-
-
   useEffect(()=>{
-          
-    if(query.get('page')) {
+       
+    if( Object.keys( searchData ).length  > 0 ) {
+      
+      setLoading(true);
 
       makeReportSearchRequest('post', {
         ...searchData,
+        pageNumber:searchData.pageNumber-1,
         role:user.role,
-        pageNumber: query.get('page'),
-      }, isLoggedinf, setReports, closeModal_1, setSubPagesCount, setLoading , setNotFound);
+      }, isLoggedinf, setReports, closeModal_1, setSubPagesCount, setLoading , setNotFound , subPagesCount);
 
     }
-    
-  },[query.get('page')])
+    else if( Object.keys(searchData).length === 1 ) {
+
+      makeReportSearchRequest('post', {
+        ...searchData,
+         role:user.role,
+      }, isLoggedinf, setReports, closeModal_1, setSubPagesCount, setLoading , setNotFound , subPagesCount);
+
+    }
+
+  },[location.search]);
 
   
   return <UpdateLoggedin page='REPORT_LİST' {...props}>
@@ -147,7 +136,6 @@ const Student = (props) => {
                     <BackStage backStage={backStage} loading={!isModalOpen}   close={isModalOpen ? closeModal_1 : null}/>
 
                     <SearchReportModal
-                        setMainSearchData={setSearchData}  
                         setReports={setReports} 
                         isOpen ={isModalOpen} 
                         close={closeModal_1} 

@@ -604,7 +604,7 @@ export const PersonelReports = ( { id , setLoggedin , role , notFoundText  , cur
   // }
 
   useEffect(()=>{
-    if(role) makeReportSearchRequest('post', { personelReportID:id , role:role  } ,setLoggedin,setReports,()=>{},setSubPagesCount,setLoading,setNotFound);
+    if(role) makeReportSearchRequest('post', { personelReportID:id , role:role  } , setLoggedin , setReports , ()=>{} , setSubPagesCount , setLoading , setNotFound);
   },[role])
     
   return <GeneralList 
