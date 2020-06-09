@@ -95,22 +95,25 @@ module.exports.reportSearch = async (req,res,next)=>{
 
         if(user.role === 'Bayi') searchData={ ...searchData , userID:user._id } ; 
 
-        if( personelReportID && role === 'Bayi')  searchData={...searchData,userID:personelReportID};
+        if( personelReportID && role === 'Bayi')  searchData={...searchData,userID:personelReportID };
                 
-        var documentCount = await Reports.countDocuments( searchData );     
+        if( ( user.role !== role && role === 'Bayi')  ||  ( user.role === role &&  role !== 'Temsilci') ) {
+            var documentCount = await Reports.countDocuments( searchData );    
+        }
+             
         
-        if ( role === 'Temsilci' )
-        {
+        
+        if ( role === 'Temsilci' ) {
             var sortedData = await  Reports.find ( searchData ).sort({meetingDate:'descending'});
         }
-        else
-        {
+        else {
             var sortedData = await  Reports.find ( searchData ).sort({meetingDate:'descending'}).skip(10*pageNumber).limit(10);
         }
       
         
 
         if( ( user.role === 'Temsilci' && role !== 'Bayi' ) ||  role === 'Temsilci' ) {
+
 
             var newSortedArray  = [];
                  
@@ -134,12 +137,10 @@ module.exports.reportSearch = async (req,res,next)=>{
 
               //we remove undefined files .;
 
-            if(!pageNumber)
-            {
-                newSortedArray = newSortedArray.filter( (item,index)=> item );
+            
+            newSortedArray = newSortedArray.filter( (item,index)=> item );
 
-                var newSortedArrayLength = newSortedArray.length;
-            }
+            var newSortedArrayLength = newSortedArray.length;
            
             var factor1 =  typeof pageNumber === 'number' ? pageNumber : 0 ; 
      

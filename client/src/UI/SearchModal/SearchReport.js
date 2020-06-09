@@ -94,7 +94,6 @@ export const  SearchReportModal = React.memo(( { isOpen , close , role , closeMo
     const [date,setDate] = useState(null);
     const [date2,setDate2] = useState(null);
 
-    const { isLoggedinf }  = useContext(Context);
     const [searchData,setSearchData] = useState ( initialSearchState );
     
     const { width }  = useViewport(); 
@@ -150,7 +149,35 @@ export const  SearchReportModal = React.memo(( { isOpen , close , role , closeMo
 
         },'')
 
-        history.push( location.pathname  +   ( queryString || '?' )  + 'pageNumber=1' );
+
+        for ( const key in searchMainData ) {
+          
+            if(searchMainData[key]) {
+                
+                if(Object.keys(querySearchData).includes(key)) {
+                   
+                    if( querySearchData[key] !== searchMainData[key]){
+                        
+                        return  history.push( location.pathname  +  queryString   + 'pageNumber=1' ); 
+
+                    }
+
+                }
+                else {
+
+                   return  history.push( location.pathname  +   queryString  + 'pageNumber=1' );
+
+                }
+
+            }
+
+        }
+   
+        if(Object.keys(queryObject).length === 0 ) { return history.push( location.pathname   + '?pageNumber=1' ); }
+          
+        else {   close(); }
+      
+         
     }
 
     const submitChangeHandler = Type => event => {

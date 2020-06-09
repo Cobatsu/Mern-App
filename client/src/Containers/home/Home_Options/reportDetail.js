@@ -243,7 +243,7 @@ const ReportDetail  = ({match,...rest })=>{
                             {
                                 user._id != initalReportStates.userID  &&   <Icon style={{background:'#63b7af',padding:0}}>
 
-                                        <Link to={'/home/personel_listesi/raporlar/' + initalReportStates.userID} style={{width:'100%',height:'100%',textDecoration:'none',color:'white',display:'block',padding:'5px 10px'}}>
+                                        <Link to={'/home/personel_listesi/raporlar/' + initalReportStates.userID + '?pageNumber=1'} style={{width:'100%',height:'100%',textDecoration:'none',color:'white',display:'block',padding:'5px 10px'}}>
                                             Gönderen:  {initalReportStates.whoseDocument}   <i class="fas fa-user"></i> 
                                         </Link>
                                         

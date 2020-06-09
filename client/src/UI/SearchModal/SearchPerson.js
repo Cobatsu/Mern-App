@@ -87,7 +87,7 @@ const initialSearchState = {
  gender:'',
 }
 
-export const  SearchPersonModal = React.memo(({isOpen,close,role, closeModalOnly , setReports , setSubPagesCount , setNotFound , isOnlySubBranch , id}) => {
+export const  SearchPersonModal = React.memo(({ isOpen , close , role ,  closeModalOnly , setReports , setSubPagesCount , setNotFound , isOnlySubBranch , id}) => {
   
     const [date,setDate] = useState(null);
     const [date2,setDate2] = useState(null);
@@ -152,8 +152,34 @@ export const  SearchPersonModal = React.memo(({isOpen,close,role, closeModalOnly
 
         },'')
 
-        history.push( location.pathname  +   ( queryString || '?' )  + 'pageNumber=1' );
-        
+
+        for ( const key in searchMainData ) {
+          
+            if(searchMainData[key]) {
+                
+                if(Object.keys(querySearchData).includes(key)) {
+                   
+                    if( querySearchData[key] !== searchMainData[key]){
+                        
+                        return  history.push( location.pathname  +   queryString   + 'pageNumber=1' ); 
+
+                    }
+
+                }
+                else{
+
+                   return  history.push( location.pathname  +    queryString   + 'pageNumber=1' );
+
+                }
+
+            }
+
+        }
+
+        if( Object.keys(queryObject).length === 0 ) { return history.push( location.pathname   + '?pageNumber=1' ); }
+          
+        else {   return close(); }
+
     }
 
     const submitChangeHandler = Type => event => {

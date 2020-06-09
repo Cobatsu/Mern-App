@@ -407,6 +407,8 @@ export const makeDeleteReportRequest =(Type,id,setLoggedin,setDeleted)=>{
 
 export const makeReportSearchRequest = (Type , searchData , setLoggedin , setReport , close , setCount , setLoading , setNotFound , subPagesCount  )=>{
   
+  console.log(searchData)
+
   axios[Type]('/api/profile/report_search',searchData,{
     headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`} 
   })
@@ -420,6 +422,7 @@ export const makeReportSearchRequest = (Type , searchData , setLoggedin , setRep
     }
     else if (sortedData.length > 0) {
         
+      console.log(documentCount)
       setCount(documentCount);
       setNotFound(null)
       close();
@@ -427,6 +430,8 @@ export const makeReportSearchRequest = (Type , searchData , setLoggedin , setRep
 
     }
     else {
+
+    
 
       setCount( 0 );
       setNotFound(true)

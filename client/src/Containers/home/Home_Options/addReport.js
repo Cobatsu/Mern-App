@@ -120,7 +120,6 @@ export const  AddReport = React.memo((props)=>{
       if(reportType) setinitialReportState(prevState =>({...prevState,meetingDate:date}));
     },[date])
 
-    console.log(initialReportState);
    
     const closeEmptyModal = ()=>{
          setBackStage(false);

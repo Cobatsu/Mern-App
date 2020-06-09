@@ -112,7 +112,12 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
 
   }  
 
-  const pathGenerator = ( item , id ) => '/home/personel_listesi/' + item.split(' ').join('_').toLowerCase() + '/' + id 
+  const pathGenerator = ( item , id ) => {
+
+     if( item === 'Raporlar' || item === 'Bayiler' ) { var pageQuery = '?pageNumber=1' } else { var pageQuery = '' }
+
+      return '/home/personel_listesi/' + item.split(' ').join('_').toLowerCase() + '/' + id + pageQuery ;
+  }
 
   useEffect(()=>{
           

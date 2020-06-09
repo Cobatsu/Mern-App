@@ -10,7 +10,7 @@ import {Context} from '../../../Context/Context'
 import DateFnsUtils from '@date-io/date-fns';
 import Generator  from 'generate-password';
 import {Regions}  from '../../../Regions/regions'
-import {Link,NavLink,Route,Switch} from 'react-router-dom';
+import {Link,NavLink,Route,Switch,useLocation} from 'react-router-dom';
 import Modal from '../../../UI/sentModal'
 import Stage from '../../../UI/backStage'
 import {Redirect}  from 'react-router-dom'
@@ -21,6 +21,8 @@ import UserMenu from '../../../Components/Usermenu'
 import {useViewport} from '../../home/navs/customHooks/viewPortHook'
 import GeneralList from '../../../Components/GeneralList'
 import {restrictWord} from '../../../Utilities/utilities' 
+import queryString from 'querystring'
+
 
 const MainWrapper = styled.form`
 display:flex;
@@ -201,10 +203,10 @@ const General_User_Info = ({match,...rest})=>{
     
     const context =  useContext(Context);
 
-          const UserMenuLinks = useMemo(()=>{
+    const UserMenuLinks = useMemo(()=>{
 
-            switch(userInformations.role)
-            {
+            switch(userInformations.role) {
+
               case 'Admin':
 
               return Admin();
@@ -219,12 +221,10 @@ const General_User_Info = ({match,...rest})=>{
 
               case 'Bayi':
                  
-                if(context.user.role === 'Temsilci')
-                {
+                if(context.user.role === 'Temsilci') {
                    return Bayi().filter(( menuItem , index ) => menuItem.desc !== 'Yetkiler'  );
                 }
-                else
-                {
+                else {
                    return Bayi();
                 }
                 
@@ -234,7 +234,8 @@ const General_User_Info = ({match,...rest})=>{
                   return [];
               break;
             }
-        },[userInformations]);
+
+    },[userInformations]);
 
                   
         const closeModal_1 = useCallback(event=>{
@@ -356,13 +357,9 @@ const General_User_Info = ({match,...rest})=>{
 
         if(Type === 'responsibleCities' ){ oldState[Type] = multipleInput ;}
 
-        if(Type==='region')
-        {
-          oldState['township']='';
-        }
+        if(Type==='region') { oldState['township']=''; }
 
-        if( value==='Admin' || value==='Temsilci' || value==='Bayi' )
-        {
+        if( value==='Admin' || value==='Temsilci' || value==='Bayi' ) {
           oldState['township']='';
           oldState['region']='';
         }
@@ -554,6 +551,10 @@ export const PersonelReports = ( { id , setLoggedin , role , notFoundText  , cur
   const [subPagesCount , setSubPagesCount] = useState(null);
   const [loading,setLoading] = useState(true);
   
+   
+  const location = useLocation() ; 
+  const searchData = queryString.parse(location.search.slice(1)) ; 
+
   const TopRows = [
     'Görüşülen Kişi',
     'Telefon Numarası',
@@ -604,8 +605,23 @@ export const PersonelReports = ( { id , setLoggedin , role , notFoundText  , cur
   // }
 
   useEffect(()=>{
-    if(role) makeReportSearchRequest('post', { personelReportID:id , role:role  } , setLoggedin , setReports , ()=>{} , setSubPagesCount , setLoading , setNotFound);
-  },[role])
+      
+
+    if(role) {
+
+      setLoading(true);
+
+      makeReportSearchRequest('post', {
+        pageNumber:searchData.pageNumber - 1 ,
+        role:role , 
+        personelReportID:id,
+      }, setLoggedin, setReports, ()=>{} , setSubPagesCount, setLoading , setNotFound );
+
+
+    }
+
+
+  },[ location.search , role  ])
     
   return <GeneralList 
     width = {780}
@@ -619,7 +635,6 @@ export const PersonelReports = ( { id , setLoggedin , role , notFoundText  , cur
     notFound = {notFound}
     path = {'/home/personel_listesi'}
     pathGenerator = {pathGenerator}   />
-
 }
 
 
@@ -630,6 +645,9 @@ export const PersonelSubBranches = ({ id , setLoggedin , role , notFoundText , c
   const [ notFound , setNotFound ] = useState(null);
   const [ subPagesCount , setSubPagesCount ] = useState(null);
   const [ loading,setLoading ] = useState(true);
+
+  const location = useLocation() ; 
+  const searchData = queryString.parse(location.search.slice(1)) ; 
  
   const TopRows  =  [
     'İsim',
@@ -674,19 +692,13 @@ export const PersonelSubBranches = ({ id , setLoggedin , role , notFoundText , c
 
   const pathGenerator = ( item , id ) => '/home/personel_listesi/' + item.split(' ').join('_').toLowerCase() + '/' + id
 
-  // const nextPage = (page) => {
-  //   setLoading(true);
-
-  //   makePersonSearchRequest('post', {
-  //     relatedAgencyID:id,
-  //     pageNumber: page
-  //   } , setLoggedin , setSubBranches, ()=>{}, setSubPagesCount, setLoading);
-
-  // }
-
   useEffect(()=>{
-    makePersonSearchRequest('post',{relatedAgencyID:id},setLoggedin,setSubBranches,()=>{},setSubPagesCount,setLoading,setNotFound);
-  },[])
+
+    setLoading(true);
+
+    makePersonSearchRequest('post',{ relatedAgencyID:id , pageNumber:searchData.pageNumber - 1 },setLoggedin,setSubBranches,()=>{},setSubPagesCount,setLoading,setNotFound);
+
+  },[  location.search ])
     
   return <GeneralList 
    

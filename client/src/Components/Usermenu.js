@@ -48,13 +48,14 @@ const UserImage = styled.img`
 max-width:110px;
 `
 
-const pathGenerator = ( item , id ) => ( {
+const pathGenerator = ( { desc , query } , id  ) =>  {
+  
+   if( query ) { var pageQuery = '?pageNumber=1';  } else { var pageQuery = ''; } 
 
-   PROFİLE_PATH :  '/home/profil/' + item.desc.split(' ').join('_').toLowerCase(),
+   return {  PROFİLE_PATH :  '/home/profil/' + desc.split(' ').join('_').toLowerCase() + pageQuery, 
+             DETAİL_PATH:'/home/personel_listesi/' + desc.split(' ').join('_').toLowerCase() + '/' + id + pageQuery }
 
-   DETAİL_PATH:'/home/personel_listesi/' + item.desc.split(' ').join('_').toLowerCase() + '/' + id
-
-}  )
+}  
  
 
 
@@ -84,7 +85,7 @@ const Usermenu = ( { role , firstName , lastName , UserMenuLinks , match:{params
 
                      <Link   className='responsiveLink' style={{padding:5,textDecoration:'none' , display:'block'  , width:'100%' , height:'100%'}}  
 
-                     to = { page === 'Profile'  ?  pathGenerator(item).PROFİLE_PATH : pathGenerator(item,id).DETAİL_PATH  }   >
+                     to = { page === 'Profile'  ?  pathGenerator(item).PROFİLE_PATH : pathGenerator(item,id).DETAİL_PATH}   >
 
                         {item.Icon} {item.desc}
 

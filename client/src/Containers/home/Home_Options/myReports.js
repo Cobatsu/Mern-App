@@ -56,6 +56,7 @@ const Student = (props) => {
   const [ notFound , setNotFound ] = useState(null);
 
   const { isLoggedinf , user  } = useContext(Context);
+
   const location = useLocation() ; 
   const searchData = queryString.parse(location.search.slice(1)) ; 
  
@@ -103,7 +104,7 @@ const Student = (props) => {
 
   useEffect(()=>{
        
-    if( Object.keys( searchData ).length  > 0 ) {
+    if( Object.keys( searchData ).length  > 0 &&  user.role ) {
       
       setLoading(true);
 
@@ -114,16 +115,8 @@ const Student = (props) => {
       }, isLoggedinf, setReports, closeModal_1, setSubPagesCount, setLoading , setNotFound , subPagesCount);
 
     }
-    else if( Object.keys(searchData).length === 1 ) {
 
-      makeReportSearchRequest('post', {
-        ...searchData,
-         role:user.role,
-      }, isLoggedinf, setReports, closeModal_1, setSubPagesCount, setLoading , setNotFound , subPagesCount);
-
-    }
-
-  },[location.search]);
+  },[ location.search , user.role ]);
 
   
   return <UpdateLoggedin page='REPORT_LİST' {...props}>
