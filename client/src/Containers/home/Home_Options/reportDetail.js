@@ -156,9 +156,8 @@ const ReportDetail  = ({match,...rest })=>{
 
     }
 
-    const closeModal_4= ()=>{   
-        rest.history.push('/home/raporlar');
-    }
+    const closeModal_4= ()=>{  rest.history.goBack(); }
+    
    
     useEffect(()=>{  //this is just because of Date issue //--------
         setInitalReportState(prevState =>({...prevState,meetingDate:date}));
