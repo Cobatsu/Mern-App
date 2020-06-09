@@ -49,7 +49,7 @@ export const UpdateLoggedin = ({page,children,history,isLoggedin,location,match}
 
                     if(user.role === 'Bayi')
                     {
-                        history.push('/home');
+                        history.goBack();
                     }
                     else
                     {
@@ -76,7 +76,7 @@ export const UpdateLoggedin = ({page,children,history,isLoggedin,location,match}
 
                 if(user.role !== 'Admin' && ( match.params.id === user._id || match.params.desc === 'yetkiler' )){ 
 
-                    history.push('/home');
+                    history.goBack();
 
                 }    
                 else{
