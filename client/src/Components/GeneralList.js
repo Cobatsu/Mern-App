@@ -162,7 +162,6 @@ cursor:pointer;
 }
 `
 
-
 const GeneralList = ( 
 
     { data, 
@@ -367,7 +366,7 @@ const GeneralList = (
   
                     return <SubPageItem  key={index} selected={ index === selectedSubPage   }  > 
                         
-                        <Link className='responsiveLink'  to = { pathName +  ( ( Object.keys(oldQueryObject).length <= 1 ) ?  `?pageNumber=${index+1}` : oldLoactionSearch.split('&').slice(0,oldLoactionSearch.split('&').length-1).join('&') + `&pageNumber=${index+1}` )   } style={ { display:'flex',alignItems:'center',justifyContent:'center' , width:'100%', height:'100%' , textDecoration:'none' , color:index === selectedSubPage  ? 'white' : 'grey'}}>
+                        <Link className='responsiveLink'  to = { pathName +  ( ( Object.keys(oldQueryObject).length <= 1 ) ?  `/?pageNumber=${index+1}` : oldLoactionSearch.split('&').slice(0,oldLoactionSearch.split('&').length-1).join('&') + `&pageNumber=${index+1}` )   } style={ { display:'flex',alignItems:'center',justifyContent:'center' , width:'100%', height:'100%' , textDecoration:'none' , color:index === selectedSubPage  ? 'white' : 'grey'}}>
                         
                             {index+1}
 
