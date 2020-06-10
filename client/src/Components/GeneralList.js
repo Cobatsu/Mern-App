@@ -260,10 +260,10 @@ const GeneralList = (
 
             }  
   
-              <h1 style={ { marginBottom:20,color:'lightblue',fontSize:16,color:'#52de97' } }>( { subPagesCount || 0 } ) Sonuç Bulundu </h1> 
+            <h1 style={ { marginBottom:20,color:'lightblue',fontSize:16,color:'#52de97' } }>( { subPagesCount || 0 } ) Sonuç Bulundu </h1> 
       
         {
-                loading ? <Circle position='static' marginTop={50} Load = {loading}  /> : <StudentList width={width} >   
+                loading  && !resetSubPage ? <Circle position='static' marginTop={50} Load = {loading}  /> : <StudentList width={width} >   
                     
                     <StudentListItem>
                     
@@ -362,11 +362,11 @@ const GeneralList = (
           <SubPagesContainer>
   
           {
-                   ( subPageNumber > 1 && data.length !== 0 && !notFound )  &&  new Array(subPageNumber).fill().map((item, index) => { 
+                   ( subPageNumber > 1 && data.length !== 0 && !notFound && !loading)  &&  new Array(subPageNumber).fill().map((item, index) => { 
   
                     return <SubPageItem  key={index} selected={ index === selectedSubPage   }  > 
                         
-                        <Link className='responsiveLink'  to = { pathName +  ( ( Object.keys(oldQueryObject).length <= 1 ) ?  `/?pageNumber=${index+1}` : oldLoactionSearch.split('&').slice(0,oldLoactionSearch.split('&').length-1).join('&') + `&pageNumber=${index+1}` )   } style={ { display:'flex',alignItems:'center',justifyContent:'center' , width:'100%', height:'100%' , textDecoration:'none' , color:index === selectedSubPage  ? 'white' : 'grey'}}>
+                        <Link className='responsiveLink'  to = { pathName +  ( ( Object.keys(oldQueryObject).length <= 1 ) ?  `?pageNumber=${index+1}` : oldLoactionSearch.split('&').slice(0,oldLoactionSearch.split('&').length-1).join('&') + `&pageNumber=${index+1}` )   } style={ { display:'flex',alignItems:'center',justifyContent:'center' , width:'100%', height:'100%' , textDecoration:'none' , color:index === selectedSubPage  ? 'white' : 'grey'}}>
                         
                             {index+1}
 
