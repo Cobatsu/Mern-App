@@ -210,7 +210,6 @@ const UserInformations = [
 const UserPermissions = {
 Personel:['Personel Bilgileri'],
 Rapor:['Rapor Bilgileri'],
-"Ana Sayfa":['Ana Sayfa Bilgileri']
 }
 // -----------------------------
 
