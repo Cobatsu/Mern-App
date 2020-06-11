@@ -260,7 +260,7 @@ module.exports.personSearch = async (req,res,next) => {
          
         if( user.role === 'Temsilci' && !rest.relatedAgencyID ) { return  res.json( { sortedData:{},documentCount:0}); }
 
-        if( rest.relatedAgencyID &&  rest.relatedAgencyID != user._id ) { return res.json( { sortedData:{},documentCount:0}); }
+        if( user.role === 'Temsilci' && rest.relatedAgencyID &&  rest.relatedAgencyID != user._id ) { return res.json( { sortedData:{},documentCount:0}); }
 
         var documentCount = await User.countDocuments(searchData);     
         

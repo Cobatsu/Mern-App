@@ -42,6 +42,7 @@ background:#f57170;
 color:white;
 padding:5px 8px;
 font-size:12.5px;
+text-transform:capitalize;
 `
 
 
@@ -70,8 +71,8 @@ const Usermenu = ( { role , firstName , lastName , UserMenuLinks , match:{params
 
          <Capsule>
 
-            <span style={{marginRight:5 , textTransform:'capitalize'}}>{ restrictWord(firstName,10) }</span> 
-            <span style={{textTransform:'capitalize'}}>{ restrictWord(lastName,10) }</span>
+            <span> { restrictWord(firstName,10) } </span> 
+            <span> { restrictWord(lastName,10) } </span>
 
          </Capsule>
 
