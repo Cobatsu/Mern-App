@@ -252,16 +252,15 @@ const Query = (body)=>{
 
 module.exports.personSearch = async (req,res,next) => {
 
-  const {user:{role},body:{pageNumber,...rest}} = req;
+  const {user,body:{pageNumber,...rest}} = req;
   
     let searchData = Query(rest);
     
    try {
-
-
-        console.log(rest.relatedAgencyID)
          
-        if( role === 'Temsilci' && !rest.relatedAgencyID){ return  res.json( { sortedData:{},documentCount:0}); }
+        if( user.role === 'Temsilci' && !rest.relatedAgencyID ) { return  res.json( { sortedData:{},documentCount:0}); }
+
+        if( rest.relatedAgencyID &&  rest.relatedAgencyID != user._id ) { return res.json( { sortedData:{},documentCount:0}); }
 
         var documentCount = await User.countDocuments(searchData);     
         
@@ -283,7 +282,7 @@ module.exports.personSearch = async (req,res,next) => {
    } 
    catch (error){
        
-         console.log(error)
+    res.json({error});
    }
 }
 
