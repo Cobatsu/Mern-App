@@ -134,7 +134,6 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
     
   },[ location.search ])
 
-
  // we can also  use useRef hook for storing value or objects; 
 
     return <UpdateLoggedin page='PERSONEL_LİST' {...rest}  >

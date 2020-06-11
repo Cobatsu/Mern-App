@@ -252,16 +252,19 @@ const Query = (body)=>{
 
 module.exports.personSearch = async (req,res,next) => {
 
-  const {user,body:{pageNumber,...rest}} = req;
+  const {user:{role},body:{pageNumber,...rest}} = req;
   
     let searchData = Query(rest);
     
    try {
 
-        
+
+        console.log(rest.relatedAgencyID)
+         
+        if( role === 'Temsilci' && !rest.relatedAgencyID){ return  res.json( { sortedData:{},documentCount:0}); }
+
         var documentCount = await User.countDocuments(searchData);     
         
-
         let sortedData = await  User.find(searchData).sort({contractDate:'descending'}).skip(10*pageNumber).limit(12);
 
         let copyReport = [...sortedData];

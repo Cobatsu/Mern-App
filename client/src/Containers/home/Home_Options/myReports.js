@@ -112,7 +112,7 @@ const Student = (props) => {
         ...searchData,
         pageNumber:searchData.pageNumber-1,
         role:user.role,
-      }, isLoggedinf, setReports, closeModal_1, setSubPagesCount, setLoading , setNotFound , subPagesCount);
+      } , isLoggedinf, setReports, closeModal_1, setSubPagesCount, setLoading , setNotFound , subPagesCount);
 
     }
 
@@ -129,7 +129,7 @@ const Student = (props) => {
                     <BackStage backStage={backStage} loading={!isModalOpen}   close={isModalOpen ? closeModal_1 : null}/>
 
                     <SearchReportModal
-                    
+
                         setReports={setReports} 
                         isOpen ={isModalOpen} 
                         close={closeModal_1} 
