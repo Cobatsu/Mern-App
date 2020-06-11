@@ -131,16 +131,6 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
       }, isLoggedinf, setPersonels, closeModal_1, setSubPagesCount, setLoading , setNotFound , subPagesCount);
 
     }
-    else if( Object.keys(searchData).length === 1 ) {
-
-      setLoading(true);
-
-      makePersonSearchRequest('post', {
-        ...searchData,
-      }, isLoggedinf, setPersonels, closeModal_1, setSubPagesCount, setLoading , setNotFound , subPagesCount);
-
-
-    }
     
   },[ location.search ])
 

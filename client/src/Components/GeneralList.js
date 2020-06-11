@@ -319,7 +319,7 @@ const GeneralList = (
                   <div  style={{display:'flex',flex:1}} >
   
                     {
-                          iconOptions( mainItem ).map( ( item,Mainindex )=>{
+                          iconOptions( mainItem ).map( ( item , Mainindex )=>{
   
                               return   <StudentListIconWrapper key={item.desc} >
                                       
