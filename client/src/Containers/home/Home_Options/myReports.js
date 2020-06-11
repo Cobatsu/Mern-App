@@ -129,6 +129,7 @@ const Student = (props) => {
                     <BackStage backStage={backStage} loading={!isModalOpen}   close={isModalOpen ? closeModal_1 : null}/>
 
                     <SearchReportModal
+                    
                         setReports={setReports} 
                         isOpen ={isModalOpen} 
                         close={closeModal_1} 

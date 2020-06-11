@@ -41,7 +41,7 @@ class  Home extends React.Component{
               <Route path={'/home/raporlarım/:desc/:id'} exact component={MyReports} /> 
               <Route path={'/home/raporlar/:id'}  exact  component={ReportDetail}/>  
 
-              <Route path='*' render ={()=><NotFoundPage path='home'/>} />
+              <Route path='*' render ={()=><NotFoundPage path='home'/>} />  
 
                {
                  //the route above when we add two params to path , match.params will get two params too

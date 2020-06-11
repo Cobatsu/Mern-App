@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components'
 import {Link} from 'react-router-dom'
+import {restrictWord}  from '../Utilities/utilities'
 
 const UserMenu = styled.div`
 flex:0.2;
@@ -69,8 +70,8 @@ const Usermenu = ( { role , firstName , lastName , UserMenuLinks , match:{params
 
          <Capsule>
 
-            <span style={{marginRight:5}}>{firstName}</span> 
-            <span>{lastName}</span>
+            <span style={{marginRight:5 , textTransform:'capitalize'}}>{ restrictWord(firstName,10) }</span> 
+            <span style={{textTransform:'capitalize'}}>{ restrictWord(lastName,10) }</span>
 
          </Capsule>
 
