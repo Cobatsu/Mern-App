@@ -2,8 +2,18 @@ import React from 'react';
 import styled from 'styled-components'
 import {Link} from 'react-router-dom'
 import './notFound.css'
+import {useHistory} from 'react-router-dom'
 
 const NotFoundPage = ({path})=>{
+
+	const history = useHistory();
+
+	const goBackToPage = (e)=>{ 
+		
+		e.preventDefault();
+
+		history.goBack();
+	}
 
     return <React.Fragment>
 
@@ -14,7 +24,7 @@ const NotFoundPage = ({path})=>{
 			</div>
 			<h2>404 - Page not found</h2>
 			<p>The page you are looking for might have been removed had its name changed or is temporarily unavailable.</p>
-			<Link to={'/'+path}>GO TO HOMEPAGE</Link>
+			<button onClick={goBackToPage}>GO BACK</button>
 		</div>
 	</div>
     

@@ -8,6 +8,7 @@ import {MuiPickersUtilsProvider,KeyboardDatePicker} from '@material-ui/pickers'
 import {useViewport} from '../../Containers/home/navs/customHooks/viewPortHook'
 import { useHistory , useLocation } from 'react-router-dom'
 import queryString from 'querystring'
+import { isSearchDataSame } from '../../Utilities/Search/search'
 
 const SearchModalContainer = styled.form`
 position:fixed;
@@ -140,59 +141,9 @@ export const  SearchReportModal = React.memo(( { isOpen , close , role , closeMo
         }
            
         //we can also send trimmed data to parent component;
-
-        var  queryString = Object.keys(searchMainData).reduce( ( init ,  currentValue , currentIndex )=>{
-            
-            if(!searchMainData[currentValue]) return init ;
-
-            else return '?' + `${currentValue}=${searchMainData[currentValue]}` + '&' + init.slice(1) ;
-
-        },'')
-
-        queryString = queryString.split('&') ; 
-
-        queryString.pop();
-
-        queryString = queryString.join('&') ; 
-
-        if(Object.keys(queryObject).length === 0 ) { return history.push( location.pathname + ( queryString ?  queryString + '&pageNumber=1'  :  '?pageNumber=1')) };
-
-        for ( const key in searchMainData ) {
-          
-            if(searchMainData[key]) {
+         
+        if( isSearchDataSame( history , queryObject , searchMainData  , querySearchData , location )) {  close(); } 
                 
-                if(Object.keys(querySearchData).includes(key)) {
-                   
-                    if( querySearchData[key] !== searchMainData[key]){
-                        
-                        return  history.push( location.pathname  +  queryString   + '&pageNumber=1' ); 
-
-                    }
-
-                }
-                else {
-
-                   return  history.push( location.pathname  +   queryString  + '&pageNumber=1' );
-
-                }
-
-            }
-
-        }
-   
-        var notUndefinedObject = Object.keys(searchMainData).reduce((init,curr)=>{
-        
-            if(searchMainData[curr]) return {...init,[curr]:searchMainData[curr]} ; 
-
-            else return init ; 
-
-        },{})
-
-        if( Object.keys(notUndefinedObject).length !== Object.keys(querySearchData).length){ return history.push( location.pathname  +    ( queryString ? queryString +  '&pageNumber=1' : '?pageNumber=1' ) );}
-    
-        
-        close(); 
-    
     }
 
     const submitChangeHandler = Type => event => {
