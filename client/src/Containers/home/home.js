@@ -19,7 +19,8 @@ import NotFoundPage from '../../Components/NotFoundPage'
 import { UpdateLoggedin } from "../isLoggedin/action";
 class  Home extends React.Component{
      static contextType = Context; 
-   
+
+    
      render() {    
        //match path location  farklı olsa bile ilk eşleştiği route nin pathini verir
 

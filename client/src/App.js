@@ -11,20 +11,19 @@ import Circle from './UI/Circle';
 
 class  App extends React.Component{
 
-  render()
-  { 
-  
-    
-    return ( <BrowserRouter> 
-           
-           <Switch>
+  render() { 
 
+    return ( <BrowserRouter> 
+             
+           <Switch>
+            
               <Route path='/' exact component = {Login} />
               <Route path='/register' exact component={Register} /> 
               <Route path='/home'  component = {Home} /> 
               <Route path='*'  render = {()=> <NotFoundPage path=''/>} />
 
            </Switch> 
+
      </BrowserRouter> 
 
     )
