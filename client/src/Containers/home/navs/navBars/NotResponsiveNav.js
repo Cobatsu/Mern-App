@@ -2,7 +2,7 @@ import React,{useContext,useState,useEffect,useRef,createRef,useMemo,useCallback
 import styled from 'styled-components';
 import {Link} from 'react-router-dom'
 import {restrictWord}  from '../../../../Utilities/utilities'
-import {Context} from '../../../../Context/Context'
+import  { AnnouncementSComponent } from '../../../../Components/Navbar/Announcement '
 
 const NavWrapper = styled.div`
 display:flex;
@@ -60,11 +60,11 @@ flex:1;
 text-align:center;
 transition:100ms;
 background-color:${({isSelected})=>isSelected ? '#ff6363' : 'none' };
-color:${({isSelected})=>isSelected ? 'white' : '#707070' };
+color:${({isSelected})=>isSelected ? 'white': '#707070' };
 &:hover{
     cursor:pointer;
-    background-color:#ff6363;
-    color:white;
+    background-color:#ff6363 !important;
+    color:white !important;
 }
 `
 const InnerItemText  = styled.span`
@@ -98,9 +98,38 @@ top:100%;
 z-index:200;
 `
 
+const ArrowIcon = styled.div`
+
+position:absolute;
+left:auto;
+right:auto;
+top:80%;
+color:${({isFirstItem})=> isFirstItem ?  '#00909e' : '#1f4068'};
+font-size:30px;
+display:${({isSelected})=>isSelected  ? 'block':'none'};
+
+`
+
+
+const Announcements = [
+
+    '  - Sayfa içi  ileri geri yaparken verinin kaybolma sorunu çözüldü .' ,
+   
+    '  - Personel eklerken çoklu il seçim bölümü eklendi . ' , 
+  
+    '  - Öğrenci ve Okul raporlarına Bölge  ve İlçe bölümü eklendi . ' , 
+  
+    '  - Raporlarınızın Bölge ve İlçe kısımlarını güncelleyebilirsiniz . '
+  
+  ]
+
 const NotResponsiveNav = ({logoutHandler,subMenu,user,setSubLeave,setSubEnter,match,hideSubList})=>{
     
-     const [selectedElement , setSelectedElement] = useState(null);
+     const [ selectedElement , setSelectedElement] = useState(null);
+
+     const [ announcement , setAnnouncement ]  = useState(null);
+
+     const [ isFirstItem , setIsFirstItem ] = useState(null);
 
      return <NavWrapper>
 
@@ -133,6 +162,7 @@ const NotResponsiveNav = ({logoutHandler,subMenu,user,setSubLeave,setSubEnter,ma
                 {
 
                 subMenu.map((mainItem,index)=>{
+
                     return  <Sublist onClick={()=>setSelectedElement(null)} isSelected={selectedElement === index}  onMouseEnter={()=>setSelectedElement(index)} onMouseLeave={()=>setSelectedElement(null)}    key={mainItem.type} >                  
                         {
                             mainItem.props.map((item,index)=>{
@@ -153,13 +183,42 @@ const NotResponsiveNav = ({logoutHandler,subMenu,user,setSubLeave,setSubEnter,ma
             </SubContainer>
 
     </Item>
-                    <ItemProfile>
+                    <Item style={{flex:0.2}}>
 
-                         <Link to='/home/profil/genel_bilgiler'  style={{textDecoration:'none',display:'flex',alignItems:'center',justifyContent:'center',width:'100%',height:'100%',color:'#707070'}}>
-                                   <InnerItemText>{restrictWord(user.firstName,10)}</InnerItemText>
-                         </Link>    
+                        <InnerItemLink style={{ position:'relative'  }} isSelected = { announcement } onMouseOut= { ()=>setAnnouncement(false) }  onMouseOver = { ()=>setAnnouncement(true) }>
 
-                     </ItemProfile>
+                            <i style={{ fontSize:19.5  }} class="fas fa-exclamation-circle"></i>         
+                            <span style={{ marginLeft:10}}> Duyurular </span> 
+
+                            <ArrowIcon isSelected = {announcement}  isFirstItem = {isFirstItem}>
+                                  <i class="fas fa-caret-up"/>
+                            </ArrowIcon>
+                           
+                          
+                        </InnerItemLink>
+
+
+                        <InnerItemLink style={{background:'#f3f5f9'}}>
+
+                            <Link to='/home/profil/genel_bilgiler'  style={{textDecoration:'none',display:'flex',alignItems:'center',justifyContent:'center',width:'100%',height:'100%',color:'#707070'}}>
+                                    <InnerItemText>{restrictWord(user.firstName,10)}</InnerItemText>
+                            </Link>    
+
+                        </InnerItemLink>
+
+                        <SubContainer style={{ width:'200%' ,left:'-96%' }}>
+                                  
+                                  
+                            <div style={{ width:'80%', paddingTop:16 }} onMouseEnter={()=>setAnnouncement(true)} onMouseLeave={()=>setAnnouncement(false)} >
+
+                                  <AnnouncementSComponent isOpen = { announcement } isFirstItem = { setIsFirstItem } Announcements = { Announcements } />
+
+                            </div>
+
+
+                        </SubContainer>
+
+                     </Item>
   </NavWrapper>
 
 }

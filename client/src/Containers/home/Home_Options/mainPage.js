@@ -135,71 +135,7 @@ const MainPage = (props)=>{
         ( Loading , user )=> Loading ? null : 
         
            <React.Fragment>
-
-                    <MainPageWrapper>
-
-                        <TopTitle>
-                                Duyurular  <i style={{marginLeft:4}} class="fas fa-exclamation-triangle"></i>
-                        </TopTitle>
-
-
-                                <GeneralWrapper>
-                                        
-                                        {/* <GeneralItem1>
-
-                                            <i class="fas fa-circle" style={{ marginRight:10 , fontSize:6 , color:'#707070'}}></i>
-                                            Şimdilik , uygulamamızda sadece " Rapor Bilgilendirme " sistemi bulunmaktadır . Yeni güncellemeler için çalışmalarımız devam etmektedir . 
-
-                                        </GeneralItem1>
-                                            
-                                            {
-                                                user.role === 'Admin' && <GeneralItem1> 
-                                                    
-                                                    <i class="fas fa-circle" style={{ marginRight:10 , fontSize:6 , color:'#707070'}}></i>  
-                                                    Yetkilendirme sistemimiz şimdilik  kısıtlı bölgelere etki etmektedir . 
-                                                
-                                                </GeneralItem1> 
-                                            } */}
-
-                                            <GeneralItem1>
-
-                                            <i class="fas fa-circle" style={{ marginRight:10 , fontSize:8 , color:'#42e6a4'}}></i>
-
-                                                Sayfa içi  ileri geri yaparken verinin kaybolma sorunu çözüldü . 
-
-                                            </GeneralItem1>
-
-                                            <GeneralItem1>
-
-                                            <i class="fas fa-circle" style={{ marginRight:10 , fontSize:8 , color:'#42e6a4'}}></i>
-
-                                                Personel eklerken çoklu il seçim bölümü eklendi .  
-
-                                            </GeneralItem1>
-
-
-                                             <GeneralItem1>
-
-                                            <i class="fas fa-circle" style={{ marginRight:10 , fontSize:8 , color:'#42e6a4'}}></i>
-
-                                                Öğrenci ve Okul raporlarına Bölge  ve İlçe bölümü eklendi .   
-
-                                            </GeneralItem1>
-
-
-                                            <GeneralItem1>
-
-                                            <i class="fas fa-circle" style={{ marginRight:10 , fontSize:8 , color:'#42e6a4'}}></i>
-
-                                                Raporlarınızın Bölge ve İlçe kısımlarını güncelleyebilirsiniz .    
-
-                                            </GeneralItem1>
-                                        
-                        
-                                </GeneralWrapper>
-
-                    </MainPageWrapper>
-                    
+ 
                     { ( user.role === 'Admin' || user.role === 'Temsilci' ) && <MainPageWrapper style={{marginBottom:30}}>    
 
                         <TopTitle>
