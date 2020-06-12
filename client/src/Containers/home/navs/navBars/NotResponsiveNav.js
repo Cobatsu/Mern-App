@@ -51,6 +51,7 @@ border:none;
 `
 
 const InnerItemLink = styled.span`
+transition:100ms;
 font-size:15px;
 box-sizing:border-box;
 display:flex;
@@ -83,6 +84,7 @@ box-shadow: 0 10px 6px -6px #dcd6f7;
 `
 const SublistItem = styled.li`
 text-align:center;
+transition:100ms;
 &:hover{
     background-color:#00909e;
     cursor:pointer;
@@ -175,17 +177,19 @@ const NotResponsiveNav = ({logoutHandler,subMenu,user,setSubLeave,setSubEnter,ma
 
                                         return  < div style={{ width:'100%', paddingTop: selectedElement === index ? 12 : 0 , display: selectedElement === index  ? 'block' : 'none' }}   onMouseEnter={()=>setSelectedElement(index)} onMouseLeave={()=>setSelectedElement(null)}  >
                                     
-                                        <Sublist onClick={()=>setSelectedElement(null)}    key={mainItem.type} >                  
+                                        <Sublist onClick={()=>setSelectedElement(null)}    key={mainItem.type} > 
+                                                        
                                             {
                                                 mainItem.props.map((item,index)=>{
-                                                    return   <SublistItem   key={index} onMouseOver = { ()=>{ index === 0 ?  setIsFirstItem(true) : setIsFirstItem(false) } } onMouseOut = { ()=> setIsFirstItem(null) }>
+                                                    return   <SublistItem   key={index} onMouseOver = { ()=>{ index === 0 &&   setIsFirstItem(true)  } } onMouseOut = { ()=> setIsFirstItem(null) }>
                                                         
                                                         <Link to={ match.path + '/' + item.split(' ').join('_').toLocaleLowerCase() }  style={{textDecoration:'none',display:'block',width:'100%',height:'100%',color:'white',padding:10}}>{item}
                                                         </Link>
 
                                                         </SublistItem>
                                                 })
-                                            }                       
+                                            }
+                                                                   
                                         </Sublist>  
 
                                         </div>

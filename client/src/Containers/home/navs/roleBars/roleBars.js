@@ -2,7 +2,7 @@ export const Admin = ()=>{
     return [
         {type:'Personel',props:['Personel Listesi','Personel Ekle']},
         {type:'Rapor',props:['Raporlar'] },
-        // {type:'Öğrenci',props:['Ön Kayıt']},
+        {type:'Öğrenci',props:['Ön Kayıt']},
     ]
 
 }
@@ -16,7 +16,7 @@ export const Bayi = ()=>{
 export const Temsilci = ()=>{
     return [
         {type:'Rapor',props:['Rapor Ekle','Raporlar']},
-        {type:'Personel',props:['Personel Ekle']},
-        {type:'Bayi',props:['Bayi Listesi']},
+        {type:'Personel',props:['Personel Ekle' , 'Bayi Listesi']},
+        {type:'Öğrenci',props:['Ön Kayıt']},
     ]
 }
