@@ -59,11 +59,11 @@ justify-content:center;
 flex:1;
 text-align:center;
 transition:100ms;
-background-color:${({isSelected})=>isSelected ? '#ff6363' : 'none' };
+background-color:${({isSelected})=>isSelected ? '#00909e' : 'none' };
 color:${({isSelected})=>isSelected ? 'white': '#707070' };
 &:hover{
     cursor:pointer;
-    background-color:#ff6363 !important;
+    background-color:#00909e !important;
     color:white !important;
 }
 `
@@ -77,13 +77,14 @@ text-transform: capitalize;
 const Sublist  =  styled.ul`
 width:100%;
 padding:0;
-background-color:#588da8;
-display:${({isSelected})=>isSelected?'block':'none'};
+background-color:#1f4068;
+display:block;
+box-shadow: 0 10px 6px -6px #dcd6f7;
 `
 const SublistItem = styled.li`
 text-align:center;
 &:hover{
-    background-color:#fb7b6b;
+    background-color:#00909e;
     cursor:pointer;
 }
 `
@@ -131,6 +132,7 @@ const NotResponsiveNav = ({logoutHandler,subMenu,user,setSubLeave,setSubEnter,ma
 
      const [ isFirstItem , setIsFirstItem ] = useState(null);
 
+
      return <NavWrapper>
 
      <Item style={{flex:0.16 , alignItems:'stretch',justifyContent:'flex-start'}}>
@@ -152,33 +154,47 @@ const NotResponsiveNav = ({logoutHandler,subMenu,user,setSubLeave,setSubEnter,ma
 
             {
                 subMenu.map((item,index)=>{
-                    return   <InnerItemLink key={item.type} isSelected={selectedElement === index}  onMouseOut={()=>setSelectedElement(null)}  onMouseOver={()=>setSelectedElement(index)}>{item.type}
+
+                    return   <InnerItemLink style={{ position:'relative'  }}  key={item.type} isSelected={selectedElement === index}  onMouseOut={()=>setSelectedElement(null)}  onMouseOver={()=>setSelectedElement(index)}>{item.type}
+
+                             <ArrowIcon style={{top:'70%'}} isSelected = { selectedElement === index }  isFirstItem = { isFirstItem  }> 
+
+                                  <i class="fas fa-caret-up"/>
+
+                             </ArrowIcon>
+            
                     </InnerItemLink> 
                 })
             }
 
             <SubContainer>
 
-                {
+                            {
 
-                subMenu.map((mainItem,index)=>{
+                                    subMenu.map((mainItem,index)=>{
 
-                    return  <Sublist onClick={()=>setSelectedElement(null)} isSelected={selectedElement === index}  onMouseEnter={()=>setSelectedElement(index)} onMouseLeave={()=>setSelectedElement(null)}    key={mainItem.type} >                  
-                        {
-                            mainItem.props.map((item,index)=>{
-                                return   <SublistItem   key={index}>
+                                        return  < div style={{ width:'100%', paddingTop: selectedElement === index ? 12 : 0 , display: selectedElement === index  ? 'block' : 'none' }}   onMouseEnter={()=>setSelectedElement(index)} onMouseLeave={()=>setSelectedElement(null)}  >
                                     
-                                    <Link to={ match.path + '/' + item.split(' ').join('_').toLocaleLowerCase() }  style={{textDecoration:'none',display:'block',width:'100%',height:'100%',color:'white',padding:10}}>{item}
-                                    </Link>
+                                        <Sublist onClick={()=>setSelectedElement(null)}    key={mainItem.type} >                  
+                                            {
+                                                mainItem.props.map((item,index)=>{
+                                                    return   <SublistItem   key={index} onMouseOver = { ()=>{ index === 0 ?  setIsFirstItem(true) : setIsFirstItem(false) } } onMouseOut = { ()=> setIsFirstItem(null) }>
+                                                        
+                                                        <Link to={ match.path + '/' + item.split(' ').join('_').toLocaleLowerCase() }  style={{textDecoration:'none',display:'block',width:'100%',height:'100%',color:'white',padding:10}}>{item}
+                                                        </Link>
 
-                                    </SublistItem>
-                            })
-                        }                       
-                    </Sublist>  
-                    
-                })  
+                                                        </SublistItem>
+                                                })
+                                            }                       
+                                        </Sublist>  
 
-                }
+                                        </div>
+                                        
+                                    })  
+
+                            }
+
+                
                 
             </SubContainer>
 
@@ -209,7 +225,7 @@ const NotResponsiveNav = ({logoutHandler,subMenu,user,setSubLeave,setSubEnter,ma
                         <SubContainer style={{ width:'200%' ,left:'-96%' }}>
                                   
                                   
-                            <div style={{ width:'80%', paddingTop:16 }} onMouseEnter={()=>setAnnouncement(true)} onMouseLeave={()=>setAnnouncement(false)} >
+                            <div style={{ width:'80%', paddingTop: announcement ? 16 : 0 }} onMouseEnter={()=>setAnnouncement(true)} onMouseLeave={()=>setAnnouncement(false)} >
 
                                   <AnnouncementSComponent isOpen = { announcement } isFirstItem = { setIsFirstItem } Announcements = { Announcements } />
 

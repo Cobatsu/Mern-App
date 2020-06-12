@@ -13,6 +13,7 @@ background:white;
 width:70%;
 margin:0 auto;
 flex-flow:column;
+align-items:flex-start;
 padding:3px;
 margin-top:1%;
 padding:25px;
@@ -21,27 +22,18 @@ box-sizing:border-box;
 box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
 
 @media (max-width: 1030px) {
+    align-items:center;
     width:90%;
     margin-top:3%;
 }
 
 `
-const TopTitle = styled.div`
-padding-bottom:20px;
-color:#1b6ca8;
 
-`
 
 const GeneralWrapper = styled.ul `
 padding:0;
 margin:0;
-
-`
-
-const GeneralItem1 = styled.li`
-min-height:25px;
-margin-top:5px;
-color:#707070;
+width:100%;
 `
 
 const InfoFields = styled.div`
@@ -70,13 +62,14 @@ margin-right:10px;
 
 const Capsule = styled.div`
 border-radius:4px;
-background:#1b6ca8;
+background:#1f4068;
 color:white;
 padding:5px 7px;
 opacity:0.76;
 margin-left:6.5px;
 font-size:13px;
 `
+
 
 
 const GeneralItem2 = styled.li`
@@ -138,15 +131,14 @@ const MainPage = (props)=>{
  
                     { ( user.role === 'Admin' || user.role === 'Temsilci' ) && <MainPageWrapper style={{marginBottom:30}}>    
 
-                        <TopTitle>
+                        <Capsule style={ { fontSize:14 , background:'#00909e' , marginBottom:15} }>
                           
                           {
                               user.role === 'Admin' ?  'Günlük Temsilci Görüşme Rakamları' : 'Günlük Bayi Görüşme Rakamları' 
                           }
 
-                          <i style={{marginLeft:8}}  class="fas fa-file"></i>
 
-                        </TopTitle>
+                        </Capsule>
 
                         {
                             loading  ?  <Circle position='static' Load={true}/> : 
