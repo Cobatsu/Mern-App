@@ -61,7 +61,7 @@ flex:1;
 text-align:center;
 transition:100ms;
 background-color:${({isSelected})=>isSelected ? '#00909e' : 'none' };
-color:${({isSelected})=>isSelected ? 'white': '#707070' };
+color:${({isSelected})=>isSelected ? 'white': '#707070' } !important;
 &:hover{
     cursor:pointer;
     background-color:#00909e !important;
@@ -189,7 +189,7 @@ const NotResponsiveNav = ({logoutHandler,subMenu,user,setSubLeave,setSubEnter,ma
                                                         </SublistItem>
                                                 })
                                             }
-                                                                   
+
                                         </Sublist>  
 
                                         </div>
@@ -207,8 +207,8 @@ const NotResponsiveNav = ({logoutHandler,subMenu,user,setSubLeave,setSubEnter,ma
 
                         <InnerItemLink style={{ position:'relative'  }} isSelected = { announcement } onMouseOut= { ()=>setAnnouncement(false) }  onMouseOver = { ()=>setAnnouncement(true) }>
 
-                            <i style={{ fontSize:19.5  }} class="fas fa-exclamation-circle"></i>         
-                            <span style={{ marginLeft:10}}> Duyurular </span> 
+                            <i style = {{ fontSize:19.5 , color: announcement ? 'white' : '#d63447'  }} class="fas fa-exclamation-circle"></i>         
+                            <span style={{ marginLeft:10 }}> Duyurular </span> 
 
                             <ArrowIcon isSelected = {announcement}  isFirstItem = {isFirstItem}>
                                   <i class="fas fa-caret-up"/>
