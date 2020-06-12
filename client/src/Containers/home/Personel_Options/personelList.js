@@ -98,6 +98,7 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
     if( role !== "Temsilci" ) PersonelOptions =  PersonelOptions.filter(( { desc } )=> desc !== 'Bayiler' ) ;
 
     return PersonelOptions ; 
+    
   }
 
   const tableInformations = ( item )=> {
