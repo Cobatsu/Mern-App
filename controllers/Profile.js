@@ -2,6 +2,8 @@ const User = require('../models/user');
 const Reports = require('../models/reports');
 const bcyrpt  = require('bcryptjs');
 const moment = require('moment');
+const { Regions } = require('../client/src/Regions/regions');
+const {data} = require('../client/src/Regions/regions2')
 
 module.exports.Update = async (req,res,next)=>{ 
 
@@ -43,17 +45,52 @@ module.exports.addReport  = async (req,res,next)=>{
     const {reportType,...rest} = req.body;
     const {user} = req;
 
+     
     try {    
+        
         const newReport = new Reports({
           ...rest,userID:user._id,reportType,whoseDocument:user.firstName + ' ' + user.lastName
-         });
+        });
          
          await newReport.save();
-         res.json({reportAdded:true , message:'Report Added !'});
+         res.json({reportAdded:true});
    
     } catch (error) {
         res.json({error})
     }
+
+}
+
+module.exports.addContactReport = async (req,res,next)=>{
+     
+    const contactData = req.body ; 
+     
+    const findedCity = data.find((City)=>{ return City['il_adi'].toLocaleLowerCase() === contactData.region.toLocaleLowerCase(); }) ;
+    
+    const regionOfCity = findedCity['bolge'];
+
+    if(!regionOfCity) 
+    
+    const relatedAgencies  = await User.find({ $or:[{region:regionOfCity , responsibleCities:{$all:['']}}] });
+
+
+    const IDs = relatedAgencies.map((user)=>{ return user._id ;})
+
+
+    try {    
+        
+        const newReport = new Reports({
+          ...rest,userID:IDs,reportType,whoseDocument:user.firstName + ' ' + user.lastName,
+        });
+         
+         await newReport.save();
+         res.json({reportAdded:true});
+   
+    } catch (error) {
+        res.json({error})
+    }
+
+
 }
 
 
@@ -101,8 +138,7 @@ module.exports.reportSearch = async (req,res,next)=>{
             var documentCount = await Reports.countDocuments( searchData );    
         }
              
-        
-        
+
         if ( role === 'Temsilci' ) {
             var sortedData = await  Reports.find ( searchData ).sort({meetingDate:'descending'});
         }

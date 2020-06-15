@@ -22,7 +22,7 @@ class Register extends React.Component {
 
     e.preventDefault();
     
-    const inputValue = document.querySelector('.code').value ; 
+    const inputValue = '';
 
     if ( !inputValue  ) {
 

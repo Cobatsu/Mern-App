@@ -181,7 +181,7 @@ const NotResponsiveNav = ({logoutHandler,subMenu,user,setSubLeave,setSubEnter,ma
                                                         
                                             {
                                                 mainItem.props.map((item,index)=>{
-                                                    return   <SublistItem   key={index} onMouseOver = { ()=>{ index === 0 &&   setIsFirstItem(true)  } } onMouseOut = { ()=> setIsFirstItem(null) }>
+                                                    return   <SublistItem   key={index} onMouseOver = { ()=>{ index === 0 && setIsFirstItem(true)  } } onMouseOut = { ()=> setIsFirstItem(null) }>
                                                         
                                                         <Link to={ match.path + '/' + item.split(' ').join('_').toLocaleLowerCase() }  style={{textDecoration:'none',display:'block',width:'100%',height:'100%',color:'white',padding:10}}>{item}
                                                         </Link>

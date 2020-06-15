@@ -1,6 +1,6 @@
 import React,{useContext,useEffect,useState,useRef} from 'react';
 import {BrowserRouter,Route,Switch,Redirect,Link} from 'react-router-dom'
-import Register from './Containers/registration/pre-registration'
+import Register from './Components/RegisterStudent/refferenceNumber'
 import Login from './Containers/login/Login'
 import UploadDocument from './Containers/uploadDocument/uploadDoc'
 import {makeVerifyRequest} from './request/requset'

@@ -1,7 +1,11 @@
-import React , {useState} from 'react';
+import React , {useState,useEffect} from 'react';
 import styled from 'styled-components'
-import {TextField} from '@material-ui/core'
+import {TextField , MenuItem} from '@material-ui/core'
 import Circle from '../../UI/Circle'
+import NumberFormat from 'react-number-format'
+import {Regions} from '../../Regions/regions'
+import axios from 'axios'
+
 
 const GeneralWrapper  = styled.div`
 display:flex;
@@ -12,8 +16,8 @@ height:100%;
 `
 
 const FormBox = styled.form`
-min-width:320px;
-min-height:230px;
+min-width:350px;
+min-height:500px;
 border-radius:15px;
 display:flex;
 flex-flow:column;
@@ -33,15 +37,17 @@ display:flex;
 align-items:center;
 justify-content:center;
 color:white;
-font-size:15px;
+font-size:18px;
 
 `
 const InputBox = styled.div`
 flex:1;
+width:80%;
 display:flex;
 padding:10px;
+flex-flow:column;
 align-items:center;
-justify-content:center;
+justify-content:space-evenly;
 `
 
 const SubmitButton = styled.button`
@@ -55,43 +61,149 @@ outline:none;
 border:none;
 color:white;
 background:#00909e;
+opacity:${({ disabled }) => disabled ? '0.5' : '1'};
 min-height:40px;
 min-width:150px;
-font-size:14px;
+font-size:12px;
 align-self:flex-end;
 border-radius:15px 0 15px 0  ; 
 &:hover{
     cursor:pointer;
 }
-
 `
 
 
-const RefferenceNumber= ( { loading , submit , errorMessage  } )=>{
+
+
+const initialState = {
+
+    name:'',
+    surname:'',
+    e_mail:'',
+    phoneNumber:'+90 (___) ___-____',
+    region:'',
+
+}
+
+
+const RefferenceNumber= (props)=>{
+
+    
+    
+    const [ contactForm , setContactForm ] = useState(initialState);
+    const [ responseResult  , setResponseResult ] = useState('');
+    const [ loading , setLoading ] = useState(false);
+    
+
+    const Submit = (e) => { 
+     
+        e.preventDefault();
+       
+        const finalState = {
+
+            relatedPersonName:initialState.name +' '+ initialState.surname,
+            relatedPersonPhoneNumber:initialState.phoneNumber,
+            relatedPersonEmail:initialState.e_mail,
+            region:initialState.region,  
+
+        }
+
+        axios.post( '/api/contactReport/add' , finalState ).then((response)=>{
+
+            const { result } = response.data ; 
+
+            setResponseResult(result);
+
+        })
+        .catch((error)=>{
+
+            console.log(error);
+
+        })
+
+    }
+
+    let isPhoneNumberFilled = contactForm['phoneNumber'].split('')
+    .slice(3)
+    .filter((item) => parseInt(item) || item === '0' ).length < 10 ; 
+
+
+    let result = Object.keys(contactForm).every((key) => {
+
+      if( key === 'phoneNumber' && isPhoneNumberFilled ) {
+
+        return false ; 
+
+      } else {
+
+        return contactForm[key] ; 
+
+      }
+
+    }) ; 
+
+
+    const OnchangeHandler = type => event => {
+         
+        let value = event.target.value ; 
+
+        setContactForm((prevState)=>({...prevState , [type]:value}));
+
+    }
+
+
+    if( responseResult === 'Success' ) { 
+      
+        //
+
+
+    } else if ( responseResult === 'Error' ) {
+
+    //
+
+    } else {
+
+    
+
+    }
+
+
 
     return <GeneralWrapper>
 
-           <FormBox onSubmit = {submit} >
+           <FormBox onSubmit = {Submit} >
                       
                       <Description>
 
-                          Lütfen  Referans Kodunuzu Giriniz  
+                         İletişim Formu / Contact Form <i style={{marginLeft:15 , fontSize:16}} className="fas fa-phone"></i>
 
                       </Description>
 
 
                       <InputBox>
 
-                           <TextField  maxLength ='9'  inputProps={{ className:'code' , maxLength:'9'}} error = { errorMessage } placeholder='#########' />
+                           <TextField style={{width:'100%'}} onChange={OnchangeHandler('name')}  label='İsim / Name'  />
                       
+                           <TextField style={{width:'100%'}} onChange={OnchangeHandler('surname')}  label='Soy İsim / Surname'  />
+
+                           <TextField style={{width:'100%'}} onChange={OnchangeHandler('e_mail')}  label='E-posta Adresi / E-mail Address'  />
+
+                           <NumberFormat style={{width:'100%'}}  onChange={OnchangeHandler('phoneNumber')}   customInput={TextField} format="+90 (###) ###-####" label='Telefon Numarası / Phone Number' allowEmptyFormatting mask="_"/>
+
+                            <TextField style={{width:'100%'}} value={contactForm['region']}   onChange={OnchangeHandler('region')}  id="select" label="Şehir / City"   select>
+
+                                {                 
+                                    Regions.map((item)=> <MenuItem key={item['il']} value={item['il'].toString()}>{item['il']}</MenuItem>)
+                                }
+
+                            </TextField> 
+
+
                       </InputBox>
 
-                      {
-                            errorMessage &&  <h1 style = {{fontSize:14 , padding:0 , margin:0 }}> { errorMessage } </h1> 
-                      }
 
 
-                      <SubmitButton >
+                      <SubmitButton disabled = {!result} >
                             
                             {
 
@@ -99,7 +211,7 @@ const RefferenceNumber= ( { loading , submit , errorMessage  } )=>{
                                 
                                 <React.Fragment>
 
-                                    DEVAM ET  <i style={{marginLeft:10}} className="fas fa-arrow-right"></i> 
+                                    GÖNDER / SUBMİT  <i style={{marginLeft:10}} className="fas fa-arrow-right"></i> 
 
                                 </React.Fragment>
 

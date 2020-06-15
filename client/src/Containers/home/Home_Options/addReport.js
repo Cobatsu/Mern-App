@@ -114,7 +114,7 @@ export const  AddReport = React.memo((props)=>{
    const  [emptyWarning , setEmptyWarning] = useState(false);
    const  [reportAdded ,setReportAdded] = useState(false);
    const  [backStage , setBackStage ] = useState(false); 
-   const  [date , setDate] = useState(new Date(Date(Date.now())));
+   const  [date , setDate] = useState(new Date());
    
     useEffect(()=>{  //this is just because of Date issue //--------      
       if(reportType) setinitialReportState(prevState =>({...prevState,meetingDate:date}));

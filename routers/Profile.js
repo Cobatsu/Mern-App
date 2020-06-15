@@ -4,6 +4,8 @@ const {auth}  = require('../controllers/verify');
 const Profile  =require('../controllers/Profile');
 
 router.route('/report/add').post(auth,Profile.addReport);
+router.route('/contactReport/add').post(Profile.addContactReport);
+
 router.route('/report_search').post(auth,Profile.reportSearch);
 router.route('/:id').patch(auth,Profile.Update)
 

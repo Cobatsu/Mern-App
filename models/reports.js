@@ -31,7 +31,7 @@ const Reports = mongoose.Schema({
         required:true,
     },
     userID:{
-        type:String,
+        type:Array,
         required:true,
     },
     reportType:{
