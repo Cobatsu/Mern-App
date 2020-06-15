@@ -22,7 +22,8 @@ app.use(express.json({
     verify: undefined,
 }))
 
-app.use('/uploads',express.static('uploads'))
+
+app.use(express.static('public/documents'))
 
 mongoose.connect(_Url,{ useUnifiedTopology: true,useNewUrlParser: true })
 .then(()=>console.log('connected to DB'))
@@ -39,6 +40,7 @@ app.use(function(req, res, next) { //this is always going to be called
 }); 
 
 routes(app);
+
 
 if(process.env.NODE_ENV === 'production' || false)
 {

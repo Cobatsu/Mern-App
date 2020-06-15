@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const uniqueValidtor=require('mongoose-unique-validator')
+const shortid = require('shortid')
+
 const User = mongoose.Schema({
     userName:{
         type:String,
@@ -58,6 +60,10 @@ const User = mongoose.Schema({
     responsibleCities : {
      type:Array,
      required:false,
+    },
+    referenceCode :{
+         type:String , 
+         default:shortid.generate(),
     }
 })
 

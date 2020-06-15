@@ -3,6 +3,7 @@
     display:flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
 }
 .Inner-Register{
     width:55%;
@@ -89,7 +90,7 @@ label{
     border:none;
     padding:5px;
     padding-left: 10px;
-    box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 0.596), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 0.6), 0 2px 4px -1px rgba(0, 0, 0, 0.4);
    
 }
 

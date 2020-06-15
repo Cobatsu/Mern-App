@@ -22,7 +22,7 @@ const registeringStudent =({country_of_birth,country_of_citizenship,native_langu
 
    <div>
      <label>First Date of Grade 9</label>
-     <input type='date' defaultValue={moment().format('L').split('/').reverse().join('-')} ref={first_date_of_grade_9_ref}  onChange={changeHandler('first_date_of_grade_9')}/>
+     <input type='date' defaultValue={new Date().toISOString().substr(0, 10)} ref={first_date_of_grade_9_ref}  onChange={changeHandler('first_date_of_grade_9')}/>
    </div>
 
    <div>

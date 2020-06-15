@@ -1,14 +1,22 @@
 
 const multer =require("multer");
-const DIR = './client/public/';
+const DIR = './public/documents';
+const jwt = require('jsonwebtoken');
 
 storage = multer.diskStorage({
+    
     destination: (req, file, cb) => {
+     
         cb(null, DIR);
     },
     filename: (req, file, cb) => {
+
+        const token =  req.header("Authorization").split(' ')[1];
+
+        const jwtData = jwt.verify(token, process.env.SECRET_KEY);
+
         const fileName = file.originalname.toLowerCase().split(' ').join('-');
-        cb(null, Date.now()+'_'+fileName)
+        cb(null, jwtData.id +  '_' + Date.now()+'_'+fileName)
     }
 });
 

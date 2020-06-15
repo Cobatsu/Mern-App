@@ -1,11 +1,23 @@
 
 const Student = require('../models/student');
-
+const User = require('../models/user');
+const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
+const student = require('../models/student');
+ 
 module.exports.add = async (req,res,next)=>{
 
-    console.log(req.files)
-    if(!req.files) 
-    {
+    const { referenceCode } = req.body ; 
+
+ 
+        const  relatedUser = await User.findOne({ referenceCode });
+
+        if(!relatedUser) {
+
+            return res.json({isCorrect:false});
+
+        }
+
        const newStudent=new Student({StudentInfo:{
          information:{
              name:req.body.name,
@@ -25,8 +37,6 @@ module.exports.add = async (req,res,next)=>{
              },
              telno:req.body.phone_number,
              emailadress:req.body.e_mail,
-             kayitalan:'',
-             sube:'',
          },
          parentinformation:{
              parentname:req.body.parent_guardian_first_name,
@@ -35,12 +45,7 @@ module.exports.add = async (req,res,next)=>{
              emailadress:req.body.parent_guardian_e_mail_address,
              telno:req.body.parent_guardian_mobile_phone_number
          },
-         Images:{
-         1:'',
-         2:'',
-         3:'',
-         4:'',
-         },
+         Images:[],
          schoolinformation:{
              currentlyhighschoolstate:req.body.currently_attending_a_high_school,
              currentorlastschoolname:req.body. currentor_last_attended_school_name,
@@ -48,9 +53,19 @@ module.exports.add = async (req,res,next)=>{
              gradelevel:req.body.look_forward_to_study_at_rosedale,
              desireduniversitystudie:req.body.desired_university_studie,
          },
-         registerstate:{
-             onkayit:{not:'',state:true},
-             kayitliogrenci:{not:'',state:false},
+         registerState:{
+             onkayit:{note:'' , state:true , docState:false },
+             kayitliogrenci:{
+                 
+                 note:'', 
+                 state:false,
+                 edcStatus:{
+
+                    attendanceStatus:false,
+ 
+                 },
+                
+            },
          },
          odeme:{
              kayitfiyati:'',
@@ -68,46 +83,128 @@ module.exports.add = async (req,res,next)=>{
                      tahsiltarihi:'',
                  }
              },
-         }
-       },registerdate:{
-           day:req.body.time.day,
-           month:req.body.time.month,
-           year:req.body.time.year,
-       }});
+         },
+         registerdate:new Date(),
+         referenceCode
+       }
+           
+     });
  
          try {
                  const saved = await  newStudent.save();
-                 res.status(201).send(saved);
+
+                 const token =  await jwt.sign({ id:saved._id , referenceCode },process.env.SECRET_KEY);
+
+                 var transporter = nodemailer.createTransport({
+                    service: 'gmail',
+                    auth: {
+                      user: 'huze.ozr@gmail.com',
+                      pass: 'Huzeyfe123..'
+                    }
+                  });
+                  
+                  var mailOptions = {
+                    from: 'huze.ozr@gmail.com',
+                    to: 'ercanozr12@gmail.com',
+                    subject: 'StudyOnlineInCanada Döküman Bilgilendirme',
+                    html: `<a href =${'http://localhost:3000/upload?token=' + token} > HELLO ERCÜMENT </a>`
+                  };
+                  
+                  transporter.sendMail(mailOptions, function(error, info){
+
+                    if (error) {
+
+                      console.log(error);
+
+                    } else {
+              
+                        res.json({saved:'Completed'});
+
+                    }
+
+                  });
+                 
          }
          catch (error) 
          {
                  console.log(error)
-                 res.status(406).send(error);
+                 res.json({error});
          }
-    }
-    else
-    {
-     try { 
-      const all  =  await  Student.find();
-      const id = all[all.length-1]._id;
-      const lastItem = all[all.length-1];
-      const update = await Student.updateOne({_id:id},{StudentInfo:{...lastItem.StudentInfo, Images:{
-         govermentIssuedPhoto:req.files[0].filename,
-         rosedaleEnglishProficiencyTest:req.files[1].filename,
-         englishProficiencyTestResult:req.files[2].filename,
-         AcopyOfTranslated:req.files[3].filename,
-         }
-      }})
+    
+
+    // else {
+
+    //     try { 
+
+    //     const all  =  await  Student.find();
+    //     const id = all[all.length-1]._id;
+    //     const lastItem = all[all.length-1];
+    //     const update = await Student.updateOne({_id:id},{StudentInfo:{...lastItem.StudentInfo, Images:{
+    //         govermentIssuedPhoto:req.files[0].filename,
+    //         rosedaleEnglishProficiencyTest:req.files[1].filename,
+    //         englishProficiencyTestResult:req.files[2].filename,
+    //         AcopyOfTranslated:req.files[3].filename,
+    //         }
+    //     }})
  
-         res.status(201).send(update);
-     }
-     catch (error) 
-     {
-         res.status(406).send(error);
-     }
+    //      res.status(201).send(update);
+    //  }
+    //  catch (error) 
+    //  {
+    //      res.status(406).send(error);
+    //  }
  
+    // }
+}
+
+
+module.exports.uploadDocuments = async (req,res) =>{
+
+    const token =  req.header("Authorization").split(' ')[1];
+   
+    try {
+
+        const tokenData  = await jwt.verify( token , process.env.SECRET_KEY) ; 
+
+        const checkedStudent = await student.findOne({_id:tokenData.id})
+
+        const copyStudent = {...checkedStudent.StudentInfo} ; 
+
+        if( checkedStudent && !checkedStudent.StudentInfo.registerState.onkayit.docState ) {
+
+            if(!req.files) {
+                    return res.json({isVerified:true});
+            } else {
+                  
+                if( tokenData.referenceCode == checkedStudent.StudentInfo.referenceCode ) {
+
+                    copyStudent.registerState.onkayit.docState = true ;
+                    
+                    req.files.forEach( (file,index)=> {
+                         
+                        copyStudent.Images[index] = file.filename;
+
+                    });
+
+                    await student.updateOne({_id:tokenData.id},{StudentInfo:copyStudent});
+
+                    return res.json({  isAdded:true });
+
+                }
+            }
+        }
+
+        res.json({ error:'Server Error' });
+        
+    } catch (error) {
+        console.log(error)
+        
+        res.json({error:'Server Error'});
+
     }
- }
+
+}
+
 
 module.exports.getStudents = async (req,res,next)=>{
     try

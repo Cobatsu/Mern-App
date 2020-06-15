@@ -4,8 +4,8 @@ import React,{useState,useEffect} from 'react';
 
 const RotatingCircle = styled.div`
 
-width:50px;
-height:50px;
+width:${({width})=> ( width || '50' ) + 'px'};
+height:${({height})=> ( height || '50' ) + 'px'};
 border-radius:50%;
 border:3px solid white;
 border-top:3px solid #00bdaa;
@@ -24,7 +24,7 @@ z-index:4;
 
 `
 
-const Circle = React.memo(({Load,left,top,position,marginTop})=>{
+const Circle = React.memo(({Load,left,top,position,marginTop,width,height})=>{
 
    const [a,b] =   useState(0);
 
@@ -49,7 +49,7 @@ const Circle = React.memo(({Load,left,top,position,marginTop})=>{
    },[a])
   
 
-   return Load ? <RotatingCircle position={position} marginTop={marginTop} degree={a} top={top} left={left}  /> : null;
+   return Load ? <RotatingCircle position={position} marginTop={marginTop} degree={a} top={top} left={left} width={width} height={height} /> : null;
 
 })
 

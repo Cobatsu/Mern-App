@@ -2,6 +2,8 @@ const User = require('../models/user');
 const Permission = require('../models/permission');
 const bcyrpt = require('bcryptjs');
 
+
+
 const isPermissionSame = async (permissions,type,updatedPermission)=>{
      
     if( type === 'ADD_PHASE' ) {
@@ -77,7 +79,7 @@ module.exports.addUser = async (req,res,next)=>{
         }
         else
         {
-            newUser = new User({ ...AddedUser , password:hash });
+            newUser = new User({ ...AddedUser, password:hash });
         }
       
 

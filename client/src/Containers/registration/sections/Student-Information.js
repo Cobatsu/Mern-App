@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-const studentInfo  =({name,warning,warningText,surname,phoneNumber,eMail,date_of_birth_ref,gender_ref,changeHandler})=><div className='Item'>
+const studentInfo  =({name,warning,warningText,surname,phoneNumber,eMail,date_of_birth_ref,gender_ref,changeHandler,state})=><div className='Item'>
 <h1>1. STUDENT INFORMATION</h1>
 <div className='Fields'>
 
@@ -38,7 +38,7 @@ const studentInfo  =({name,warning,warningText,surname,phoneNumber,eMail,date_of
    
    <div>
      <label htmlFor='4'>Date of Birth</label>
-     <input type='date'  defaultValue={moment().format('L').split('/').reverse().join('-')} id='4' ref={date_of_birth_ref}  onChange={changeHandler('date_of_birth')}/>
+     <input type='date'  defaultValue={new Date().toISOString().substr(0, 10)} id='4' ref={date_of_birth_ref}  onChange={changeHandler('date_of_birth')}/>
    </div>
 
    <div>

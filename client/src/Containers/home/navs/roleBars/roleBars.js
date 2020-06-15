@@ -2,7 +2,7 @@ export const Admin = ()=>{
     return [
         {type:'Personel',props:['Personel Listesi','Personel Ekle']},
         {type:'Rapor',props:['Raporlar'] },
-        {type:'Öğrenci',props:['Ön Kayıt']},
+        {type:'Öğrenci',props:['Ön Kayıt' , 'Asıl Kayıt']},
     ]
 
 }

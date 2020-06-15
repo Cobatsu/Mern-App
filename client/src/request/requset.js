@@ -6,20 +6,40 @@ import ReactDOM from 'react-dom';
 //   return Promise.reject(error);
 // });
 
-export const makeRequest = (Type,Body,fileInputs,activeCircle,backStage)=>{
+export const makeRequest = (Type,Body,activeCircle,backStage)=>{
         activeCircle(true)
     axios[Type]('/api/register',Body)
     .then((data)=>{   
-          var formData = new FormData();
-          for (const key in fileInputs) { 
-          formData.append("imageName","multer-image-"+Date.now());    
-          formData.append('imgCollection', fileInputs[key]);
-          } 
-          makeFileRequest('post',formData,activeCircle,backStage);  
+
+      if(data.data.error) {
+            
+
+      } else {
+
+        localStorage.removeItem('code');
+
+      }
+
+
+      activeCircle(false);
+      backStage(true);
+          // var formData = new FormData();
+          // for (const key in fileInputs) { 
+          // formData.append("imageName","multer-image-"+Date.now());    
+          // formData.append('imgCollection', fileInputs[key]);
+          // } 
+          // makeFileRequest('post',formData,activeCircle,backStage);  
     })
     .catch((err)=>{
         console.log(err)
     })    
+}
+
+export const makeFileRequest = (Type,FormData,activeCircle,backStage)=>{
+  axios[Type]('/api/register', FormData).then((res)=>{
+   
+      
+  })
 }
 
 
@@ -64,14 +84,6 @@ export const makeAddUserRequest = (Type,Body,alreadyInUse,setModal,setLoggedin)=
 
 }
 
-
-export const makeFileRequest = (Type,FormData,activeCircle,backStage)=>{
-    axios[Type]('/api/register', FormData).then((res)=>{
-     
-        activeCircle(false);
-        backStage(true);
-    })
-}
 
 export const makeSpecificUserRequest = (Type,id,setLoading,setStudent)=>{
  axios[Type]('/api/register/'+id).then((res)=>{
