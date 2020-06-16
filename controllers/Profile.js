@@ -63,7 +63,7 @@ module.exports.addReport  = async (req,res,next)=>{
 
 module.exports.addContactReport = async (req,res,next)=>{
      
-    const contactData = req.body ; 
+    const contactData = req.body ; //lo 
      
     const findedCity = data.find((City)=>{ return City['il_adi'].toLocaleLowerCase() === contactData.region.toLocaleLowerCase(); }) ;
     
