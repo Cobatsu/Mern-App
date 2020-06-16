@@ -68,7 +68,11 @@ module.exports.addContactReport = async (req,res,next)=>{
     const findedCity = data.find((City)=>{ return City['il_adi'].toLocaleLowerCase() === contactData.region.toLocaleLowerCase(); }) ;
     
     const regionOfCity = findedCity['bolge'];
+<<<<<<< HEAD
      //hey  want to be merge
+=======
+     //ey I want to be merge
+>>>>>>> new
     
     const relatedAgencies  = await User.find({ $or:[{region:regionOfCity , responsibleCities:{$all:['']}}] });
 
