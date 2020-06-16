@@ -69,7 +69,6 @@ module.exports.addContactReport = async (req,res,next)=>{
     
     const regionOfCity = findedCity['bolge'];
 
-    if(!regionOfCity) 
     
     const relatedAgencies  = await User.find({ $or:[{region:regionOfCity , responsibleCities:{$all:['']}}] });
 
