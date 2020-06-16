@@ -62,20 +62,59 @@ module.exports.addReport  = async (req,res,next)=>{
 
 module.exports.addContactReport = async (req,res,next)=>{
      
-    const contactData = req.body ; //lo 
+    const contactData = req.body ; 
      
     const findedCity = data.find((City)=>{ return City['il_adi'].toLocaleLowerCase() === contactData.region.toLocaleLowerCase(); }) ;
     
     const regionOfCity = findedCity['bolge'];
      //hey  want to be merge
-    
+    if( regionOfCity != 'Marmara' ) {
+     
+        regionOfCity = 'İç Anadolu' ; 
+ 
+    }
+
     const relatedAgencies  = await User.find({ $or:[{region:regionOfCity , responsibleCities:{$all:['']}}] });
 
+    const afterResult  = relatedAgencies.every((user)=>{
+      
+        if(user.role === 'Temsilci') {
+ 
+            return true ;
+             
+        } else {
 
-    const IDs = relatedAgencies.map((user)=>{ return user._id ;})
+            return  false ; 
+
+        }
+         
+    })
+
+    var  owner = [] , allowedToSee  = [] ;  
     
-    // he
 
+    const content = relatedAgencies.map((user)=>{
+                     
+        return user.__id ; 
+
+   })
+
+
+    if( afterResult ) {
+            
+            owner.push ( ...content );   
+            
+            allowedToSee.push(...content) ; 
+            
+    } else {
+    
+            owner.push ( subBranch._id );   
+            
+            allowedToSee.push( ...content ) ; 
+    
+    }
+
+    
     try {    
         
         const newReport = new Reports({
