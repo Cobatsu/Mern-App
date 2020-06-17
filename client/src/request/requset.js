@@ -182,6 +182,9 @@ export const makeAuthenticationRequest = (Type,Body,redirectTo,setContext)=>{
    }
    )
    .catch((err)=>{
+
+    console.log(err);
+
     setContext.isLoggedinf(false); 
     setContext.setLoadingf(false);
     const type = {warning:true}
@@ -558,5 +561,20 @@ export const makeStudentSearchRequest = ( Type , setStudent , setLoading  )=>{
   .catch(()=>{
 
   })
+
+}
+
+export const makeSendFormRequest = ( Type , data ,setSentForm )=>{
+
+  axios[Type]('/api/register/sendForm').then((response)=>{
+
+
+  })
+  .catch((error)=>{
+
+
+
+  })
+
 
 }

@@ -23,12 +23,25 @@ z-index:5;
 box-shadow: 0 1px 6px -1px rgba(0, 0, 0,0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
 
 `
+const CloseIcon = styled.div`
+position:absolute;
+right:13px;
+top:5px;
+font-size:18px;
+color:#f57170;
+&:hover{
+    cursor:pointer;
+}
+`
+
+
 const CloseButton = styled.div`
 outline:none;
 border:none;
 padding:5px;
 font-size:12px;
 background:#d63447;
+box-shadow: 0 1px 6px -1px rgba(0, 0, 0,0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
 color:white;
 border-radius:6px;
 text-align:center;
@@ -75,7 +88,7 @@ const deletedModalTexts = {
 }
 
 
-const SentModal = React.memo(({backStage, type, closeModal, deleteUser}) => {
+const SentModal = React.memo(({backStage, type, closeModal, deleteUser , formSent , sendForm}) => {
 
   let modalY = {
     display: 'none'
@@ -101,9 +114,7 @@ const SentModal = React.memo(({backStage, type, closeModal, deleteUser}) => {
     <CloseButton onClick={closeModal}>KAPAT</CloseButton>
     </Modal>
 
-  }
-  else if(Object.keys(deletedModalTexts).includes(type))
-  {
+  } else if(Object.keys(deletedModalTexts).includes(type)) {
     
     return <Modal display={modalY.display}><i style={{
       fontSize: 50,
@@ -128,7 +139,47 @@ const SentModal = React.memo(({backStage, type, closeModal, deleteUser}) => {
 
   </Modal>
 
-  } 
+  } else if( type === 'SEND_STUDENT_FORM' ) {
+
+    return  <Modal  display={modalY.display} style = {{ maxWidth:500, minHeight:210 }} >
+
+    <CloseIcon onClick={closeModal} > <i class="fas fa-times"></i> </CloseIcon>
+
+    <div style={{
+      display: 'flex',
+      width: '90%',
+      justifyContent: 'space-around'
+    }}>
+      
+    <CloseButton style={{ flex: 1, marginRight: 20 , padding:20 , fontSize:15 , background:'#5f6caf' }}  onClick={sendForm('MAİL')}> 
+    
+          MAİL İLE GÖNDER 
+
+        <i style={{marginLeft:10}} class="fas fa-envelope"></i>
+
+    </CloseButton>
+
+    <CloseButton style={{ flex: 1,  padding:20 , fontSize:15  , background:'#5f6caf'}} onClick={sendForm('LİNK')}> 
+    
+        LİNK OLUŞTUR 
+
+        <i style={{marginLeft:10}} class="fas fa-link"></i>
+
+    </CloseButton>
+    
+    </div>   
+
+    </Modal>
+
+     if(formSent) {
+
+
+      
+     } else {
+
+     }
+
+  }
 
   switch (type) {
 
@@ -234,6 +285,13 @@ const SentModal = React.memo(({backStage, type, closeModal, deleteUser}) => {
         <CloseButton onClick={closeModal}>KAPAT</CloseButton>
         </Modal>
       break;
+
+    
+    case 'SEND_STUDENT_FORM' : 
+
+
+
+    break; 
 
 
 

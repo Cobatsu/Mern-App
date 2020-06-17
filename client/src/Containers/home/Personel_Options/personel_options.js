@@ -144,7 +144,7 @@ justify-content:center;
 border-radius:4px;
 background:#f57b51;
 color:white;
-font-size:12.5px;
+font-size:11.6px;
 padding:6px;
 `
 
@@ -558,11 +558,11 @@ export const PersonelReports = ( { id , setLoggedin , role , notFoundText  , cur
     'Telefon Numarası',
     'Görüşme Tipi',
     'Görüşme Tarihi',
-    'Gönderen Kişi',
+    'Görüşme Durumu',
+    'Görüşen Kişi',
     '',
   ]
   
-
   
   const filterIconOptions = (report)=>{
 
@@ -584,7 +584,8 @@ export const PersonelReports = ( { id , setLoggedin , role , notFoundText  , cur
       item.relatedPersonPhoneNumber,
       item.reportType === 'schoolReport' ? 'Okul Görüşmesi' : 'Öğrenci Görüşmesi'  ,
       item.meetingDate,
-      item.userID == id  ? <Capsule> { restrictWord(item.whoseDocument,13) } </Capsule> : restrictWord(item.whoseDocument,13)
+      item.isContacted ? <Capsule  style={ { background:'#21bf73' , fontSize:11.6 }} > Görüşme Yapıldı </Capsule> : <Capsule style={{background:'#e7305b' , fontSize:11.6}} > Beklemede </Capsule>,
+      item.owner == id  ? <Capsule> { restrictWord(item.whoseDocument,13) } </Capsule> : restrictWord(item.whoseDocument,13)
     ] 
 
   }
@@ -622,7 +623,7 @@ export const PersonelReports = ( { id , setLoggedin , role , notFoundText  , cur
   },[ location.search , role  ])
     
   return <GeneralList 
-    width = {780}
+    width = {900}
     data = { reports } 
     topTitles = {TopRows} 
     loading = {loading} 

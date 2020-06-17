@@ -45,7 +45,7 @@ const Reports = mongoose.Schema({
     },
     whoseDocument:{
         type:String,
-        required:true,
+        required:false,
     },
     region:{
         type:String,

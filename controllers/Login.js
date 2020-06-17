@@ -4,8 +4,10 @@ const Permission = require('../models/permission');
 const jwt  = require('jsonwebtoken');
 
 module.exports = async (req,res,next)=>{
-
+   
     const { name , password } = req.body;
+     
+    
     
     if(name  && password)
     {
@@ -52,11 +54,11 @@ module.exports = async (req,res,next)=>{
 
                 const getUpdatedUser = await User.findOne({_id:user._id})
                  
+
+                console.log('HYE')
               
                 const token =  await jwt.sign({_id:user._id,userName:user.userName,firstName:user.firstName,lastName:user.lastName,role:user.role },process.env.SECRET_KEY,{expiresIn:'1d'});
              
-
-
                 return res.json({user:getUpdatedUser,token ,isLoggedin:true , message:'Login Successful'});
                 
             }

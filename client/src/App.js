@@ -9,6 +9,7 @@ import NotFoundPage from './Components/NotFoundPage';
 import {Context} from './Context/Context'
 import {UpdateLoggedin} from './Containers/isLoggedin/action'
 import Circle from './UI/Circle';
+import './Containers/registration/register.css'
 
 class  App extends React.Component{
 

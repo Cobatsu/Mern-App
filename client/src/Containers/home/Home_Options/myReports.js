@@ -40,7 +40,7 @@ justify-content:center;
 border-radius:4px;
 background:#f57b51;
 color:white;
-font-size:12.5px;
+font-size:11.6px;
 padding:6px;
 `
 
@@ -65,7 +65,8 @@ const Student = (props) => {
     'Telefon Numarası',
     'Görüşme Tipi',
     'Görüşme Tarihi',
-    'Gönderen Kişi',
+    'Görüşme Durumu',
+    'Görüşen Kişi',
     '',
   ]
   
@@ -90,7 +91,8 @@ const Student = (props) => {
       item.relatedPersonPhoneNumber,
       item.reportType === 'schoolReport' ? 'Okul Görüşmesi' : 'Öğrenci Görüşmesi'  ,
       item.meetingDate,
-      item.userID == user._id  ? <Capsule> { restrictWord(item.whoseDocument,13) } </Capsule> : restrictWord(item.whoseDocument,13)
+      item.isContacted ? <Capsule  style={ { background:'#21bf73' , fontSize:11.6 }} > Görüşme Yapıldı </Capsule> : <Capsule style={{background:'#e7305b' , fontSize:11.6}} > Beklemede </Capsule>,
+      !item.isContacted ? '—' : item.owner == user._id  ? <Capsule> { restrictWord(item.whoseDocument,13) } </Capsule> : restrictWord(item.whoseDocument,13)
     ] 
 
   } 

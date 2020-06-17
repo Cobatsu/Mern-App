@@ -47,7 +47,7 @@ module.exports.addReport  = async (req,res,next)=>{
     try {    
         
         const newReport = new Reports({
-          ...rest , owner:user._id , allowedToSee:[ user._id , user.relatedAgencyID  ],reportType,whoseDocument:user.firstName + ' ' + user.lastName
+          ...rest , owner:user._id ,isContacted:true,allowedToSee:[ user._id , user.relatedAgencyID  ],reportType,whoseDocument:user.firstName + ' ' + user.lastName
         });
          
          await newReport.save();
@@ -77,8 +77,6 @@ module.exports.addContactReport = async (req,res,next)=>{
 
     const relatedAgencies  = await User.find({ $or:[ {region:regionOfCity } ,{responsibleCities:{$all:[contactData.region]}}] });
 
-    console.log(relatedAgencies)
-
     const afterResult  = relatedAgencies.every((user)=>{
       
         if(user.role === 'Temsilci') {
@@ -92,27 +90,21 @@ module.exports.addContactReport = async (req,res,next)=>{
         }
          
     })
-
-    var  owner = {} , allowedToSee  = [] ;  
-    
+ 
     const content = relatedAgencies.map(( user )=>{
                      
-        return user._id ; 
+        return user._id.toString() ; 
 
    })
    
-    if( !afterResult ) {
-            
-        owner = relatedAgencies.find((user)=>user.role === 'Bayi') ; 
-
-    }
+   var allowedToSee = [];
   
     allowedToSee.push(...content) ; 
 
     try {    
         
         const newReport = new Reports({
-          ...contactData,allowedToSee,owner:owner._id,reportType:'studentReport',whoseDocument:owner.firstName + ' ' + owner.lastName,
+          ...contactData,allowedToSee,reportType:'studentReport',
         });
          
          await newReport.save();
@@ -165,51 +157,20 @@ module.exports.reportSearch = async (req,res,next)=>{
     let searchData = Query(rest);
   
     try {
+        
+        if(user.role !== 'Admin') { 
+          
+            if( user.role !== role )  searchData = { ...searchData , allowedToSee:{$all:[personelReportID]}} ;
 
-        searchData={ ...searchData , allowedToSee:{$all:[user._id]}} ; 
+            else searchData = { ...searchData , allowedToSee:{$all:[user._id]}} ;
 
+        }
+       
         var documentCount = await Reports.countDocuments( searchData );    
              
         var sortedData = await  Reports.find ( searchData ).sort({meetingDate:'descending'}).skip(10*pageNumber).limit(10);
-        
-      
-        // if( ( user.role === 'Temsilci' && role !== 'Bayi' ) ||  role === 'Temsilci' ) {
-
-
-        //     var newSortedArray  = [];
-                 
-        //     sortedData.forEach((report,index) => {
-        
-        //        if( report.userID == ( user.role === 'Temsilci'  ?  user._id : personelReportID  ) ) newSortedArray[index] = report ;
-
-        //     })
-
-        //     var subBranches   = await User.find ( { relatedAgencyID: user.role === 'Temsilci'  ?  user._id : personelReportID  } );
-
-        //     subBranches.forEach( ( branch ) => {
-
-        //         sortedData.forEach( ( report,index ) => {
-                    
-        //             if(report.userID == branch._id)  newSortedArray[index] = report
-                     
-        //         })
-                
-        //     })
-
-        //       //we remove undefined files .;
-
             
-        //     newSortedArray = newSortedArray.filter( (item,index)=> item );
-
-        //     var newSortedArrayLength = newSortedArray.length;
-           
-        //     var factor1 =  typeof pageNumber === 'number' ? pageNumber : 0 ; 
-     
-        //     sortedData = newSortedArray.filter( ( item , index )=> item ).slice( 10 * factor1 , 10 + 10 * factor1);
-
-        // }
-        
-        // let copyReport = [...sortedData ];
+         let copyReport = [...sortedData ];
 
         copyReport.forEach((mainItem,index)=>{
             
@@ -223,7 +184,7 @@ module.exports.reportSearch = async (req,res,next)=>{
              copyReport[index] = copyReportObj;
         })
 
-        res.json({ sortedData:copyReport , documentCount: documentCount || newSortedArrayLength});
+        res.json({ sortedData:copyReport , documentCount: documentCount });
 
     }       
     catch (error) {
@@ -236,7 +197,7 @@ module.exports.getSpecificReport =async (req,res,next)=>{
     const {id} = req.params;
     try 
     {
-        const specificReport = await Reports.findOne({_id:id}).select('-__v -_id');
+        const specificReport = await Reports.findOne({_id:id}).select('-__v -_id -allowedToSee');
         res.json({specificReport});
     } catch (error) {
         res.json({error});
@@ -246,11 +207,25 @@ module.exports.getSpecificReport =async (req,res,next)=>{
 
 module.exports.updateReport = async ( req,res,next)=>{
 
-    const { params: { id } , body } = req;
+    const { params: { id } , body , user } = req;
     
     try {
-        await Reports.updateOne({_id:id},{$set:{...body}})
-        const updatedData = await  Reports.findOne({_id:id}).select('-__v');
+
+        if(body.meetingDetails) {
+
+            body['isContacted'] = true ; 
+            body['owner'] = user._id ; 
+            body['whoseDocument'] = user.firstName + ' ' + user.lastName
+            body['allowedToSee'] = [user._id];
+
+        } else {
+
+            body['isContacted'] = false ; 
+
+        }
+
+        await Reports.updateOne({_id:id},{$set:{...body }})
+        const updatedData = await  Reports.findOne({_id:id}).select('-__v -_id -allowedToSee');
 
         res.json({updatedData});
 

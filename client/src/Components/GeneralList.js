@@ -24,8 +24,8 @@ justify-content:center;
 const StudentList = styled.ul`
 overflow:hidden;
 padding:0;
-min-width:${({width})=> width ? width+'px' : '900px'};
-max-width:${({width})=> width ? width+'px' : '900px'};
+min-width:${({width})=> width ? width+'px' : '950px'};
+max-width:${({width})=> width ? width+'px' : '950px'};
 -webkit-box-shadow: 0 10px 6px -6px #758184;
 -moz-box-shadow: 0 10px 6px -6px #758184;
  box-shadow: 0 10px 6px -6px #758184;

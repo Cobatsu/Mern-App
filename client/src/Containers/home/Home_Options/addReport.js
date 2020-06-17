@@ -237,10 +237,9 @@ export const  AddReport = React.memo((props)=>{
    </UpdateLoggedin> 
 });
 
-export const Report = ({SubmitOnChange,State,setBackStage,setDate,disable,type,reportType,townships})=>{
+export const Report = ( { SubmitOnChange,State,setBackStage,setDate,disable,type,reportType,townships,isContactStudent } )=>{
   
-
-
+  console.log(isContactStudent)
 
   return <React.Fragment>
      
@@ -284,13 +283,15 @@ export const Report = ({SubmitOnChange,State,setBackStage,setDate,disable,type,r
  
                         {
 
-                          State.region   && <TextField disabled={disable} InputLabelProps={{style:{zIndex:1}}}  disabled={disable}       style={{width:'85%',padding:'10px 0'}} inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}  onChange={SubmitOnChange('townShip')}  id="select" label="İlçe" value={State['townShip']}  select>
+                          ( State.region && !isContactStudent )  ? <TextField disabled={disable} InputLabelProps={{style:{zIndex:1}}}  disabled={disable}       style={{width:'85%',padding:'10px 0'}} inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}  onChange={SubmitOnChange('townShip')}  id="select" label="İlçe" value={State['townShip']}  select>
 
                             {                
                               townships.map((item)=> <MenuItem value={item}>{item}</MenuItem>)
                             }
 
                           </TextField> 
+
+                          : null 
 
                         }
               

@@ -222,7 +222,7 @@ module.exports.getStudents = async (req,res,next)=>{
 module.exports.getOneStudent = async (req,res,next)=>{
 
     const {id} = req.params;
-    console.log(id);
+  
     try 
     {
         const specificStudent = await Student.findOne({_id:id});
@@ -240,5 +240,21 @@ module.exports.getOneStudent = async (req,res,next)=>{
         res.json({error})  
     } 
 
+}
+
+module.exports.sendForm = async ( req , res , next )=>{
+
+    const { tokenData , requestType } = req.body ;
+    
+     
+    if(requestType === 'MAİL') {
+           
+         
+
+    } else {
+
+
+
+    }
 
 }

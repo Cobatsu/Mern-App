@@ -13,7 +13,6 @@ background:white;
 width:70%;
 margin:0 auto;
 flex-flow:column;
-align-items:flex-start;
 padding:3px;
 margin-top:1%;
 padding:25px;
@@ -22,18 +21,28 @@ box-sizing:border-box;
 box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
 
 @media (max-width: 1030px) {
-    align-items:center;
     width:90%;
     margin-top:3%;
 }
 
 `
+const TopTitle = styled.div`
+padding-bottom:20px;
+color:#1b6ca8;
 
+`
 
 const GeneralWrapper = styled.ul `
 padding:0;
 margin:0;
-width:100%;
+list-style:none;
+
+`
+
+const GeneralItem1 = styled.li`
+min-height:25px;
+margin-top:5px;
+color:#707070;
 `
 
 const InfoFields = styled.div`
@@ -62,14 +71,13 @@ margin-right:10px;
 
 const Capsule = styled.div`
 border-radius:4px;
-background:#1f4068;
+background:#1b6ca8;
 color:white;
 padding:5px 7px;
 opacity:0.76;
 margin-left:6.5px;
 font-size:13px;
 `
-
 
 
 const GeneralItem2 = styled.li`
@@ -128,17 +136,82 @@ const MainPage = (props)=>{
         ( Loading , user )=> Loading ? null : 
         
            <React.Fragment>
- 
+
+                    <MainPageWrapper>
+
+                        <TopTitle>
+                                Duyurular  <i style={{marginLeft:4}} class="fas fa-exclamation-triangle"></i>
+                        </TopTitle>
+
+
+                                <GeneralWrapper>
+                                        
+                                        {/* <GeneralItem1>
+
+                                            <i class="fas fa-circle" style={{ marginRight:10 , fontSize:6 , color:'#707070'}}></i>
+                                            Şimdilik , uygulamamızda sadece " Rapor Bilgilendirme " sistemi bulunmaktadır . Yeni güncellemeler için çalışmalarımız devam etmektedir . 
+
+                                        </GeneralItem1>
+                                            
+                                            {
+                                                user.role === 'Admin' && <GeneralItem1> 
+                                                    
+                                                    <i class="fas fa-circle" style={{ marginRight:10 , fontSize:6 , color:'#707070'}}></i>  
+                                                    Yetkilendirme sistemimiz şimdilik  kısıtlı bölgelere etki etmektedir . 
+                                                
+                                                </GeneralItem1> 
+                                            } */}
+
+                                            <GeneralItem1>
+
+                                            <i class="fas fa-circle" style={{ marginRight:10 , fontSize:8 , color:'#42e6a4'}}></i>
+
+                                                Sayfa içi  ileri geri yaparken verinin kaybolma sorunu çözüldü . 
+
+                                            </GeneralItem1>
+
+                                            <GeneralItem1>
+
+                                            <i class="fas fa-circle" style={{ marginRight:10 , fontSize:8 , color:'#42e6a4'}}></i>
+
+                                                Personel eklerken çoklu il seçim bölümü eklendi .  
+
+                                            </GeneralItem1>
+
+
+                                             <GeneralItem1>
+
+                                            <i class="fas fa-circle" style={{ marginRight:10 , fontSize:8 , color:'#42e6a4'}}></i>
+
+                                                Öğrenci ve Okul raporlarına Bölge  ve İlçe bölümü eklendi .   
+
+                                            </GeneralItem1>
+
+
+                                            <GeneralItem1>
+
+                                            <i class="fas fa-circle" style={{ marginRight:10 , fontSize:8 , color:'#42e6a4'}}></i>
+
+                                                Raporlarınızın Bölge ve İlçe kısımlarını güncelleyebilirsiniz .    
+
+                                            </GeneralItem1>
+                                        
+                        
+                                </GeneralWrapper>
+
+                    </MainPageWrapper>
+                    
                     { ( user.role === 'Admin' || user.role === 'Temsilci' ) && <MainPageWrapper style={{marginBottom:30}}>    
 
-                        <Capsule style={ { fontSize:14 , background:'#00909e' , marginBottom:15} }>
+                        <TopTitle>
                           
                           {
                               user.role === 'Admin' ?  'Günlük Temsilci Görüşme Rakamları' : 'Günlük Bayi Görüşme Rakamları' 
                           }
 
+                          <i style={{marginLeft:8}}  class="fas fa-file"></i>
 
-                        </Capsule>
+                        </TopTitle>
 
                         {
                             loading  ?  <Circle position='static' Load={true}/> : 
