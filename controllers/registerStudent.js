@@ -4,6 +4,7 @@ const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const student = require('../models/student');
+const Reports = require('../models/reports');
  
 module.exports.add = async (req,res,next)=>{
 
@@ -245,14 +246,46 @@ module.exports.getOneStudent = async (req,res,next)=>{
 module.exports.sendForm = async ( req , res , next )=>{
 
     const { tokenData , requestType } = req.body ;
+
+    const token =  await jwt.sign( { ...tokenData } , process.env.SECRET_KEY );
     
-     
+    const findedReport =  await Reports.updateOne({_id:contactReportID} , {$set:{isFormSent:true}});
+
     if(requestType === 'MAİL') {
+        
+        var transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+              user: 'huze.ozr@gmail.com',
+              pass: 'Huzeyfe123..'
+            }
+          });
+          
+          var mailOptions = {
+            from: 'huze.ozr@gmail.com',
+            to: 'ercanozr12@gmail.com',
+            subject: 'StudyOnlineInCanada Döküman Bilgilendirme',
+            html: `<a href =${'http://localhost:3000/upload?token=' + token} > HELLO ERCÜMENT </a>`
+          };
+          
+          transporter.sendMail(mailOptions, function(error, info){
+
+            if (error) {
+
+              console.log(error);
+
+            } else {
+      
+                res.json({result:'Success'});
+
+            }
+
+          });
            
-         
-
     } else {
-
+           
+             
+          res.json({result:'Success' , tokenLink : token });
 
 
     }
