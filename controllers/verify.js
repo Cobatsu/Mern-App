@@ -22,8 +22,36 @@ module.exports.auth =  async (req,res,next)=>{
     try
     {
         const verify = await jwt.verify(token,process.env.SECRET_KEY);
-        req.user = verify;
-        next();  //if there is no problem go on with  next ();
+
+        const currentUser = await User.findOne({_id:verify._id});
+
+        if(currentUser) {
+                
+            var result = Object.keys(verify).every((key)=>{
+               
+                return currentUser[key] == verify[key];
+
+            })
+            
+            if(result) {
+
+                req.user = verify ; 
+                
+                next();
+
+            } else {
+                
+                res.json({error:'Server Error'})
+ 
+            }
+
+             
+        } else {
+
+            res.json({error:'Server Error'}); 
+
+        }
+            //if there is no problem go on with  next ();
     }
     catch(error)
     { 

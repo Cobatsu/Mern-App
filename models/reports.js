@@ -20,19 +20,24 @@ const Reports = mongoose.Schema({
     },
     meetingDate :{
         type:Date , 
+        default:new Date(),
         required:true,
-    },
-    meetingDate2:{
-        type:String , 
-        required:false,
     },
     meetingDetails:{
         type:String,
+        required:false,
+    },
+    owner:{
+        type:String,
+        required:false,
+    },
+    allowedToSee:{
+        type:Array,    
         required:true,
     },
-    userID:{
-        type:Array,
-        required:true,
+    isContacted :{
+        type:Boolean,
+        default:false,
     },
     reportType:{
         type:String,
@@ -48,7 +53,7 @@ const Reports = mongoose.Schema({
     },
     townShip:{
         type:String,
-        required:true,
+        required:false,
     }
 
 });

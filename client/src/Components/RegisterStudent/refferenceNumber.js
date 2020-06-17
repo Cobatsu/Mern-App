@@ -101,23 +101,27 @@ const RefferenceNumber= (props)=>{
        
         const finalState = {
 
-            relatedPersonName:initialState.name +' '+ initialState.surname,
-            relatedPersonPhoneNumber:initialState.phoneNumber,
-            relatedPersonEmail:initialState.e_mail,
-            region:initialState.region,  
+            relatedPersonName:contactForm.name +' '+ contactForm.surname,
+            relatedPersonPhoneNumber:contactForm.phoneNumber,
+            relatedPersonEmail:contactForm.e_mail,
+            region:contactForm.region,  
 
         }
 
-        axios.post( '/api/contactReport/add' , finalState ).then((response)=>{
+        setLoading(true)
+
+        axios.post( '/api/profile/contactReport/add' , finalState ).then((response)=>{
 
             const { result } = response.data ; 
 
             setResponseResult(result);
+            setLoading(false)
 
         })
         .catch((error)=>{
-
             console.log(error);
+            setResponseResult('Error');
+            setLoading(false)
 
         })
 
@@ -154,18 +158,13 @@ const RefferenceNumber= (props)=>{
 
     if( responseResult === 'Success' ) { 
       
-        //
-
+      return <h1> Formunuz gönderilmiştir .En geç 1 gün içinde sizinle iletişime geçilecektir </h1>  
 
     } else if ( responseResult === 'Error' ) {
 
-    //
+      return <h1> Bir Hata Oluştu  </h1>  
 
-    } else {
-
-    
-
-    }
+    } 
 
 
 

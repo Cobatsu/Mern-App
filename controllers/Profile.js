@@ -44,11 +44,10 @@ module.exports.addReport  = async (req,res,next)=>{
     const {reportType,...rest} = req.body;
     const {user} = req;
 
-     
     try {    
         
         const newReport = new Reports({
-          ...rest,userID:user._id,reportType,whoseDocument:user.firstName + ' ' + user.lastName
+          ...rest , owner:user._id , allowedToSee:[ user._id , user.relatedAgencyID  ],reportType,whoseDocument:user.firstName + ' ' + user.lastName
         });
          
          await newReport.save();
@@ -63,10 +62,12 @@ module.exports.addReport  = async (req,res,next)=>{
 module.exports.addContactReport = async (req,res,next)=>{
      
     const contactData = req.body ; 
-     
-    const findedCity = data.find((City)=>{ return City['il_adi'].toLocaleLowerCase() === contactData.region.toLocaleLowerCase(); }) ;
     
-    const regionOfCity = findedCity['bolge'];
+    console.log(contactData);
+
+    const findedCity = Regions.find((City)=>{ return City['il_adi'].toLocaleLowerCase() === contactData.region.toLocaleLowerCase(); }) ;
+    
+    let regionOfCity = findedCity['bolge'];
      //hey  want to be merge
     if( regionOfCity != 'Marmara' ) {
      
@@ -74,7 +75,9 @@ module.exports.addContactReport = async (req,res,next)=>{
  
     }
 
-    const relatedAgencies  = await User.find({ $or:[{region:regionOfCity , responsibleCities:{$all:['']}}] });
+    const relatedAgencies  = await User.find({ $or:[ {region:regionOfCity } ,{responsibleCities:{$all:[contactData.region]}}] });
+
+    console.log(relatedAgencies)
 
     const afterResult  = relatedAgencies.every((user)=>{
       
@@ -90,42 +93,37 @@ module.exports.addContactReport = async (req,res,next)=>{
          
     })
 
-    var  owner = [] , allowedToSee  = [] ;  
+    var  owner = {} , allowedToSee  = [] ;  
     
-
-    const content = relatedAgencies.map((user)=>{
+    const content = relatedAgencies.map(( user )=>{
                      
-        return user.__id ; 
+        return user._id ; 
 
    })
+   
+    if( !afterResult ) {
+            
+        owner = relatedAgencies.find((user)=>user.role === 'Bayi') ; 
 
-
-    if( afterResult ) {
-            
-            owner.push ( ...content );   
-            
-            allowedToSee.push(...content) ; 
-            
-    } else {
-    
-            owner.push ( subBranch._id );   
-            
-            allowedToSee.push( ...content ) ; 
-    
     }
+  
+    allowedToSee.push(...content) ; 
 
-    
     try {    
         
         const newReport = new Reports({
-          ...rest,userID:IDs,reportType,whoseDocument:user.firstName + ' ' + user.lastName,
+          ...contactData,allowedToSee,owner:owner._id,reportType:'studentReport',whoseDocument:owner.firstName + ' ' + owner.lastName,
         });
          
          await newReport.save();
-         res.json({reportAdded:true});
+
+         res.json({result:'Success'});
    
     } catch (error) {
-        res.json({error})
+
+        console.log(error);
+        res.json({result:'Error'});
+
     }
 
 
@@ -168,61 +166,50 @@ module.exports.reportSearch = async (req,res,next)=>{
   
     try {
 
-        if(user.role === 'Bayi') searchData={ ...searchData , userID:user._id } ; 
+        searchData={ ...searchData , allowedToSee:{$all:[user._id]}} ; 
 
-        if( personelReportID && role === 'Bayi')  searchData={...searchData,userID:personelReportID };
-                
-        if( ( user.role !== role && role === 'Bayi')  ||  ( user.role === role &&  role !== 'Temsilci') ) {
-            var documentCount = await Reports.countDocuments( searchData );    
-        }
+        var documentCount = await Reports.countDocuments( searchData );    
              
-
-        if ( role === 'Temsilci' ) {
-            var sortedData = await  Reports.find ( searchData ).sort({meetingDate:'descending'});
-        }
-        else {
-            var sortedData = await  Reports.find ( searchData ).sort({meetingDate:'descending'}).skip(10*pageNumber).limit(10);
-        }
+        var sortedData = await  Reports.find ( searchData ).sort({meetingDate:'descending'}).skip(10*pageNumber).limit(10);
+        
       
-        
-
-        if( ( user.role === 'Temsilci' && role !== 'Bayi' ) ||  role === 'Temsilci' ) {
+        // if( ( user.role === 'Temsilci' && role !== 'Bayi' ) ||  role === 'Temsilci' ) {
 
 
-            var newSortedArray  = [];
+        //     var newSortedArray  = [];
                  
-            sortedData.forEach((report,index) => {
+        //     sortedData.forEach((report,index) => {
         
-               if( report.userID == ( user.role === 'Temsilci'  ?  user._id : personelReportID  ) ) newSortedArray[index] = report ;
+        //        if( report.userID == ( user.role === 'Temsilci'  ?  user._id : personelReportID  ) ) newSortedArray[index] = report ;
 
-            })
+        //     })
 
-            var subBranches   = await User.find ( { relatedAgencyID: user.role === 'Temsilci'  ?  user._id : personelReportID  } );
+        //     var subBranches   = await User.find ( { relatedAgencyID: user.role === 'Temsilci'  ?  user._id : personelReportID  } );
 
-            subBranches.forEach( ( branch ) => {
+        //     subBranches.forEach( ( branch ) => {
 
-                sortedData.forEach( ( report,index ) => {
+        //         sortedData.forEach( ( report,index ) => {
                     
-                    if(report.userID == branch._id)  newSortedArray[index] = report
+        //             if(report.userID == branch._id)  newSortedArray[index] = report
                      
-                })
+        //         })
                 
-            })
+        //     })
 
-              //we remove undefined files .;
+        //       //we remove undefined files .;
 
             
-            newSortedArray = newSortedArray.filter( (item,index)=> item );
+        //     newSortedArray = newSortedArray.filter( (item,index)=> item );
 
-            var newSortedArrayLength = newSortedArray.length;
+        //     var newSortedArrayLength = newSortedArray.length;
            
-            var factor1 =  typeof pageNumber === 'number' ? pageNumber : 0 ; 
+        //     var factor1 =  typeof pageNumber === 'number' ? pageNumber : 0 ; 
      
-            sortedData = newSortedArray.filter( ( item , index )=> item ).slice( 10 * factor1 , 10 + 10 * factor1);
+        //     sortedData = newSortedArray.filter( ( item , index )=> item ).slice( 10 * factor1 , 10 + 10 * factor1);
 
-        }
+        // }
         
-        let copyReport = [...sortedData ];
+        // let copyReport = [...sortedData ];
 
         copyReport.forEach((mainItem,index)=>{
             
