@@ -7,7 +7,10 @@ const student = require('../models/student');
 const Reports = require('../models/reports');
  
 module.exports.add = async (req,res,next)=>{
-
+    try {
+        
+    const { token } = req.body ; 
+    const tokenData  = await jwt.verify( token , process.env.SECRET_KEY ) ; 
 
        const newStudent=new Student({StudentInfo:{
          information:{
@@ -81,18 +84,16 @@ module.exports.add = async (req,res,next)=>{
            
      });
  
-         try {
+     
 
-                const { token } = req.body ; 
-            
-                const tokenData  = await jwt.verify( token , process.env.SECRET_KEY ) ; 
+         
 
                 const updatedReport = await Reports.findOneAndUpdate ( { _id:tokenData.contactReportID } , { $set: { isFormFilled:true } } ) ; 
 
 
-                if( updatedReport.owner !== tokenData.owner ||  !updatedReport ) {
+                if( updatedReport.owner !== tokenData.owner ||  !updatedReport ||  updatedReport.isFormFilled) {
 
-                        return res.json( { error:'Server Error' } ) ; 
+                        return res.json( { result:'Error' } ) ; 
 
                 }
 
@@ -123,7 +124,7 @@ module.exports.add = async (req,res,next)=>{
 
                     } else {
               
-                        res.json({saved:'Completed'});
+                        res.json({result:'Success'});
 
                     }
 
@@ -132,7 +133,7 @@ module.exports.add = async (req,res,next)=>{
          }
          catch (error) 
          {
-                 res.json({error});
+                 res.json({result:'Error'});
          }
     
 
@@ -254,7 +255,7 @@ module.exports.sendForm = async ( req , res , next )=>{
 
     const token =  await jwt.sign( { ...tokenData } , process.env.SECRET_KEY , {expiresIn:'1h'} );
     
-    const tokenLink =  'https://study-online.herokuapp.com/student_form?token=' + token ; 
+    const tokenLink =  'http://localhost:3000/student_form?token=' + token ; 
 
     await Reports.updateOne({_id:tokenData.contactReportID} , {$set:{isFormSent:true}});
 
@@ -272,7 +273,7 @@ module.exports.sendForm = async ( req , res , next )=>{
             from: 'huze.ozr@gmail.com',
             to: tokenData.e_mail ,
             subject: 'StudyOnlineInCanada Döküman Bilgilendirme',
-            html: `<a href =${tokenLink} > Kayıt Formunuzu Doldurmak İçin Lütfen Tıklayınız </a>`
+            html: `<a href =${tokenLink} > Ön Kayıt Formunu Doldurmak İçin Lütfen Tıklayınız </a>`
           };
           
           transporter.sendMail(mailOptions, function(error, info){

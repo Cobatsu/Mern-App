@@ -89,7 +89,7 @@ const deletedModalTexts = {
 }
 
 
-const SentModal = React.memo(({backStage, type, closeModal, deleteUser , formSent , sendForm}) => {
+const SentModal = React.memo(({backStage, type, closeModal, deleteUser , formSent , sendForm , result}) => {
 
   let modalY = {
     display: 'none'
@@ -154,15 +154,16 @@ const SentModal = React.memo(({backStage, type, closeModal, deleteUser , formSen
           justifyContent: 'space-around'
         }}>
           
-        <CloseButton style={{ flex: 1, marginRight: 20 , padding:20 , fontSize:15 , background:'#5f6caf' }}  onClick={sendForm('MAİL')}> 
+        <CloseButton style={{ flex: 1, marginRight: 20 , padding:20 , fontSize:15 , background:'#58b4ae' }}  onClick={sendForm('MAİL')}> 
         
               MAİL İLE GÖNDER 
     
             <i style={{marginLeft:10}} class="fas fa-envelope"></i>
     
         </CloseButton>
+
     
-        <CloseButton style={{ flex: 1,  padding:20 , fontSize:15  , background:'#5f6caf'}} onClick={sendForm('LİNK')}> 
+        <CloseButton style={{ flex: 1,  padding:20 , fontSize:15  , background:'#58b4ae'}} onClick={sendForm('LİNK')}> 
         
             LİNK OLUŞTUR 
     
@@ -181,7 +182,7 @@ const SentModal = React.memo(({backStage, type, closeModal, deleteUser , formSen
 
                  <CloseIcon onClick={closeModal} > <i class="fas fa-times"></i> </CloseIcon>
 
-                 <span style={{marginBottom:25, display:'block' , padding:8 , fontSize:14 , borderRadius:5 , boxShadow:'0 1px 6px -1px rgba(0, 0, 0,0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.05)' , background:'#effffb' }}> Linkiniz Oluşturuldu !  </span>
+                 <span style={{marginBottom:25, display:'block' , padding:8 , fontSize:14 , borderRadius:5 , boxShadow:'0 1px 6px -1px rgba(0, 0, 0,0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.05)' , background:'#58b4ae' , color:'white' }}> Linkiniz Oluşturuldu !  </span>
 
                
                     <input className="foo" value = {formSent.payload} style={{width:'80%'}}/>
@@ -196,16 +197,57 @@ const SentModal = React.memo(({backStage, type, closeModal, deleteUser , formSen
 
      } else if (formSent.text === 'MAİL') {
 
-           return <Modal  display={modalY.display} style = {{ maxWidth:500, minHeight:210 }} >
+           return <Modal  display={modalY.display} >
 
            <CloseIcon onClick={closeModal} > <i class="fas fa-times"></i> </CloseIcon>
 
-           <span style={{marginBottom:25, display:'block' , padding:8 , fontSize:14 , borderRadius:5 , boxShadow:'0 1px 6px -1px rgba(0, 0, 0,0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.05)' }}> Öğrenci Formu Gönderildi  !  </span>
+           <span style={{ background:'#58b4ae' , color:'white' , display:'block' , textAlign:'center',  padding:10 , fontSize:14 , borderRadius:5 , boxShadow:'0 1px 6px -1px rgba(0, 0, 0,0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.05)' }}> 
+           
+             Ön Kayıt Formu Başarıyla Gönderildi . 
 
-          </Modal>
+           </span>
+
+     </Modal>
 
      }  
 
+  } else if (type === 'STUDENT_FORM') {
+
+    if ( result === 'Success' ) {
+
+      
+        return <Modal  display={modalY.display} >
+
+              <span style={{ background:'#58b4ae' , color:'white' , display:'block' , textAlign:'center',  padding:10 , fontSize:14 , borderRadius:5 , boxShadow:'0 1px 6px -1px rgba(0, 0, 0,0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.05)' }}> 
+              
+                  Ön Kayıt Formunuz Başarıyla Gönderildi . E-posta Adresinize Gönderilen Bağlantıdan ,  Belgeleriniz Hazır Olduğunda Yükleyebilirsiniz . 
+
+              </span>
+
+        </Modal>
+
+    } else {
+
+      return <Modal  display={modalY.display}  style={{justifyContent:'space-between'}} >
+
+          <span style={{ display:'block', background:'#e7305b', color:'white'  , textAlign:'center' , padding:'20px 10px' , fontSize:14 , borderRadius:5 , boxShadow:'0 1px 6px -1px rgba(0, 0, 0,0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.05)' }}> 
+           
+               Bir Hata Oluştu Formunuz Gönderilmedi ! 
+
+          </span>
+
+          <span style={{ display:'block' , textAlign:'center' , padding:'20px 10px' , fontSize:14 , borderRadius:5 , boxShadow:'0 1px 6px -1px rgba(0, 0, 0,0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.05)' }}> 
+           
+               Bu Bağlantıyı Yalnızca Bir Sefer Kullanabilirsiniz . 
+
+         </span>
+
+      </Modal>
+
+
+    }
+
+    
   }
 
   switch (type) {
@@ -218,7 +260,7 @@ const SentModal = React.memo(({backStage, type, closeModal, deleteUser , formSen
 
           <span style={{marginBottom:25, display:'block' , padding:8 , fontSize:14 , borderRadius:5 , boxShadow:'0 1px 6px -1px rgba(0, 0, 0,0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.05)' }}> 
           
-            Öğrenci Formu Gönderildi  !
+            Ön Kayıt Formunuz Başarıyla Gönderildi . E-posta Adresinize Gönderilen Bağlantıdan ,  Belgeleriniz Hazır Olduğunda Yükleyebilirsiniz . 
 
           </span>
 

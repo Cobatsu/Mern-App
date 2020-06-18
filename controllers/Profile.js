@@ -245,7 +245,7 @@ module.exports.updateReport = async ( req,res,next)=>{
 
             if( user.role !== 'Bayi' ) {
 
-                body['allowedToSee'] = [user._id];
+                body['allowedToSee'] = [user._id.toString()];
 
             } 
 

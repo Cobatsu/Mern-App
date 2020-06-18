@@ -63,6 +63,7 @@ class Register extends React.Component{
         circle:false,
         backStage:false,
         warningModal:false,
+        result:'',
         users:[],
    }
 
@@ -87,13 +88,18 @@ class Register extends React.Component{
       this.setState((prev)=>({studentInformations:{...prev.studentInformations,...refsSelect}}));
    }
 
-   activeCircle=(type) => {
-     this.setState({circle:type});
+   activeCircle=(value) => {
+     this.setState({circle:value});
    }
   
-   backStage = (type) => {
-     this.setState({backStage:type});
+   backStage = (value) => {
+     this.setState({backStage:value});
    }
+
+   setResult = (value) => {
+    this.setState({result:value});
+   }
+
 
    SubmitHandler=(e)=> {
 
@@ -122,7 +128,7 @@ class Register extends React.Component{
 
        }  
 
-        makeRequest('post', { token:this.token } ,this.activeCircle,this.backStage);
+        makeRequest('post', { token:this.token } ,this.activeCircle,this.backStage,this.setResult);
    }
 
    changeHandlerFactory=(type)=> {
@@ -152,7 +158,7 @@ class Register extends React.Component{
         
          <div className='Container'>
              
-               <Header backStage={this.state.backStage} warning={this.state.warningModal}/>
+               <Header backStage={this.state.backStage} result={this.state.result} warning={this.state.warningModal}/>
                
                <form onSubmit={this.SubmitHandler} className='Inner-Register'>             
                             

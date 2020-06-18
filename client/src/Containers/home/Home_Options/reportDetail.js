@@ -285,7 +285,7 @@ const ReportDetail  = ({match,...rest })=>{
             else
             {
                 
-                if( !element && key !=='schoolName' && key!=='townShip' && typeof initalReportStates[key] === 'string') {
+                if( !element && key !=='schoolName' && key!=='meetingDetails' && key!=='townShip' && typeof initalReportStates[key] === 'string') {
                 
                     return setEmptyWarning(true);
                 }
@@ -364,7 +364,7 @@ const ReportDetail  = ({match,...rest })=>{
                          
 
                         {
-                           initalReportStates.isContacted &&  ( initalReportStates.owner === user._id ) ?  <Icon style={{background:'#e16262'}} onClick= {()=>{ setSendForm(true); setbackStageOpen(true) }}> Öğrenci Formunu Gönder <i class="fas fa-file-signature"></i> </Icon> : null
+                           initalReportStates.isContacted && !initalReportStates.isFormSent &&  ( initalReportStates.owner === user._id ) ?  <Icon style={{background:'#e16262'}} onClick= {()=>{ setSendForm(true); setbackStageOpen(true) }}> Ön Kayıt Formu Gönder <i class="fas fa-file-signature"></i> </Icon> : null
                         }
 
                         {
