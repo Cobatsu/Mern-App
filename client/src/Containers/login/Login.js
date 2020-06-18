@@ -189,7 +189,7 @@ class Login  extends React.Component {
                                 
                                 <Link to='/register'style={{width:'100%',alignItems:'center',justifyContent:'center',height:'100%',textDecoration:'none',color:'white',padding:5,display:'flex'}}>
 
-                                        Öğrenci Kayıt Formu 
+                                        Öğrenci İletişim Formu 
                                         
                                         <i style={{marginLeft:10 }} class="fas fa-file-alt"></i>
                                 
