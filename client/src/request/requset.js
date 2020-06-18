@@ -1,38 +1,26 @@
 import axios from 'axios';
 import ReactDOM from 'react-dom';
-// axios.interceptors.response.use(function (response) {
-//   return response.data;
-// }, function (error) {
-//   return Promise.reject(error);
-// });
 
-export const makeRequest = (Type,Body,activeCircle,backStage)=>{
-        activeCircle(true)
-    axios[Type]('/api/register',Body)
-    .then((data)=>{   
+export const makeRequest = (Type,Body,activeCircle,backStage) => {
+
+    activeCircle(true);
+
+    axios[Type]('/api/register',Body).then((data)=>{   
 
       if(data.data.error) {
-            
+
+
 
       } else {
 
-        localStorage.removeItem('code');
+        activeCircle(false);
+
+        backStage(true);
 
       }
-
-
-      activeCircle(false);
-      backStage(true);
-          // var formData = new FormData();
-          // for (const key in fileInputs) { 
-          // formData.append("imageName","multer-image-"+Date.now());    
-          // formData.append('imgCollection', fileInputs[key]);
-          // } 
-          // makeFileRequest('post',formData,activeCircle,backStage);  
+         
     })
-    .catch((err)=>{
-        console.log(err)
-    })    
+    .catch((err)=>{ console.log(err) })    
 }
 
 export const makeFileRequest = (Type,FormData,activeCircle,backStage)=>{
@@ -42,12 +30,11 @@ export const makeFileRequest = (Type,FormData,activeCircle,backStage)=>{
   })
 }
 
-
-
 export const makePersonelRequest = (type,setPersonels,setLoading)=>{
+  
   setLoading(true);
-  axios[type]('/api/user/get')
-  .then((res)=>{
+
+  axios[type]('/api/user/get').then((res)=>{
        
         const {personels} =  res.data; 
         
@@ -564,17 +551,28 @@ export const makeStudentSearchRequest = ( Type , setStudent , setLoading  )=>{
 
 }
 
-export const makeSendFormRequest = ( Type , data ,setSentForm )=>{
+export const makeSendFormRequest = ( Type , data , setSentForm , setFormSent )=>{
 
-  axios[Type]('/api/register/sendForm').then((response)=>{
+  axios[Type]('/api/register/sendForm',data ,{
+    headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`} 
+  }).then((response)=>{
+       
+    const { result , tokenLink } = response.data ; 
 
+
+    if(result === 'Success') {
+
+         setFormSent({text:data.requestType , payload:tokenLink}) ; 
+
+    }
+
+    setSentForm(true);
 
   })
   .catch((error)=>{
-
-
-
+ 
+    console.log(error);
+    
   })
-
 
 }

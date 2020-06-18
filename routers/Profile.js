@@ -15,5 +15,4 @@ router.route('/report/:id')
 .delete(auth,Profile.deleteReport)
 .patch(auth,Profile.Update);
 
-
 module.exports = router;

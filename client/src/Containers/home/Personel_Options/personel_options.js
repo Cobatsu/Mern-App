@@ -585,7 +585,7 @@ export const PersonelReports = ( { id , setLoggedin , role , notFoundText  , cur
       item.reportType === 'schoolReport' ? 'Okul Görüşmesi' : 'Öğrenci Görüşmesi'  ,
       item.meetingDate,
       item.isContacted ? <Capsule  style={ { background:'#21bf73' , fontSize:11.6 }} > Görüşme Yapıldı </Capsule> : <Capsule style={{background:'#e7305b' , fontSize:11.6}} > Beklemede </Capsule>,
-      item.owner == id  ? <Capsule> { restrictWord(item.whoseDocument,13) } </Capsule> : restrictWord(item.whoseDocument,13)
+      !item.isContacted ? '—' : item.owner == id  ? <Capsule> { restrictWord(item.whoseDocument,13) } </Capsule> : restrictWord(item.whoseDocument,13)
     ] 
 
   }

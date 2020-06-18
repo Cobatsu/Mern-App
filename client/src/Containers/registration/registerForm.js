@@ -10,6 +10,9 @@ import Submit from './sections/Submit';
 import moment from 'moment';
 import Header from './sections/Header';
 import RefferenceNumber  from '../../Components/RegisterStudent/refferenceNumber'
+import { id } from 'date-fns/locale';
+
+
 
 class Register extends React.Component{
 
@@ -63,26 +66,32 @@ class Register extends React.Component{
         users:[],
    }
 
-   componentDidMount()
-   {
-     const refsSelect ={
-      date_of_birth:this.date_of_birth_ref.current.value.split('-').reverse().join('/'),
-      gender:this.gender_ref.current.value,
-      first_date_of_grade_9:this.first_date_of_grade_9_ref.current.value.split('-').reverse().join('/'),
-      relationship_to_student:this.relationship_to_student_ref.current.value,
-      currently_attending_a_high_school:this.currently_attending_a_high_school_ref.current.value,
-      english_language_proficiency:this.english_language_proficiency_ref.current.value,
-      look_forward_to_study_at_rosedale:this.look_forward_to_study_at_rosedale_ref.current.value,
-      desired_university_studies:this.desired_university_studies_ref.current.value
-    }
-     this.setState((prev)=>({studentInformations:{...prev.studentInformations,...refsSelect}}));
+   token = new URLSearchParams(this.props.location.search).get('token'); 
+
+   componentDidMount() {
+
+
+      if(!this.token) { return ; }
+
+      const refsSelect ={
+        date_of_birth:this.date_of_birth_ref.current.value.split('-').reverse().join('/'),
+        gender:this.gender_ref.current.value,
+        first_date_of_grade_9:this.first_date_of_grade_9_ref.current.value.split('-').reverse().join('/'),
+        relationship_to_student:this.relationship_to_student_ref.current.value,
+        currently_attending_a_high_school:this.currently_attending_a_high_school_ref.current.value,
+        english_language_proficiency:this.english_language_proficiency_ref.current.value,
+        look_forward_to_study_at_rosedale:this.look_forward_to_study_at_rosedale_ref.current.value,
+        desired_university_studies:this.desired_university_studies_ref.current.value
+      }
+
+      this.setState((prev)=>({studentInformations:{...prev.studentInformations,...refsSelect}}));
    }
 
-   activeCircle=(type)=>{
+   activeCircle=(type) => {
      this.setState({circle:type});
    }
   
-   backStage = (type)=>{
+   backStage = (type) => {
      this.setState({backStage:type});
    }
 
@@ -91,31 +100,33 @@ class Register extends React.Component{
        e.preventDefault();
 
        const registeredStudent = {...this.state.studentInformations};
-       const code = localStorage.getItem('code');
-
-       let scroll = 0;
+      
+       var scroll = 0 ;
 
         for (const key in registeredStudent) {
+
          if (registeredStudent.hasOwnProperty(key)) {
-           const element = registeredStudent[key];
-           scroll++;
-           if(!element)
-           { 
-             
-              window.scrollTo(0,scroll*66); 
-              this.setState({warning:<i className="fas fa-exclamation-circle warning"></i>,warning_text:'warning-text',warningModal:true}) 
-              return;
-           } 
+
+            const element = registeredStudent[key];
+
+            scroll++;
+
+            if(!element)
+            { 
+                window.scrollTo(0,scroll*66); 
+                this.setState({warning:<i className="fas fa-exclamation-circle warning"></i>,warning_text:'warning-text',warningModal:true}) 
+                return;
+            } 
+
          }
+
        }  
 
-       if(!code) { return; };
-
-       
-        makeRequest('post',{...registeredStudent , referenceCode :code } ,this.activeCircle,this.backStage);
+        makeRequest('post', { token:this.token } ,this.activeCircle,this.backStage);
    }
-   changeHandlerFactory=(type)=>
-   {
+
+   changeHandlerFactory=(type)=> {
+
       return (e)=>{
             const copyStudent = {...this.state.studentInformations}         
             let value = e.target.value;
@@ -131,7 +142,12 @@ class Register extends React.Component{
    render()
    {
 
+      if(!this.token) {
 
+        return <h1> ERROR </h1>; 
+
+      }
+    
       return (
         
          <div className='Container'>

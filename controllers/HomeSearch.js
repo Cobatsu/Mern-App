@@ -54,13 +54,13 @@ module.exports = async (req,res,next)=>{
                        
                          
                     lastArray = lastArray.concat( Report.filter(( report , index )=>{
-                        return  agenta._id == report.userID ;
+                        return report.owner ==  agenta._id  ;
                     }))
 
                     subBranches.forEach ( ( person , index )=>{
 
                         lastArray = lastArray.concat( Report.filter((report,index)=>{
-                            return  person._id == report.userID ;
+                            return  report.owner ==  person._id ;  
                         }))
                         
                     })
@@ -115,7 +115,7 @@ module.exports = async (req,res,next)=>{
          subBranchesOfAgency.forEach(( branch,index )=>{
  
             var matchedReports  = Report.filter((report,index)=>{
-                     return branch._id  == report.userID;
+                     return report.owner == branch._id  ;
             })    
 
         

@@ -51,6 +51,14 @@ const Reports = mongoose.Schema({
         type:String,
         required:true,
     },
+    isFormSent:{
+        type:Boolean,
+        default:false,
+    },
+    isFormFilled:{
+        type:Boolean,
+        default:false,
+    },
     townShip:{
         type:String,
         required:false,

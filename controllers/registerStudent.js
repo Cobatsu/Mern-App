@@ -8,16 +8,6 @@ const Reports = require('../models/reports');
  
 module.exports.add = async (req,res,next)=>{
 
-    const { referenceCode } = req.body ; 
-
- 
-        const  relatedUser = await User.findOne({ referenceCode });
-
-        if(!relatedUser) {
-
-            return res.json({isCorrect:false});
-
-        }
 
        const newStudent=new Student({StudentInfo:{
          information:{
@@ -55,7 +45,7 @@ module.exports.add = async (req,res,next)=>{
              desireduniversitystudie:req.body.desired_university_studie,
          },
          registerState:{
-             onkayit:{note:'' , state:true , docState:false },
+             onkayit:{note:''  , docState:false },
              kayitliogrenci:{
                  
                  note:'', 
@@ -86,15 +76,29 @@ module.exports.add = async (req,res,next)=>{
              },
          },
          registerdate:new Date(),
-         referenceCode
+         owner:tokenData.owner , 
        }
            
      });
  
          try {
+
+                const { token } = req.body ; 
+            
+                const tokenData  = await jwt.verify( token , process.env.SECRET_KEY ) ; 
+
+                const updatedReport = await Reports.findOneAndUpdate ( { _id:tokenData.contactReportID } , { $set: { isFormFilled:true } } ) ; 
+
+
+                if( updatedReport.owner !== tokenData.owner ||  !updatedReport ) {
+
+                        return res.json( { error:'Server Error' } ) ; 
+
+                }
+
                  const saved = await  newStudent.save();
 
-                 const token =  await jwt.sign({ id:saved._id , referenceCode },process.env.SECRET_KEY);
+                 const signedToken =  await jwt.sign({ studentID:saved._id , owner:tokenData.owner , e_mail:tokenData.e_mail  } , process.env.SECRET_KEY);
 
                  var transporter = nodemailer.createTransport({
                     service: 'gmail',
@@ -106,16 +110,16 @@ module.exports.add = async (req,res,next)=>{
                   
                   var mailOptions = {
                     from: 'huze.ozr@gmail.com',
-                    to: 'ercanozr12@gmail.com',
+                    to: tokenData.e_mail,
                     subject: 'StudyOnlineInCanada Döküman Bilgilendirme',
-                    html: `<a href =${'http://localhost:3000/upload?token=' + token} > HELLO ERCÜMENT </a>`
+                    html: `<a href =${'http://localhost:3000/upload?token=' + signedToken} > HELLO ERCÜMENT </a>`
                   };
                   
                   transporter.sendMail(mailOptions, function(error, info){
 
                     if (error) {
 
-                      console.log(error);
+                        res.json( { error } );
 
                     } else {
               
@@ -128,7 +132,6 @@ module.exports.add = async (req,res,next)=>{
          }
          catch (error) 
          {
-                 console.log(error)
                  res.json({error});
          }
     
@@ -165,19 +168,21 @@ module.exports.uploadDocuments = async (req,res) =>{
    
     try {
 
-        const tokenData  = await jwt.verify( token , process.env.SECRET_KEY) ; 
+        const tokenData  = await jwt.verify( token , process.env.SECRET_KEY ) ; 
 
-        const checkedStudent = await student.findOne({_id:tokenData.id})
+        const checkedStudent = await student.findOne({_id:tokenData.studentID})
 
         const copyStudent = {...checkedStudent.StudentInfo} ; 
 
         if( checkedStudent && !checkedStudent.StudentInfo.registerState.onkayit.docState ) {
 
             if(!req.files) {
+
                     return res.json({isVerified:true});
+
             } else {
                   
-                if( tokenData.referenceCode == checkedStudent.StudentInfo.referenceCode ) {
+                if( tokenData.owner == checkedStudent.StudentInfo.owner ) {
 
                     copyStudent.registerState.onkayit.docState = true ;
                     
@@ -187,20 +192,20 @@ module.exports.uploadDocuments = async (req,res) =>{
 
                     });
 
-                    await student.updateOne({_id:tokenData.id},{StudentInfo:copyStudent});
+                    await student.updateOne({_id:tokenData.studentID},{StudentInfo:copyStudent});
 
-                    return res.json({  isAdded:true });
+                    return res.json({  result:'Success' });
 
                 }
             }
         }
 
-        res.json({ error:'Server Error' });
+        return res.json({ error:'Server Error' });
         
     } catch (error) {
         console.log(error)
         
-        res.json({error:'Server Error'});
+        return res.json({error:'Server Error'});
 
     }
 
@@ -247,9 +252,11 @@ module.exports.sendForm = async ( req , res , next )=>{
 
     const { tokenData , requestType } = req.body ;
 
-    const token =  await jwt.sign( { ...tokenData } , process.env.SECRET_KEY );
+    const token =  await jwt.sign( { ...tokenData } , process.env.SECRET_KEY , {expiresIn:'1h'} );
     
-    const findedReport =  await Reports.updateOne({_id:contactReportID} , {$set:{isFormSent:true}});
+    const tokenLink =  'https://study-online.herokuapp.com/student_form?token=' + token ; 
+
+    await Reports.updateOne({_id:tokenData.contactReportID} , {$set:{isFormSent:true}});
 
     if(requestType === 'MAİL') {
         
@@ -263,9 +270,9 @@ module.exports.sendForm = async ( req , res , next )=>{
           
           var mailOptions = {
             from: 'huze.ozr@gmail.com',
-            to: 'ercanozr12@gmail.com',
+            to: tokenData.e_mail ,
             subject: 'StudyOnlineInCanada Döküman Bilgilendirme',
-            html: `<a href =${'http://localhost:3000/upload?token=' + token} > HELLO ERCÜMENT </a>`
+            html: `<a href =${tokenLink} > Kayıt Formunuzu Doldurmak İçin Lütfen Tıklayınız </a>`
           };
           
           transporter.sendMail(mailOptions, function(error, info){
@@ -285,7 +292,7 @@ module.exports.sendForm = async ( req , res , next )=>{
     } else {
            
              
-          res.json({result:'Success' , tokenLink : token });
+          res.json({result:'Success' , tokenLink });
 
 
     }

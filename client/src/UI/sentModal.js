@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 const Modal = styled.div`
 position:fixed;
@@ -141,67 +142,87 @@ const SentModal = React.memo(({backStage, type, closeModal, deleteUser , formSen
 
   } else if( type === 'SEND_STUDENT_FORM' ) {
 
-    return  <Modal  display={modalY.display} style = {{ maxWidth:500, minHeight:210 }} >
+     if( formSent.text == 'REQUEST' ) {
 
-    <CloseIcon onClick={closeModal} > <i class="fas fa-times"></i> </CloseIcon>
+        return  <Modal  display={modalY.display} style = {{ maxWidth:500, minHeight:210 }} >
 
-    <div style={{
-      display: 'flex',
-      width: '90%',
-      justifyContent: 'space-around'
-    }}>
-      
-    <CloseButton style={{ flex: 1, marginRight: 20 , padding:20 , fontSize:15 , background:'#5f6caf' }}  onClick={sendForm('MAİL')}> 
+        <CloseIcon onClick={closeModal} > <i class="fas fa-times"></i> </CloseIcon>
     
-          MAİL İLE GÖNDER 
-
-        <i style={{marginLeft:10}} class="fas fa-envelope"></i>
-
-    </CloseButton>
-
-    <CloseButton style={{ flex: 1,  padding:20 , fontSize:15  , background:'#5f6caf'}} onClick={sendForm('LİNK')}> 
+        <div style={{
+          display: 'flex',
+          width: '90%',
+          justifyContent: 'space-around'
+        }}>
+          
+        <CloseButton style={{ flex: 1, marginRight: 20 , padding:20 , fontSize:15 , background:'#5f6caf' }}  onClick={sendForm('MAİL')}> 
+        
+              MAİL İLE GÖNDER 
     
-        LİNK OLUŞTUR 
-
-        <i style={{marginLeft:10}} class="fas fa-link"></i>
-
-    </CloseButton>
+            <i style={{marginLeft:10}} class="fas fa-envelope"></i>
     
-    </div>   
+        </CloseButton>
+    
+        <CloseButton style={{ flex: 1,  padding:20 , fontSize:15  , background:'#5f6caf'}} onClick={sendForm('LİNK')}> 
+        
+            LİNK OLUŞTUR 
+    
+            <i style={{marginLeft:10}} class="fas fa-link"></i>
+    
+        </CloseButton>
+        
+        </div>   
+    
+        </Modal>
 
-    </Modal>
+     } else if (formSent.text === 'LİNK' ) {
+            
+        
+           return  <Modal  display={modalY.display} style = {{ maxWidth:500, minHeight:210  , justifyContent:'center'}} >
 
-     if(formSent) {
+                 <CloseIcon onClick={closeModal} > <i class="fas fa-times"></i> </CloseIcon>
 
+                 <span style={{marginBottom:25, display:'block' , padding:8 , fontSize:14 , borderRadius:5 , boxShadow:'0 1px 6px -1px rgba(0, 0, 0,0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.05)' , background:'#effffb' }}> Linkiniz Oluşturuldu !  </span>
 
-      
-     } else {
+               
+                    <input className="foo" value = {formSent.payload} style={{width:'80%'}}/>
 
-     }
+                    <CopyToClipboard text={formSent.payload} >
+                         <CloseButton style ={{marginTop:15 , padding:10}} type='button'> Linki Kopyala </CloseButton>
+                   </CopyToClipboard>
+                       
+                
+           </Modal>
+            
+
+     } else if (formSent.text === 'MAİL') {
+
+           return <Modal  display={modalY.display} style = {{ maxWidth:500, minHeight:210 }} >
+
+           <CloseIcon onClick={closeModal} > <i class="fas fa-times"></i> </CloseIcon>
+
+           <span style={{marginBottom:25, display:'block' , padding:8 , fontSize:14 , borderRadius:5 , boxShadow:'0 1px 6px -1px rgba(0, 0, 0,0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.05)' }}> Öğrenci Formu Gönderildi  !  </span>
+
+          </Modal>
+
+     }  
 
   }
 
   switch (type) {
 
     case 'STUDENT_FORM':
-      return <Modal  display={modalY.display} ><i style={{
-          fontSize: 80,
-          color: '#52de97'
-        }} className="far fa-check-circle"></i>
-        <h2 style={{
-          textAlign: 'center',
-          fontSize: 20,
-          color: '#52de97',
-          fontWeight: 'bolder'
-        }}>Your form  has been sent succesfuly ! </h2>
-        <h3 style={{
-          textAlign: 'center',
-          fontSize: 14,
-          color: '#7fcd91',
-          fontWeight: 'bolder'
-        }}>We will be in contact with you by e-mail.Please Dont forget to check your mails. </h3>
-        <button style={ButtonStyle}><a href='https://www.studyonlineincanada.com/' style={aStyle}>Go Back To Page</a></button>
-        </Modal>
+
+      return <Modal  display={modalY.display} >
+
+          <CloseIcon onClick={closeModal} > <i class="fas fa-times"></i> </CloseIcon>
+
+          <span style={{marginBottom:25, display:'block' , padding:8 , fontSize:14 , borderRadius:5 , boxShadow:'0 1px 6px -1px rgba(0, 0, 0,0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.05)' }}> 
+          
+            Öğrenci Formu Gönderildi  !
+
+          </span>
+
+     </Modal>
 
       break;
 
@@ -286,13 +307,7 @@ const SentModal = React.memo(({backStage, type, closeModal, deleteUser , formSen
         </Modal>
       break;
 
-    
-    case 'SEND_STUDENT_FORM' : 
-
-
-
-    break; 
-
+  
 
 
   }

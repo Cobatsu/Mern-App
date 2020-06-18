@@ -40,14 +40,24 @@ module.exports.Update = async (req,res,next)=>{
 
 
 module.exports.addReport  = async (req,res,next)=>{
+ 
+    const { reportType , ...rest } = req.body;
+    const { user } = req;
+    
+    if( user.role === 'Bayi' ) {
+ 
+        var content =  [ user._id , user.relatedAgencyID  ] ; 
 
-    const {reportType,...rest} = req.body;
-    const {user} = req;
+    } else {
+
+        var content =  [ user._id  ] ; 
+
+    }
 
     try {    
         
         const newReport = new Reports({
-          ...rest , owner:user._id ,isContacted:true,allowedToSee:[ user._id , user.relatedAgencyID  ],reportType,whoseDocument:user.firstName + ' ' + user.lastName
+          ...rest , owner:user._id , isContacted:true , allowedToSee:content , reportType , whoseDocument:user.firstName + ' ' + user.lastName
         });
          
          await newReport.save();
@@ -63,8 +73,6 @@ module.exports.addContactReport = async (req,res,next)=>{
      
     const contactData = req.body ; 
     
-    console.log(contactData);
-
     const findedCity = Regions.find((City)=>{ return City['il_adi'].toLocaleLowerCase() === contactData.region.toLocaleLowerCase(); }) ;
     
     let regionOfCity = findedCity['bolge'];
@@ -77,34 +85,47 @@ module.exports.addContactReport = async (req,res,next)=>{
 
     const relatedAgencies  = await User.find({ $or:[ {region:regionOfCity } ,{responsibleCities:{$all:[contactData.region]}}] });
 
-    const afterResult  = relatedAgencies.every((user)=>{
+    const agencies  = relatedAgencies.filter((user)=>{
       
-        if(user.role === 'Temsilci') {
+        return user.role === 'Temsilci' ;
  
-            return true ;
-             
-        } else {
+    }).map((agency) => agency._id.toString() );
 
-            return  false ; 
 
-        }
-         
+    const subBranch = relatedAgencies.find((user)=>{
+
+        return user.role === 'Bayi';
+    
     })
- 
-    const content = relatedAgencies.map(( user )=>{
-                     
-        return user._id.toString() ; 
 
-   })
+    if(subBranch) {
+
+        var content = agencies.reduce((init,curr,index)=>{
+
+            if(curr == subBranch.relatedAgencyID ) {
+               
+               return init.concat(curr) ;
    
-   var allowedToSee = [];
-  
-    allowedToSee.push(...content) ; 
+            } else {
+   
+               return init ; 
+   
+            }
+   
+       },[subBranch._id.toString()])
+
+   
+    } else {
+
+        var content = agencies ; 
+
+    }
+   
 
     try {    
         
         const newReport = new Reports({
-          ...contactData,allowedToSee,reportType:'studentReport',
+          ...contactData,allowedToSee:content,reportType:'studentReport',
         });
          
          await newReport.save();
@@ -158,12 +179,17 @@ module.exports.reportSearch = async (req,res,next)=>{
   
     try {
         
-        if(user.role !== 'Admin') { 
+        if (user.role !== 'Admin') { 
           
             if( user.role !== role )  searchData = { ...searchData , allowedToSee:{$all:[personelReportID]}} ;
 
             else searchData = { ...searchData , allowedToSee:{$all:[user._id]}} ;
 
+        } else {
+
+            if( user.role !== role )  searchData = { ...searchData , allowedToSee:{$all:[personelReportID]}} ;
+
+            searchData = { ...searchData , 'allowedToSee.0' : {$exists:true} }
         }
        
         var documentCount = await Reports.countDocuments( searchData );    
@@ -214,9 +240,14 @@ module.exports.updateReport = async ( req,res,next)=>{
         if(body.meetingDetails) {
 
             body['isContacted'] = true ; 
-            body['owner'] = user._id ; 
+            body['owner'] = user._id.toString() ; 
             body['whoseDocument'] = user.firstName + ' ' + user.lastName
-            body['allowedToSee'] = [user._id];
+
+            if( user.role !== 'Bayi' ) {
+
+                body['allowedToSee'] = [user._id];
+
+            } 
 
         } else {
 

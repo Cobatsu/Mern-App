@@ -144,15 +144,16 @@ const ReportDetail  = ({match,...rest })=>{
 
     const  [ sendForm , setSendForm ] = useState(false);
 
-    
- 
+    const  [ formSent , setFormSent ] = useState({text:'REQUEST' , payload:null});
+
+     
     const activeStep = useMemo(()=>{
             
-        if( initalReportStates.isContacted && !initalReportStates.isFormSent ) {
+        if ( initalReportStates.isContacted && !initalReportStates.isFormSent ) {
 
             return 1
 
-        } else if( initalReportStates.isFormSent && !initalReportStates.isFormFilled ) { 
+        } else if ( initalReportStates.isFormSent && !initalReportStates.isFormFilled ) { 
 
             return 2
 
@@ -164,10 +165,9 @@ const ReportDetail  = ({match,...rest })=>{
 
         return 0; 
  
-    },[initalReportStates])
+    },[initalReportStates.owner])
 
     const steps = ['İletişime Geçildi' , 'Öğrenci Formu Gönderildi' , 'Öğrenci Formu Dolduruldu']
-
 
     const context = useContext(Context);
      
@@ -179,6 +179,8 @@ const ReportDetail  = ({match,...rest })=>{
 
     const sendFormHandler = (requestType) => event =>{
 
+           setSendForm(false);
+
             const {id} = match.params;
 
             const  data = {
@@ -187,13 +189,14 @@ const ReportDetail  = ({match,...rest })=>{
 
                     owner : initalReportStates.owner ,
                     contactReportID : id,
+                    e_mail:initalReportStates.relatedPersonEmail , 
 
                 },
 
                 requestType , 
             }  
                 
-            makeSendFormRequest( 'post' , data , setSendForm  ); 
+            makeSendFormRequest( 'post' , data , setSendForm , setFormSent); 
 
     }
 
@@ -282,16 +285,15 @@ const ReportDetail  = ({match,...rest })=>{
             else
             {
                 
-                if( !element && key !=='schoolName' && key !=='meetingDetails' && key !=='townShip' && key!=='isContacted') {
+                if( !element && key !=='schoolName' && key!=='townShip' && typeof initalReportStates[key] === 'string') {
                 
                     return setEmptyWarning(true);
                 }
                 else {
 
-                    if(key !== 'meetingDate' && key!=='isContacted') {
+                    if(key !== 'meetingDate' &&  typeof initalReportStates[key] === 'string' ) {
                         
-
-                        if(initalReportStates[key]) initalReportStates[key] = initalReportStates[key].trim(); 
+                        initalReportStates[key] = initalReportStates[key].trim(); 
 
                     } 
 
@@ -327,7 +329,7 @@ const ReportDetail  = ({match,...rest })=>{
                 <Modal backStage={uptadedModal}  closeModal={closeModal_2} type='UPDATED_REPORT'/>
                 <Modal backStage={deleteModal}   closeModal={closeModal_3} deleteUser={deleteReport}  type='DELETE_REPORT'/>
                 <Modal backStage={deleted}       closeModal={closeModal_4} type='DELETED_REPORT'/>
-                <Modal backStage={sendForm}      closeModal={closeModal_5} type='SEND_STUDENT_FORM' sendForm = {sendFormHandler}  />
+                <Modal backStage={sendForm}  formSent={formSent}     closeModal={closeModal_5} type='SEND_STUDENT_FORM' sendForm = {sendFormHandler}  />
                 
                 <Stepper style={{width:'90%'}} alternativeLabel activeStep={activeStep}>
                     
@@ -362,15 +364,15 @@ const ReportDetail  = ({match,...rest })=>{
                          
 
                         {
-                           initalReportStates.isContacted && <Icon style={{background:'#e16262'}} onClick= {()=>{ setSendForm(true); setbackStageOpen(true) }}> Öğrenci Formunu Gönder <i class="fas fa-file-signature"></i> </Icon>
+                           initalReportStates.isContacted &&  ( initalReportStates.owner === user._id ) ?  <Icon style={{background:'#e16262'}} onClick= {()=>{ setSendForm(true); setbackStageOpen(true) }}> Öğrenci Formunu Gönder <i class="fas fa-file-signature"></i> </Icon> : null
                         }
 
                         {
-                           user.permissions.Rapor_Bilgileri.includes(PermissionsNumbers.UPDATE) &&  ( !initalReportStates.isContacted || initalReportStates.owner === user._id )   ?  <Icon onClick= { ()=>setDisable(false)}>Düzenle <i className="fas fa-edit"/></Icon> : null
+                           user.permissions.Rapor_Bilgileri.includes(PermissionsNumbers.UPDATE) &&  ( !initalReportStates.isContacted || initalReportStates.owner === user._id ) && user.role !== 'Admin'   ?  <Icon onClick= { ()=>setDisable(false)}>Düzenle <i className="fas fa-edit"/></Icon> : null
                         }
                         
                         {
-                           user.permissions.Rapor_Bilgileri.includes(PermissionsNumbers.REMOVE) &&  ( initalReportStates.owner === user._id ) ?    <Icon style={{background:'#d9455f'}} onClick={()=>{setDeleteModal(true); setbackStageOpen(true)}} > Raporu  Sil <i className="fas fa-trash-alt"></i></Icon> : null
+                           user.permissions.Rapor_Bilgileri.includes(PermissionsNumbers.REMOVE) &&  ( initalReportStates.owner === user._id || user.role === 'Admin' ) ?    <Icon style={{background:'#d9455f'}} onClick={()=>{setDeleteModal(true); setbackStageOpen(true)}} > Raporu  Sil <i className="fas fa-trash-alt"></i></Icon> : null
                         }
 
                    </InnerItems>

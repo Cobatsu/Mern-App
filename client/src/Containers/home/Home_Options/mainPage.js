@@ -6,6 +6,7 @@ import {Route,Redirect} from 'react-router-dom'
 import Circle from '../../../UI/Circle'
 import axios from 'axios';
 import ReactDOM from 'react-dom';
+import {restrictWord} from '../../../Utilities/utilities'
 
 const MainPageWrapper = styled.div`
 display:flex;
@@ -76,6 +77,7 @@ color:white;
 padding:5px 7px;
 opacity:0.76;
 margin-left:6.5px;
+text-transform:capitalize;
 font-size:13px;
 `
 
@@ -137,69 +139,6 @@ const MainPage = (props)=>{
         
            <React.Fragment>
 
-                    <MainPageWrapper>
-
-                        <TopTitle>
-                                Duyurular  <i style={{marginLeft:4}} class="fas fa-exclamation-triangle"></i>
-                        </TopTitle>
-
-
-                                <GeneralWrapper>
-                                        
-                                        {/* <GeneralItem1>
-
-                                            <i class="fas fa-circle" style={{ marginRight:10 , fontSize:6 , color:'#707070'}}></i>
-                                            Şimdilik , uygulamamızda sadece " Rapor Bilgilendirme " sistemi bulunmaktadır . Yeni güncellemeler için çalışmalarımız devam etmektedir . 
-
-                                        </GeneralItem1>
-                                            
-                                            {
-                                                user.role === 'Admin' && <GeneralItem1> 
-                                                    
-                                                    <i class="fas fa-circle" style={{ marginRight:10 , fontSize:6 , color:'#707070'}}></i>  
-                                                    Yetkilendirme sistemimiz şimdilik  kısıtlı bölgelere etki etmektedir . 
-                                                
-                                                </GeneralItem1> 
-                                            } */}
-
-                                            <GeneralItem1>
-
-                                            <i class="fas fa-circle" style={{ marginRight:10 , fontSize:8 , color:'#42e6a4'}}></i>
-
-                                                Sayfa içi  ileri geri yaparken verinin kaybolma sorunu çözüldü . 
-
-                                            </GeneralItem1>
-
-                                            <GeneralItem1>
-
-                                            <i class="fas fa-circle" style={{ marginRight:10 , fontSize:8 , color:'#42e6a4'}}></i>
-
-                                                Personel eklerken çoklu il seçim bölümü eklendi .  
-
-                                            </GeneralItem1>
-
-
-                                             <GeneralItem1>
-
-                                            <i class="fas fa-circle" style={{ marginRight:10 , fontSize:8 , color:'#42e6a4'}}></i>
-
-                                                Öğrenci ve Okul raporlarına Bölge  ve İlçe bölümü eklendi .   
-
-                                            </GeneralItem1>
-
-
-                                            <GeneralItem1>
-
-                                            <i class="fas fa-circle" style={{ marginRight:10 , fontSize:8 , color:'#42e6a4'}}></i>
-
-                                                Raporlarınızın Bölge ve İlçe kısımlarını güncelleyebilirsiniz .    
-
-                                            </GeneralItem1>
-                                        
-                        
-                                </GeneralWrapper>
-
-                    </MainPageWrapper>
                     
                     { ( user.role === 'Admin' || user.role === 'Temsilci' ) && <MainPageWrapper style={{marginBottom:30}}>    
 
@@ -237,7 +176,7 @@ const MainPage = (props)=>{
                                      <div style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
 
                                            <span style= { {marginRight:3 , fontSize:14.5 , color:'#707070'}} > { region.region } </span>
-                                           <Capsule> <i style={{marginRight:5}} class="fas fa-user"></i> { region.fullName.split(' ')[0] } </Capsule> 
+                                           <Capsule> <i style={{marginRight:5}} class="fas fa-user"></i> { restrictWord( region.fullName.split(' ')[0] , 10 )  } </Capsule> 
 
                                      </div>
                                     
