@@ -202,7 +202,7 @@ const RefferenceNumber= (props)=>{
 
 
 
-                      <SubmitButton disabled = {!result} >
+                      <SubmitButton disabled = { !result || loading} >
                             
                             {
 

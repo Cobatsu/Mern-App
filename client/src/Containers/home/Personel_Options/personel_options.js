@@ -20,7 +20,7 @@ import {_PersonelList} from  './personelList'
 import UserMenu from '../../../Components/Usermenu'
 import {useViewport} from '../../home/navs/customHooks/viewPortHook'
 import GeneralList from '../../../Components/GeneralList'
-import {restrictWord} from '../../../Utilities/utilities' 
+import {restrictWord , statusColors} from '../../../Utilities/utilities'
 import queryString from 'querystring'
 
 
@@ -142,11 +142,13 @@ display:flex;
 align-items:center;
 justify-content:center;
 border-radius:4px;
-background:#f57b51;
-color:white;
+background:rgba(245, 123, 81, .1);
+color:#f57b51;
+border:1px solid #f57b51;
 font-size:11.6px;
 padding:6px;
 `
+
 
 
 //---------------------------------
@@ -500,7 +502,7 @@ const General_User_Info = ({match,...rest})=>{
                   </InputsWrapper>
                    } />
 
-                  <Route path='/home/personel_listesi/raporlar/:id' exact render={()=><InputsWrapper style={{alignSelf:'stretch',justifyContent:'flex-start'}}>  
+                  <Route path='/home/personel_listesi/raporlar/:id' exact render={()=><InputsWrapper style={{alignSelf:'stretch',justifyContent:'flex-start' , flex:0.86}}>  
                             <PersonelReports role={userInformations.role}    id={match.params.id} setLoggedin={context.isLoggedinf} currentID={user._id}  currentRole = {user.role} />                
                    </InputsWrapper> 
                   }
@@ -578,14 +580,16 @@ export const PersonelReports = ( { id , setLoggedin , role , notFoundText  , cur
   }
   
   const tableInformations = (item)=> {
+
+    if(item.owner) { var fullName = item.owner.firstName + ' ' + item.owner.lastName ;  }
       
     return [
       restrictWord( item.relatedPersonName , 13 ),
       item.relatedPersonPhoneNumber,
       item.reportType === 'schoolReport' ? 'Okul Görüşmesi' : 'Öğrenci Görüşmesi'  ,
       item.meetingDate,
-      item.isContacted ? <Capsule  style={ { background:'#21bf73' , fontSize:11.6 }} > Görüşme Yapıldı </Capsule> : <Capsule style={{background:'#e7305b' , fontSize:11.6}} > Beklemede </Capsule>,
-      !item.isContacted ? '—' : item.owner == id  ? <Capsule> { restrictWord(item.whoseDocument,13) } </Capsule> : restrictWord(item.whoseDocument,13)
+      <Capsule  style={ {...statusColors(item).style}} >  { statusColors(item).text } </Capsule>,
+      !item.isContacted ? '—' : item.owner._id === id  ? <Capsule> { restrictWord(fullName,13) } </Capsule> : restrictWord(fullName,13)
     ] 
 
   }

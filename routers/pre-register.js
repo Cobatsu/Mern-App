@@ -8,10 +8,9 @@ const {auth}  = require('../controllers/verify');
 router.post('/',registerStudent.add);
 router.post('/uploadDocuments' , uploadMulter.upload.array('imgCollection',4), registerStudent.uploadDocuments);
 
-
 router.route('/sendForm').post(auth,registerStudent.sendForm);
 
-router.get('/',registerStudent.getStudents);
-router.get('/:id',registerStudent.getOneStudent);
+router.route('/get_students').post(auth,registerStudent.studentSearch);
+router.post('/get_students/:id',registerStudent.getOneStudent);
 module.exports = router;
 

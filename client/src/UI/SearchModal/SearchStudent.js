@@ -80,13 +80,14 @@ align-self:flex-end;
 
 
 const initialSearchState = {
- reportType:'',
- relatedPersonName:'',
- relatedPersonPhoneNumber:'',
+    
+ name:'',
+ surname:'',
  dateIntervalStart:'',
  dateIntervalEnd:'',
- schoolName:'',
- whoseDocument:'',
+ owner:'',
+ docState:null , 
+
 }
 
 export const  SearchStudentModal = React.memo(( { isOpen , close , role , closeModalOnly , setReports , setSubPagesCount , setNotFound, setMainSearchData  }) => {
@@ -159,22 +160,19 @@ export const  SearchStudentModal = React.memo(( { isOpen , close , role , closeM
 
         <SearchFields className='SearchFields'>
 
-            <TextField style={{width: width < breakPoint ? '90%' : '48%' , margin:'10px 0  0 5px ',fontSize:14}} inputProps={{style:{fontSize:14}}}  InputLabelProps={{style:{fontSize:14}}}    value={searchData['reportType']}  onChange={submitChangeHandler('reportType')}  id="select" label="Görüşme Tipi"  select>
-                        <MenuItem value="" selected><em>Görüşme Tipi</em></MenuItem>
-                        <MenuItem value="schoolReport">Okul Görüşmesi</MenuItem>
-                        <MenuItem value="studentReport">Veli/Öğrenci Görüşmesi</MenuItem>
+            <TextField style={{width:width < breakPoint ? '90%' : '48%' , margin:'10px 0 0 5px',fontSize:14}} inputProps={{style:{fontSize:14}}}  InputLabelProps={{style:{fontSize:14}}}    value={searchData['gender']}  onChange={submitChangeHandler('gender')}  id="select" label="Cinsiyet"  select>
+                        <MenuItem value="" selected><em>Cinsiyet</em></MenuItem>
+                        <MenuItem value="Male">Erkek</MenuItem>
+                        <MenuItem value="Female">Kadın</MenuItem>
             </TextField>
 
             
-            {
-                ( role === 'Admin' || role === 'Temsilci' )  ?  <TextField  InputLabelProps={{style:{fontSize:14}}} inputProps={{style:{fontSize:14}}}   style={{width:width<breakPoint ? '90%' : '48%' , margin:'10px 0  0 5px '}} value={searchData['whoseDocument']}  onChange={submitChangeHandler('whoseDocument')}  id="standard-basic" label="Gönderen  Kişi"/> : null 
-            }
       
-            <TextField   style={{width:width<breakPoint ? '90%' : '48%' , margin:'10px 0  0 5px '}}  inputProps={{style:{fontSize:14}}}  InputLabelProps={{style:{fontSize:14}}} value={searchData['relatedPersonName']}  onChange={submitChangeHandler('relatedPersonName')}  id="standard-basic" label="Görüşülen Kişi" />
+            <TextField   style={{width:width<breakPoint ? '90%' : '48%' , margin:'10px 0  0 5px '}}  inputProps={{style:{fontSize:14}}}  InputLabelProps={{style:{fontSize:14}}} value={searchData['relatedPersonName']}  onChange={submitChangeHandler('name')}  id="standard-basic" label="İsim" />
 
-            <TextField   style={{width:width<breakPoint ? '90%' : '48%' , margin:'10px 0  0 5px '}}  inputProps={{style:{fontSize:14}}} InputLabelProps={{style:{fontSize:14}}} value={searchData['relatedPersonPhoneNumber']}  onChange={submitChangeHandler('relatedPersonPhoneNumber')}  id="standard-basic" label="Görüşülen Kişinin Telefon Numarası" />
+            <TextField   style={{width:width<breakPoint ? '90%' : '48%' , margin:'10px 0  0 5px '}}  inputProps={{style:{fontSize:14}}} InputLabelProps={{style:{fontSize:14}}} value={searchData['relatedPersonPhoneNumber']}  onChange={submitChangeHandler('surname')}  id="standard-basic" label="Soy İsim" />
 
-            <TextField   style={{width:width<breakPoint ? '90%' : '48%' , margin:'10px 0  0 5px '}}   inputProps={{style:{fontSize:14}}} InputLabelProps={{style:{fontSize:14}}} value={searchData['schoolName']}  onChange={submitChangeHandler('schoolName')}  id="standard-basic" label="Okul İsmi" />
+            <TextField   style={{width:width<breakPoint ? '90%' : '48%' , margin:'10px 0  0 5px '}}   inputProps={{style:{fontSize:14}}} InputLabelProps={{style:{fontSize:14}}} value={searchData['schoolName']}  onChange={submitChangeHandler('reference')}  id="standard-basic" label="Referans Kişi" />
 
         
          <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -187,7 +185,7 @@ export const  SearchStudentModal = React.memo(( { isOpen , close , role , closeM
           format="dd/MM/yyyy"
           margin="normal"
           id="date-picker-inline"
-          label="Başlangıç Tarih"   
+          label="Kayıt Başlangıç"   
           value={searchData['dateIntervalStart']} 
           onChange={setDate} 
           style={{width:width<breakPoint ? '90%' : '48%' , margin:'10px 0  0 5px '}}/>
@@ -201,7 +199,7 @@ export const  SearchStudentModal = React.memo(( { isOpen , close , role , closeM
           format="dd/MM/yyyy"
           margin="normal"
           id="date-picker-inline"
-          label="Son Tarih"   
+          label="Kayıt Bitiş"   
           value={searchData['dateIntervalEnd']} 
           onChange={setDate2} 
           style={{width:width<breakPoint ? '90%' : '48%' , margin:'10px 0  0 5px '}}/>

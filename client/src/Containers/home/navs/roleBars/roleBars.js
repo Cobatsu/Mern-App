@@ -10,6 +10,7 @@ export const Admin = ()=>{
 export const Bayi = ()=>{
     return [
         {type:'Rapor',props:['Rapor Ekle','Raporlar'] },
+        {type:'Öğrenci',props:['Ön Kayıt' , 'Asıl Kayıt']},
     ]
 }
 

@@ -28,13 +28,12 @@ const Reports = mongoose.Schema({
         required:false,
     },
     owner:{
-        type:String,
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'user',
+        default:null,
         required:false,
     },
-    allowedToSee:{
-        type:Array,    
-        required:true,
-    },
+    allowedToSee:[{type:mongoose.Schema.Types.ObjectId , required:true}] , 
     isContacted :{
         type:Boolean,
         default:false,
@@ -42,10 +41,6 @@ const Reports = mongoose.Schema({
     reportType:{
         type:String,
         required:true,
-    },
-    whoseDocument:{
-        type:String,
-        required:false,
     },
     region:{
         type:String,

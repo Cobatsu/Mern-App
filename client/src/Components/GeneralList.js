@@ -88,7 +88,7 @@ text-transform: capitalize;
 padding:10px;
 position:relative;
 flex:0.8;
-font-size:14px;
+font-size:13px;
 box-sizing:border-box;
 `
 

@@ -146,7 +146,9 @@ const ReportDetail  = ({match,...rest })=>{
 
     const  [ formSent , setFormSent ] = useState({text:'REQUEST' , payload:null});
 
-     
+    
+    console.log(initalReportStates)
+
     const activeStep = useMemo(()=>{
             
         if ( initalReportStates.isContacted && !initalReportStates.isFormSent ) {
@@ -187,8 +189,9 @@ const ReportDetail  = ({match,...rest })=>{
                 
                 tokenData : {
 
-                    owner : initalReportStates.owner ,
+                    owner : initalReportStates.owner._id ,
                     contactReportID : id,
+                    allowedToSee:initalReportStates.allowedToSee , 
                     e_mail:initalReportStates.relatedPersonEmail , 
 
                 },
@@ -348,10 +351,10 @@ const ReportDetail  = ({match,...rest })=>{
                        ( user.role === 'Admin' || user.role === 'Temsilci')  &&  <InnerItems style={{justifyContent:'flex-start',padding:10,marginBottom:5,marginTop:40}}>  
 
                             {
-                                initalReportStates.owner && initalReportStates.isContacted && initalReportStates.owner !== user._id  ?  <Icon style={{background:'#63b7af',padding:0}}>
+                                initalReportStates.owner && initalReportStates.isContacted && initalReportStates.owner._id != user._id  ?  <Icon style={{background:'#63b7af',padding:0}}>
 
-                                        <Link to={'/home/personel_listesi/raporlar/' + initalReportStates.owner + '?pageNumber=1'} style={{width:'100%',height:'100%',textTransform:'capitalize',textDecoration:'none',color:'white',display:'block',padding:'5px 10px'}}>
-                                            Görüşen Kişi :  { restrictWord( initalReportStates.whoseDocument , 13)}   <i class="fas fa-user"></i> 
+                                        <Link to={'/home/personel_listesi/raporlar/' + initalReportStates.owner._id + '?pageNumber=1'} style={{width:'100%',height:'100%',textTransform:'capitalize',textDecoration:'none',color:'white',display:'block',padding:'5px 10px'}}>
+                                            Görüşen Kişi :  { restrictWord( initalReportStates.owner.firstName + ' ' +  initalReportStates.owner.lastName , 13)}   <i class="fas fa-user"></i> 
                                         </Link>
                                         
                                 </Icon> : null 
@@ -364,15 +367,15 @@ const ReportDetail  = ({match,...rest })=>{
                          
 
                         {
-                           initalReportStates.isContacted && !initalReportStates.isFormSent &&  ( initalReportStates.owner === user._id ) ?  <Icon style={{background:'#e16262'}} onClick= {()=>{ setSendForm(true); setbackStageOpen(true) }}> Ön Kayıt Formu Gönder <i class="fas fa-file-signature"></i> </Icon> : null
+                           initalReportStates.isContacted && !initalReportStates.isFormSent &&  ( initalReportStates.owner._id === user._id ) ?  <Icon style={{background:'#e16262'}} onClick= {()=>{ setSendForm(true); setbackStageOpen(true) }}> Ön Kayıt Formu Gönder <i class="fas fa-file-signature"></i> </Icon> : null
                         }
 
                         {
-                           user.permissions.Rapor_Bilgileri.includes(PermissionsNumbers.UPDATE) &&  ( !initalReportStates.isContacted || initalReportStates.owner === user._id ) && user.role !== 'Admin'   ?  <Icon onClick= { ()=>setDisable(false)}>Düzenle <i className="fas fa-edit"/></Icon> : null
+                           user.permissions.Rapor_Bilgileri.includes(PermissionsNumbers.UPDATE) &&  ( !initalReportStates.isContacted || initalReportStates.owner._id === user._id ) && user.role !== 'Admin'   ?  <Icon onClick= { ()=>setDisable(false)}>Düzenle <i className="fas fa-edit"/></Icon> : null
                         }
                         
                         {
-                           user.permissions.Rapor_Bilgileri.includes(PermissionsNumbers.REMOVE) &&  ( initalReportStates.owner === user._id || user.role === 'Admin' ) ?    <Icon style={{background:'#d9455f'}} onClick={()=>{setDeleteModal(true); setbackStageOpen(true)}} > Raporu  Sil <i className="fas fa-trash-alt"></i></Icon> : null
+                           user.permissions.Rapor_Bilgileri.includes(PermissionsNumbers.REMOVE) &&  ( initalReportStates.owner._id === user._id || user.role === 'Admin' ) ?    <Icon style={{background:'#d9455f'}} onClick={()=>{setDeleteModal(true); setbackStageOpen(true)}} > Raporu  Sil <i className="fas fa-trash-alt"></i></Icon> : null
                         }
 
                    </InnerItems>

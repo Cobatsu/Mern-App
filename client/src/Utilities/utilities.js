@@ -9,6 +9,39 @@ export const restrictWord = (word,limit)=>{
 
 }
 
+export const studentStatusColor = ( docState )=>{
+
+  
+    if( docState ) { 
+
+
+        return {
+
+            text: 'Belgeler Tamamlandı' , 
+            style:{
+                backgroundColor: 'rgba(121, 215, 15, .1)' , 
+                border:'1px solid #0c9463',
+                color:'#0c9463',
+             }
+
+       }
+
+    } else {
+
+        return {
+
+            text: 'Belgeler Eksik' , 
+            style:{
+               backgroundColor:'rgba(226, 151, 156, 0.1)' , 
+               border:'1px solid #e7305b',
+               color:'#e7305b',
+            }
+
+       }
+    }
+
+}
+
 
 export const statusColors = (report) => {
 
@@ -21,7 +54,7 @@ export const statusColors = (report) => {
 
             text: 'Beklemede' , 
             style:{
-               backgroundColor:'rgba(226, 151, 156, 0.25)' , 
+               backgroundColor:'rgba(226, 151, 156, 0.1)' , 
                border:'1px solid #e7305b',
                color:'#e7305b',
             }
@@ -35,9 +68,9 @@ export const statusColors = (report) => {
 
              text: 'Görüşme Yapıldı' , 
              style:{
-                backgroundColor: 'rgba(135, 223, 214, .25)' , 
-                border:'1px solid #58b4ae',
-                color:'#58b4ae',
+                backgroundColor: 'rgba(121, 215, 15, .1)' , 
+                border:'1px solid #0c9463',
+                color:'#0c9463',
              }
 
         }
@@ -61,9 +94,9 @@ export const statusColors = (report) => {
 
             text: 'Ön Kayıt' , 
             style:{
-               backgroundColor: 'rgba(0, 144, 158, .18)' , 
-               border:'1px solid #00909e',
-               color:'#00909e',
+               backgroundColor: 'rgba(9, 108, 71, .1)' , 
+               border:'1px solid #096c47',
+               color:'#096c47',
             }
 
        }

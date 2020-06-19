@@ -2,14 +2,17 @@ const Student = require('../models/student');
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
-const student = require('../models/student');
 const Reports = require('../models/reports');
+const mongoose = require('mongoose')
  
 module.exports.add = async (req,res,next)=>{
     try {
-        
-    const { token } = req.body ; 
-    const tokenData  = await jwt.verify( token , process.env.SECRET_KEY ) ; 
+          
+      const { token } = req.body ; 
+      const tokenData  = await jwt.verify( token , process.env.SECRET_KEY ) ; 
+
+
+        console.log(tokenData);
 
        const newStudent=new Student({StudentInfo:{
          information:{
@@ -78,19 +81,17 @@ module.exports.add = async (req,res,next)=>{
              },
          },
          registerdate:new Date(),
-         owner:tokenData.owner , 
-       }
+       },
+       owner:tokenData.owner, 
+       allowedToSee:tokenData.allowedToSee , 
            
      });
  
-     
+                const updatedReport = await Reports.findOneAndUpdate ( { _id:tokenData.contactReportID } , { $set: { isFormFilled:true } } ).populate('owner') ; 
 
-         
+           
 
-                const updatedReport = await Reports.findOneAndUpdate ( { _id:tokenData.contactReportID } , { $set: { isFormFilled:true } } ) ; 
-
-
-                if( updatedReport.owner !== tokenData.owner ||  !updatedReport ||  updatedReport.isFormFilled) {
+                if( updatedReport.owner._id != tokenData.owner ||  !updatedReport ||  updatedReport.isFormFilled) {
 
                         return res.json( { result:'Error' } ) ; 
 
@@ -119,7 +120,7 @@ module.exports.add = async (req,res,next)=>{
 
                     if (error) {
 
-                        res.json( { error } );
+                        res.json({result:'Error'});
 
                     } else {
               
@@ -130,8 +131,8 @@ module.exports.add = async (req,res,next)=>{
                   });
                  
          }
-         catch (error) 
-         {
+         catch (error)  {
+            
                  res.json({result:'Error'});
          }
     
@@ -170,19 +171,14 @@ module.exports.uploadDocuments = async (req,res) =>{
 
         const tokenData  = await jwt.verify( token , process.env.SECRET_KEY ) ; 
 
-        const checkedStudent = await student.findOne({_id:tokenData.studentID})
+        const checkedStudent = await Student.findOne({_id:tokenData.studentID})
 
         const copyStudent = {...checkedStudent.StudentInfo} ; 
 
         if( checkedStudent && !checkedStudent.StudentInfo.registerState.onkayit.docState ) {
 
-            if(!req.files) {
-
-                    return res.json({isVerified:true});
-
-            } else {
                   
-                if( tokenData.owner == checkedStudent.StudentInfo.owner ) {
+                if( tokenData.owner == checkedStudent.owner ) {
 
                     copyStudent.registerState.onkayit.docState = true ;
                     
@@ -192,37 +188,122 @@ module.exports.uploadDocuments = async (req,res) =>{
 
                     });
 
-                    await student.updateOne({_id:tokenData.studentID},{StudentInfo:copyStudent});
+                    await Student.updateOne({_id:tokenData.studentID},{StudentInfo:copyStudent});
 
                     return res.json({  result:'Success' });
 
                 }
-            }
         }
-
-        return res.json({ error:'Server Error' });
+        
+        return res.json({   result:'Error'  });
         
     } catch (error) {
         console.log(error)
         
-        return res.json({error:'Server Error'});
+        return res.json({   result:'Error'  });
 
     }
 
 }
 
 
-module.exports.getStudents = async (req,res,next)=>{
-    try
-    {
-        const students  = await Student.find();
-        res.json({students})  //find returns array dont forget !        
-    } 
-    catch (error) 
-    {
-        res.json({error})
+const Query =  (body)=>{
+    
+    let searchData = {};
+
+    for (const key  in body) { // it needs to be fixed
+
+        const element = body[key];
+       
+        if(element)
+        {
+            if( key === 'gender' || key === 'docState' ){
+                searchData={...searchData,[key]:element}
+            }
+            else if (key === 'dateIntervalStart'){
+                searchData={...searchData,registerdate:{$gte:element}}
+            }
+            else if (key === 'dateIntervalEnd'){
+                searchData={...searchData,registerdate:{...searchData.meetingDate,$lte:element}}
+            }
+            else{
+                searchData={...searchData,[key]:{ $regex:element, $options: "i" }}
+            }    
+        }
+         
     }
-  
+       return  searchData
+}
+
+module.exports.studentSearch = async (req,res,next)=>{
+
+    const {user,body:{pageNumber,personelReportID,role,...rest}} = req;
+    
+    var searchData = Query(rest);
+    
+    try {
+        
+        if (user.role !== 'Admin') { 
+       
+            if(user.role !== role) searchData = { ...searchData , allowedToSee:{$all:[personelReportID]}}  ;
+
+            else searchData = { ...searchData , allowedToSee:{$all:[user._id]}}
+
+        } else {
+
+            if(user.role !== role) searchData = { ...searchData , allowedToSee:{$all:[personelReportID]}}  ;
+
+        }
+
+
+        var finalSearchQuery = {
+
+            'StudentInfo.information.name' : searchData.name , 
+            'StudentInfo.information.surname' : searchData.surname , 
+            'StudentInfo.registerdate' : searchData.registerdate , 
+            'StudentInfo.registerState.onkayit.docState' : searchData.docState,
+             allowedToSee:searchData.allowedToSee
+
+        }
+
+        finalSearchQuery =  Object.keys(finalSearchQuery).reduce((init,curr)=>{
+
+            if(finalSearchQuery[curr])  {
+                   
+                return {...init , [curr]:finalSearchQuery[curr]}
+
+            } else {
+
+                return init ; 
+            }
+
+        },{})
+
+        var documentCount = await Student.countDocuments();    
+             
+        var sortedData = await  Student.find(finalSearchQuery).populate('owner').sort({ 'StudentInfo.registerdate' : 'descending' }).skip(10*pageNumber).limit(10);
+
+        let copyReport = [...sortedData ];
+
+        copyReport.forEach((mainItem,index)=>{
+            
+             let copyReportObj = {...mainItem._doc};
+             let format = mainItem.StudentInfo.registerdate;
+             let lastDate = format.getDate() + '/'  + (format.getMonth()+1) + '/' + format.getFullYear();
+             let dateArray = lastDate.split('/');
+             let updatedArray = dateArray.map((item)=>item.length === 1 ? '0' + item  : item);
+
+             copyReportObj.StudentInfo.registerdate = updatedArray.join('/'); 
+             copyReport[index] = copyReportObj;
+        })
+
+        res.json({ sortedData:copyReport , documentCount: documentCount });
+
+    }       
+    catch (error) {
+         console.log(error);
+         res.json({error});
+    }
 }
 
 module.exports.getOneStudent = async (req,res,next)=>{

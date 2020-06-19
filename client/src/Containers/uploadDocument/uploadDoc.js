@@ -1,4 +1,5 @@
 import React , {useState , useEffect} from 'react';
+import ReactDOM from 'react-dom'
 import styled from 'styled-components'
 import {unstable_batchedUpdates} from 'react-dom'
 import {useLocation , useHistory} from 'react-router-dom'
@@ -14,6 +15,7 @@ border-radius:6px ;
 outline:none;
 border:none;
 color:white;
+opacity:${({ disabled }) => disabled ? '0.5' : '1'};
 background:#00909e;
 min-height:50px;
 min-width:150px;
@@ -23,6 +25,17 @@ align-self:flex-end;
 &:hover{
     cursor:pointer;
 }
+
+`
+
+const ErrorCapsule = styled.div`
+
+padding:30px;
+box-shadow: 0 1px 6px -1px rgba(0, 0, 0,0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+min-width:200px;
+text-align:center;
+background:#e00543;
+color:white;
 
 `
 
@@ -61,42 +74,14 @@ const InitialState = {
 const RequiredDocs = ()=>{
 
     const [ images , setImages ] = useState(InitialState);
-    const [ loading , setLoading ] = useState(true);
-    const [ tokenError , setTokenError ] = useState(false);
-    const [ isAdded , setIsAdded ] = useState(false);
+    const [ loading , setLoading ] = useState(false);
     const [ warning , setWarning ] = useState(false);
 
+    const [ result , setResult ] = useState('');
     const history  = useHistory();
 
     const query = useQuery();
     const token = query.get('token');
-   
-    
-    if(!token) { history.goBack(); }
-
-    useEffect(()=>{
-
-        setLoading(true)  ;
-
-        axios.post('/api/register/uploadDocuments',{},{ headers: {"Authorization": `Bearer ${token}`}}).then((res)=>{
-
-            const { error , isVerified  } = res.data ; 
-
-           if( error ) { setTokenError(true) ;  }
-           
-           if( isVerified ) { setLoading(false) ; }
-
-           setLoading(false);
-
-        }).catch((err)=>{
-
-            setTokenError(true) ; 
-            setLoading(false);
-
-        })
-           
-    },[])
-
    
     
     const imageHandlerFactory=(type)=>{       
@@ -134,37 +119,44 @@ const RequiredDocs = ()=>{
 
         axios.post('/api/register/uploadDocuments',formData , { headers: {"Authorization": `Bearer ${token}`}}).then((res)=>{
                  
-            const { isAdded } = res.data ; 
+            const {  result  } = res.data ; 
 
-            if( isAdded ) {
+            ReactDOM.unstable_batchedUpdates(()=>{
 
-                setIsAdded(true);
+                setResult(result);
+                setLoading(false); 
 
-            } else {
-                
-                setTokenError(true);
-                
-            }
-
-            setLoading(false) ; 
+            })
 
         })
 
     }
 
-    if( tokenError && !loading  ) {
 
-        return <h1> HATALI TOKEN / INVALID TOKEN </h1>
+    if( result  === 'Success' ) {
 
-    }
+        return  <div style={{display:'flex' , justifyContent:'center',alignItems:'center' , width:'100%' , height:'100%'}}>
+            
+            <ErrorCapsule style={{background:'#42b883'}}> Belgeleriniz Gönderilmiştir .  </ErrorCapsule>
 
-    if( isAdded && !loading  ) {
+        </div>
 
-        return <h1> BELGELERİNİZ GÖNDERİLMİŞTİR / DOCUMENTS HAVE BEEN SENT  </h1>
+    } else if (result === 'Error') {
 
-    }
+        return <div style={{display:'flex' , justifyContent:'center',alignItems:'center' , width:'100%' , height:'100%'}}>
+            
+            <ErrorCapsule > 
 
-    return !loading && !tokenError && !isAdded ?   <div style={{display:'flex' , justifyContent:'center',alignItems:'center' , width:'100%' , height:'100%'}}>
+                Hatalı Token ,    
+                Bu Bağlantıyı Yalnızca Bir Kez Kullanabilirsiniz !  
+                
+            </ErrorCapsule>
+
+        </div>
+
+    } else {
+
+      return   <div style={{display:'flex' , justifyContent:'center',alignItems:'center' , width:'100%' , height:'100%'}}>
         
         <Item onSubmit={submitImages}>
             
@@ -204,13 +196,15 @@ const RequiredDocs = ()=>{
                 
                 </div>
 
-                <SubmitButton>
+                <SubmitButton disabled = {loading} >
                     GÖNDER
                 </SubmitButton>
 
         </Item>  
 
-        </div> : null
+        </div> 
+    }
+
 
 }
 export default RequiredDocs;

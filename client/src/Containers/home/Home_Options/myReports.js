@@ -38,9 +38,9 @@ display:flex;
 align-items:center;
 justify-content:center;
 border-radius:4px;
-background:rgba(245, 123, 81, .1);
-color:#f57b51;
-border:1px solid #f57b51;
+background:rgba(255, 93, 108, .08);
+color:#fa4659;
+border:1px solid #fa4659;
 font-size:11.6px;
 padding:6px;
 `
@@ -86,14 +86,18 @@ const Student = (props) => {
   }
 
   const tableInformations = ( item  )=> {
-    
+
+    if(item.owner) {
+      var fullName = item.owner.firstName + ' ' + item.owner.lastName ; 
+    }
+
     return [
       restrictWord( item.relatedPersonName , 13 ) , 
       item.relatedPersonPhoneNumber,
       item.reportType === 'schoolReport' ? 'Okul Görüşmesi' : 'Öğrenci Görüşmesi'  ,
       item.meetingDate,
       <Capsule  style={ {...statusColors(item).style}} >  { statusColors(item).text } </Capsule>,
-      !item.isContacted ? '—' : item.owner == user._id  ? <Capsule> { restrictWord(item.whoseDocument,13) } </Capsule> : restrictWord(item.whoseDocument,13)
+      !item.isContacted ? '—' : item.owner._id == user._id  ? <Capsule> { restrictWord(fullName,13) } </Capsule> : restrictWord(fullName,13)
     ] 
 
   } 
