@@ -9,11 +9,7 @@ import BackStage from '../../../UI/backStage'
 import { hasPermission, PermissionsNumbers, IconPermission } from '../../../UI/Permissions/permissionIcon'
 import { SearchReportModal } from '../../../UI/SearchModal/SearchReport';
 import GeneralList from '../../../Components/GeneralList'
-<<<<<<< HEAD
-import {restrictWord , statusColors , avoidUndefined} from '../../../Utilities/utilities'
-=======
 import {restrictWord , statusColors} from '../../../Utilities/utilities'
->>>>>>> ce5ad5f773927d736c978d9869148b9b97015bec
 import queryString from 'querystring' 
 
 const ListWrapper = styled.div`
