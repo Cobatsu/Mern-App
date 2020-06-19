@@ -7,7 +7,24 @@ const student = require('../models/student');
 const Reports = require('../models/reports');
  
 module.exports.add = async (req,res,next)=>{
+<<<<<<< HEAD
 
+    const { referenceCode } = req.body ; 
+
+ 
+        const  relatedUser = await User.findOne({ referenceCode });
+
+        if(!relatedUser) {
+
+            return res.json({isCorrect:false});
+
+        }
+=======
+    try {
+        
+    const { token } = req.body ; 
+    const tokenData  = await jwt.verify( token , process.env.SECRET_KEY ) ; 
+>>>>>>> ce5ad5f773927d736c978d9869148b9b97015bec
 
        const newStudent=new Student({StudentInfo:{
          information:{
@@ -45,7 +62,7 @@ module.exports.add = async (req,res,next)=>{
              desireduniversitystudie:req.body.desired_university_studie,
          },
          registerState:{
-             onkayit:{note:''  , docState:false },
+             onkayit:{note:'' , state:true , docState:false },
              kayitliogrenci:{
                  
                  note:'', 
@@ -76,29 +93,31 @@ module.exports.add = async (req,res,next)=>{
              },
          },
          registerdate:new Date(),
-         owner:tokenData.owner , 
+         referenceCode
        }
            
      });
  
+<<<<<<< HEAD
          try {
+=======
+     
 
-                const { token } = req.body ; 
-            
-                const tokenData  = await jwt.verify( token , process.env.SECRET_KEY ) ; 
+         
 
                 const updatedReport = await Reports.findOneAndUpdate ( { _id:tokenData.contactReportID } , { $set: { isFormFilled:true } } ) ; 
 
 
-                if( updatedReport.owner !== tokenData.owner ||  !updatedReport ) {
+                if( updatedReport.owner !== tokenData.owner ||  !updatedReport ||  updatedReport.isFormFilled) {
 
-                        return res.json( { error:'Server Error' } ) ; 
+                        return res.json( { result:'Error' } ) ; 
 
                 }
 
+>>>>>>> ce5ad5f773927d736c978d9869148b9b97015bec
                  const saved = await  newStudent.save();
 
-                 const signedToken =  await jwt.sign({ studentID:saved._id , owner:tokenData.owner , e_mail:tokenData.e_mail  } , process.env.SECRET_KEY);
+                 const token =  await jwt.sign({ id:saved._id , referenceCode },process.env.SECRET_KEY);
 
                  var transporter = nodemailer.createTransport({
                     service: 'gmail',
@@ -110,20 +129,20 @@ module.exports.add = async (req,res,next)=>{
                   
                   var mailOptions = {
                     from: 'huze.ozr@gmail.com',
-                    to: tokenData.e_mail,
+                    to: 'ercanozr12@gmail.com',
                     subject: 'StudyOnlineInCanada Döküman Bilgilendirme',
-                    html: `<a href =${'http://localhost:3000/upload?token=' + signedToken} > HELLO ERCÜMENT </a>`
+                    html: `<a href =${'http://localhost:3000/upload?token=' + token} > HELLO ERCÜMENT </a>`
                   };
                   
                   transporter.sendMail(mailOptions, function(error, info){
 
                     if (error) {
 
-                        res.json( { error } );
+                      console.log(error);
 
                     } else {
               
-                        res.json({saved:'Completed'});
+                        res.json({result:'Success'});
 
                     }
 
@@ -132,7 +151,12 @@ module.exports.add = async (req,res,next)=>{
          }
          catch (error) 
          {
+<<<<<<< HEAD
+                 console.log(error)
                  res.json({error});
+=======
+                 res.json({result:'Error'});
+>>>>>>> ce5ad5f773927d736c978d9869148b9b97015bec
          }
     
 
@@ -168,21 +192,19 @@ module.exports.uploadDocuments = async (req,res) =>{
    
     try {
 
-        const tokenData  = await jwt.verify( token , process.env.SECRET_KEY ) ; 
+        const tokenData  = await jwt.verify( token , process.env.SECRET_KEY) ; 
 
-        const checkedStudent = await student.findOne({_id:tokenData.studentID})
+        const checkedStudent = await student.findOne({_id:tokenData.id})
 
         const copyStudent = {...checkedStudent.StudentInfo} ; 
 
         if( checkedStudent && !checkedStudent.StudentInfo.registerState.onkayit.docState ) {
 
             if(!req.files) {
-
                     return res.json({isVerified:true});
-
             } else {
                   
-                if( tokenData.owner == checkedStudent.StudentInfo.owner ) {
+                if( tokenData.referenceCode == checkedStudent.StudentInfo.referenceCode ) {
 
                     copyStudent.registerState.onkayit.docState = true ;
                     
@@ -192,20 +214,20 @@ module.exports.uploadDocuments = async (req,res) =>{
 
                     });
 
-                    await student.updateOne({_id:tokenData.studentID},{StudentInfo:copyStudent});
+                    await student.updateOne({_id:tokenData.id},{StudentInfo:copyStudent});
 
-                    return res.json({  result:'Success' });
+                    return res.json({  isAdded:true });
 
                 }
             }
         }
 
-        return res.json({ error:'Server Error' });
+        res.json({ error:'Server Error' });
         
     } catch (error) {
         console.log(error)
         
-        return res.json({error:'Server Error'});
+        res.json({error:'Server Error'});
 
     }
 
@@ -252,15 +274,19 @@ module.exports.sendForm = async ( req , res , next )=>{
 
     const { tokenData , requestType } = req.body ;
 
-    const token =  await jwt.sign( { ...tokenData } , process.env.SECRET_KEY , {expiresIn:'1h'} );
+    const token =  await jwt.sign( { ...tokenData } , process.env.SECRET_KEY );
     
-    const tokenLink =  'https://study-online.herokuapp.com/student_form?token=' + token ; 
+<<<<<<< HEAD
+    const findedReport =  await Reports.updateOne({_id:contactReportID} , {$set:{isFormSent:true}});
+=======
+    const tokenLink =  'http://localhost:3000/student_form?token=' + token ; 
 
     await Reports.updateOne({_id:tokenData.contactReportID} , {$set:{isFormSent:true}});
+>>>>>>> ce5ad5f773927d736c978d9869148b9b97015bec
 
     if(requestType === 'MAİL') {
         
-        var transporter = nodemailer.createTransport({
+          var transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
               user: 'huze.ozr@gmail.com',
@@ -270,12 +296,16 @@ module.exports.sendForm = async ( req , res , next )=>{
           
           var mailOptions = {
             from: 'huze.ozr@gmail.com',
-            to: tokenData.e_mail ,
+            to: 'ercanozr12@gmail.com',
             subject: 'StudyOnlineInCanada Döküman Bilgilendirme',
-            html: `<a href =${tokenLink} > Kayıt Formunuzu Doldurmak İçin Lütfen Tıklayınız </a>`
+<<<<<<< HEAD
+            html: `<a href =${'http://localhost:3000/upload?token=' + token} > HELLO ERCÜMENT </a>`
+=======
+            html: `<a href =${tokenLink} > Ön Kayıt Formunu Doldurmak İçin Lütfen Tıklayınız </a>`
+>>>>>>> ce5ad5f773927d736c978d9869148b9b97015bec
           };
           
-          transporter.sendMail(mailOptions, function(error, info){
+          transporter.sendMail(mailOptions, function(error, info) {
 
             if (error) {
 
@@ -292,7 +322,7 @@ module.exports.sendForm = async ( req , res , next )=>{
     } else {
            
              
-          res.json({result:'Success' , tokenLink });
+          res.json({result:'Success' , tokenLink : token });
 
 
     }
