@@ -1,23 +1,20 @@
 import axios from 'axios';
 import ReactDOM from 'react-dom';
 
-export const makeRequest = (Type,Body,activeCircle,backStage) => {
+export const makeRequest = (Type,Body,activeCircle,backStage,setResult) => {
 
     activeCircle(true);
 
     axios[Type]('/api/register',Body).then((data)=>{   
 
-      if(data.data.error) {
+      const { result } = data.data ; 
+    
+         
+      setResult(result);
 
+      backStage(true);
 
-
-      } else {
-
-        activeCircle(false);
-
-        backStage(true);
-
-      }
+      activeCircle(false);
          
     })
     .catch((err)=>{ console.log(err) })    

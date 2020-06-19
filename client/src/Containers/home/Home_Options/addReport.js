@@ -243,27 +243,6 @@ export const Report = ( { SubmitOnChange,State,setBackStage,setDate,disable,type
 
   return <React.Fragment>
      
-     <h6 style={{width:'100%',textAlign:'center',marginTop:10,color:'#dc3545'}}>
-         {
-              reportType === 'schoolReport' ? 
-         
-              <React.Fragment>
-                      <i className="fas fa-school" style={{marginRight:4}}></i>
-                      OKUL RAPORU
-              </React.Fragment>
-
-              :
-
-              <React.Fragment>
-                      <i  style={{marginRight:4}} class="fas fa-user-graduate"></i>
-                      VELİ/ÖĞRENCİ RAPORU
-              </React.Fragment>
-
-         }
-          
-           
-    </h6>
-
      <ReportContainer>
 
           <ReportTextFields>

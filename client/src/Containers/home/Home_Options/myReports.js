@@ -9,7 +9,7 @@ import BackStage from '../../../UI/backStage'
 import { hasPermission, PermissionsNumbers, IconPermission } from '../../../UI/Permissions/permissionIcon'
 import { SearchReportModal } from '../../../UI/SearchModal/SearchReport';
 import GeneralList from '../../../Components/GeneralList'
-import {restrictWord} from '../../../Utilities/utilities'
+import {restrictWord , statusColors , avoidUndefined} from '../../../Utilities/utilities'
 import queryString from 'querystring' 
 
 const ListWrapper = styled.div`
@@ -38,8 +38,9 @@ display:flex;
 align-items:center;
 justify-content:center;
 border-radius:4px;
-background:#f57b51;
-color:white;
+background:rgba(245, 123, 81, .1);
+color:#f57b51;
+border:1px solid #f57b51;
 font-size:11.6px;
 padding:6px;
 `
@@ -91,7 +92,7 @@ const Student = (props) => {
       item.relatedPersonPhoneNumber,
       item.reportType === 'schoolReport' ? 'Okul Görüşmesi' : 'Öğrenci Görüşmesi'  ,
       item.meetingDate,
-      item.isContacted ? <Capsule  style={ { background:'#21bf73' , fontSize:11.6 }} > Görüşme Yapıldı </Capsule> : <Capsule style={{background:'#e7305b' , fontSize:11.6}} > Beklemede </Capsule>,
+      <Capsule  style={ {...statusColors(item).style}} >  { statusColors(item).text } </Capsule>,
       !item.isContacted ? '—' : item.owner == user._id  ? <Capsule> { restrictWord(item.whoseDocument,13) } </Capsule> : restrictWord(item.whoseDocument,13)
     ] 
 
