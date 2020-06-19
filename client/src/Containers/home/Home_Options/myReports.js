@@ -9,7 +9,7 @@ import BackStage from '../../../UI/backStage'
 import { hasPermission, PermissionsNumbers, IconPermission } from '../../../UI/Permissions/permissionIcon'
 import { SearchReportModal } from '../../../UI/SearchModal/SearchReport';
 import GeneralList from '../../../Components/GeneralList'
-import {restrictWord} from '../../../Utilities/utilities'
+import {restrictWord , statusColors} from '../../../Utilities/utilities'
 import queryString from 'querystring' 
 
 const ListWrapper = styled.div`
@@ -91,7 +91,7 @@ const Student = (props) => {
       item.relatedPersonPhoneNumber,
       item.reportType === 'schoolReport' ? 'Okul Görüşmesi' : 'Öğrenci Görüşmesi'  ,
       item.meetingDate,
-      item.isContacted ? <Capsule  style={ { background:'#58b4ae' , fontSize:11.6 }} > Görüşme Yapıldı </Capsule> : <Capsule style={{background:'#e7305b' , fontSize:11.6}} > Beklemede </Capsule>,
+      <Capsule  style={ {...statusColors(item).style}} >  { statusColors(item).text } </Capsule>,
       !item.isContacted ? '—' : item.owner == user._id  ? <Capsule> { restrictWord(item.whoseDocument,13) } </Capsule> : restrictWord(item.whoseDocument,13)
     ] 
 
