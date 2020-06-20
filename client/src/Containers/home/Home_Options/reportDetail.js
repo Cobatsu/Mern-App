@@ -123,8 +123,31 @@ const QontoConnector = withStyles({
       borderTopWidth: 3,
       borderRadius: 1,
     },
-  })(StepConnector);
+})(StepConnector);
 
+const determineStep = (initalReportStates) => {
+            
+   return ()=> {
+    
+        if ( initalReportStates.isContacted && !initalReportStates.isFormSent ) {
+
+            return 1
+
+        } else if ( initalReportStates.isFormSent && !initalReportStates.isFormFilled ) { 
+
+            return 2
+
+        } else if( initalReportStates.isFormFilled ) {
+
+            return 3 
+
+        }
+
+        return 0; 
+
+    }
+
+}
 
   
 
@@ -146,28 +169,7 @@ const ReportDetail  = ({match,...rest })=>{
 
     const  [ formSent , setFormSent ] = useState({text:'REQUEST' , payload:null});
 
-    
-    console.log(initalReportStates)
-
-    const activeStep = useMemo(()=>{
-            
-        if ( initalReportStates.isContacted && !initalReportStates.isFormSent ) {
-
-            return 1
-
-        } else if ( initalReportStates.isFormSent && !initalReportStates.isFormFilled ) { 
-
-            return 2
-
-        } else if( initalReportStates.isFormFilled ) {
-
-            return 3 
-
-        }
-
-        return 0; 
- 
-    },[initalReportStates.owner])
+    const activeStep = useMemo( determineStep(initalReportStates) ,[initalReportStates.owner])
 
     const steps = ['İletişime Geçildi' , 'Öğrenci Formu Gönderildi' , 'Öğrenci Formu Dolduruldu']
 
@@ -248,6 +250,7 @@ const ReportDetail  = ({match,...rest })=>{
     useEffect(()=>{  //this is just because of Date issue //--------
         setInitalReportState(prevState =>({...prevState,meetingDate:date}));
     },[date])
+
   
     if(  initalReportStates.reportType )
     {

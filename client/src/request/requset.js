@@ -334,9 +334,6 @@ export const makeReportsRequest = (Type,setReports,setLoading)=>{
 }
 
 
-
-
-
 export const makeSpecificReportRequest = (Type,id,setLoading,setInitialReport,reIsetInitalReport,setNotFoundPage,initialGeneralReportState)=>{
 
   axios[Type]('/api/profile/report/'+id)
@@ -351,10 +348,10 @@ export const makeSpecificReportRequest = (Type,id,setLoading,setInitialReport,re
 
     ReactDOM.unstable_batchedUpdates(()=>{
 
+      setInitialReport((prevState)=>({...prevState,...specificReport , owner:specificReport.owner || {} }));
+      reIsetInitalReport((prevState)=>({...prevState,...specificReport  , owner:specificReport.owner || {}  }));
       setLoading(false);
-      setInitialReport((prevState)=>({...prevState,...specificReport}));
-      reIsetInitalReport((prevState)=>({...prevState,...specificReport}));
-    
+
     })
 
   })

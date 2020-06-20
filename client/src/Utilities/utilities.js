@@ -5,6 +5,7 @@ const Capsule = styled.div`
 display:flex;
 align-items:center;
 justify-content:center;
+box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
 border-radius:4px;
 background:rgba(255, 93, 108, .08);
 color:#fa4659;
@@ -21,7 +22,6 @@ export const restrictWord = (word,limit)=>{
     return finalText ; 
 
 }
-
 
 
 export const studentListHelperPackage = ( id )=>{

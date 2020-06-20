@@ -7,6 +7,18 @@ import {Regions} from '../../Regions/regions'
 import axios from 'axios'
 
 
+
+const ErrorCapsule = styled.div`
+
+padding:30px;
+box-shadow: 0 1px 6px -1px rgba(0, 0, 0,0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+min-width:200px;
+text-align:center;
+background:#e00543;
+color:white;
+
+`
+
 const GeneralWrapper  = styled.div`
 display:flex;
 align-items:center;
@@ -156,17 +168,27 @@ const RefferenceNumber= (props)=>{
     }
 
 
-    if( responseResult === 'Success' ) { 
-      
-      return <h1> Formunuz gönderilmiştir .En geç 1 gün içinde sizinle iletişime geçilecektir </h1>  
+    if( responseResult  === 'Success' ) {
 
-    } else if ( responseResult === 'Error' ) {
+        return  <div style={{display:'flex' , justifyContent:'center',alignItems:'center' , width:'100%' , height:'100%'}}>
+            
+            <ErrorCapsule style={{background:'#42b883'}}> İletişim Formunuz Gönderilmiştir . En Kısa Sürede Size Dönüş Yapılacaktır  </ErrorCapsule>
 
-      return <h1> Bir Hata Oluştu  </h1>  
+        </div>
 
-    } 
+    } else if (responseResult === 'Error') {
 
+        return <div style={{display:'flex' , justifyContent:'center',alignItems:'center' , width:'100%' , height:'100%'}}>
+            
+            <ErrorCapsule > 
 
+               Hata Oluştu , Formunuz Gönderilmedi !  
+                
+            </ErrorCapsule>
+
+        </div>
+
+    }
 
     return <GeneralWrapper>
 

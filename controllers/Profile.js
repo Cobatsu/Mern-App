@@ -227,7 +227,8 @@ module.exports.getSpecificReport =async (req,res,next)=>{
     const {id} = req.params;
 
     try {
-        const specificReport = await Reports.findOne({_id:id}).populate('owner').select(' -__v -_id ');
+        const specificReport = await Reports.findOne({_id:id}).populate('owner').select(' -__v -_id');
+
         res.json({specificReport});
     } catch (error) {
         res.json({error});

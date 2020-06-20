@@ -5,25 +5,9 @@ import {Redirect}  from 'react-router-dom'
 
 export const UpdateLoggedin = ({page,children,history,isLoggedin,location,match})=>{
 
-    const {user,isLoggedin:Loggedin,Loading,isLoggedinf,setUser,setLoadingf} = useContext(Context)   
+    const {user , isLoggedin:Loggedin , Loading } = useContext(Context)   
     const context = useContext(Context);
-    const token = localStorage.getItem('auth_token');
-    
-
-    useEffect(()=>{
-        
-        if(token)
-        {
-            makeVerifyRequest('get',setUser,isLoggedinf,setLoadingf);
-        }
-        else
-        {
-            isLoggedinf(false);
-            setLoadingf(false);
-        }
-
-    },[history.location.pathname])
-    
+ 
     switch(page)  
     {
         case 'LOGİN':
@@ -97,17 +81,21 @@ export const UpdateLoggedin = ({page,children,history,isLoggedin,location,match}
             
         default:
             
-            if(Loggedin || Loading)
-            {
-                return children(Loading,user);
-            }
-            else
-            {
-                history.push('/');
-            }
+           
 
         break;   
     }
+
+    if(Loggedin || Loading)
+    {
+        return children(Loading,user);
+    }
+    else
+    {
+        history.push('/');
+    }
+
+
     return null;
 }
 
