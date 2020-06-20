@@ -296,8 +296,5 @@ export const statusColors = (report) => {
             }
 
        }
-
-
     }
-
 }
