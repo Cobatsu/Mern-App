@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components'
 
+
 const Capsule = styled.div`
 display:flex;
 align-items:center;
@@ -263,6 +264,7 @@ export const statusColors = (report) => {
        }
       
     }
+  
 }
 
 
