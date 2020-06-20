@@ -349,10 +349,14 @@ export const makeSpecificReportRequest = (Type,id,setLoading,setInitialReport,re
 
     const {specificReport} =res.data;
 
-    setLoading(false);
-    setInitialReport((prevState)=>({...prevState,...specificReport}));
-    reIsetInitalReport((prevState)=>({...prevState,...specificReport}));
+    ReactDOM.unstable_batchedUpdates(()=>{
+
+      setLoading(false);
+      setInitialReport((prevState)=>({...prevState,...specificReport}));
+      reIsetInitalReport((prevState)=>({...prevState,...specificReport}));
     
+    })
+
   })
   .catch((res)=>{
 
@@ -529,21 +533,50 @@ export const makeRelatedAgencyRequest = (Type,id,setLoading,setRelatedAgency,set
 }
 
 
-export const makeStudentSearchRequest = ( Type , setStudent , setLoading  )=>{
+export const makeStudentSearchRequest = (Type,searchData,setLoggedin , setReport , close , setCount , setLoading , setNotFound , subPagesCount  ) =>{
 
-  setLoading(true);
 
-  axios[Type]('/api/register')
+  axios[Type]('/api/register/get_students',searchData,{
+    headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`} 
+  })
   .then((res)=>{
 
-        const {students} =  res.data; 
+    console.log(res);
+     
+    const {sortedData,documentCount} = res.data;
 
-        setStudent(students);
-        setLoading(false);
-   
+    if(res.data.error && !res.data.isLoggedin)
+    {
+
+      return setLoggedin(false);
+      
+    }
+
+    else if (sortedData.length > 0)
+    {
+      
+      setCount(documentCount);
+      close();
+      setReport(sortedData);
+      setNotFound(null)
+
+      
+    }
+    else
+    {
+      setCount(0);    
+      setNotFound(true)
+      close();
+      setReport([]);
+
+    }
+
+    setLoading(false);
+  
+
   })
-  .catch(()=>{
-
+  .catch((err)=>{
+      console.log(err);
   })
 
 }

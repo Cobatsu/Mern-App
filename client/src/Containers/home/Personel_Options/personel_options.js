@@ -1,6 +1,6 @@
 import React, {useEffect,useState,useContext,useCallback,useRef,createRef,useMemo,useReducer} from 'react';
 import {UpdateLoggedin}  from '../../isLoggedin/action'
-import {makeSpecificPersonRequest,makeUpdateUserRequest,makeRemoveUserRequest,makeReportSearchRequest,makeRelatedAgencyRequest,makePersonSearchRequest}  from '../../../request/requset'
+import {makeSpecificPersonRequest,makeUpdateUserRequest,makeRemoveUserRequest,makeReportSearchRequest,makeRelatedAgencyRequest,makePersonSearchRequest,makeStudentSearchRequest}  from '../../../request/requset'
 import styled from 'styled-components';
 import Circle from '../../../UI/Circle';
 import {IconPermission} from '../../../UI/Permissions/permissionIcon';
@@ -20,8 +20,9 @@ import {_PersonelList} from  './personelList'
 import UserMenu from '../../../Components/Usermenu'
 import {useViewport} from '../../home/navs/customHooks/viewPortHook'
 import GeneralList from '../../../Components/GeneralList'
-import {restrictWord} from '../../../Utilities/utilities' 
+import {restrictWord , statusColors , studentStatusColor , personelListHelperPackage , studentListHelperPackage , reportListHelperPackage} from '../../../Utilities/utilities'
 import queryString from 'querystring'
+import Student from '../Home_Options/students'
 
 
 const MainWrapper = styled.form`
@@ -33,7 +34,7 @@ align-items:center;
 justify-content:center;
 margin-top:2%;
 margin-bottom:20px;
-padding:30px;
+padding:30px 5px;
 border-radius:3px;
 flex-flow:column;
 @media (max-width: 1030px) {
@@ -67,7 +68,7 @@ align-items:flex-start;
 //-------------------------------
 
 const InputsWrapper = styled.div`
-flex:0.7;
+flex:0.75;
 display:flex;
 align-items:center;
 justify-content:center;
@@ -89,7 +90,7 @@ margin-bottom:5px;
 
 
 const PermissionsWrapper = styled.div`
-flex:0.7;
+flex:0.75;
 display:flex;
 flex-flow:column;
 padding: 15px 8px;
@@ -142,11 +143,13 @@ display:flex;
 align-items:center;
 justify-content:center;
 border-radius:4px;
-background:#f57b51;
-color:white;
+background:rgba(245, 123, 81, .1);
+color:#f57b51;
+border:1px solid #f57b51;
 font-size:11.6px;
 padding:6px;
 `
+
 
 
 //---------------------------------
@@ -403,7 +406,7 @@ const General_User_Info = ({match,...rest})=>{
     }
    
      //
-    return <UpdateLoggedin page='PERSONEL_GENERAL_INFO'  {...rest} match={match}>
+    return <UpdateLoggedin page='PERSONEL_GENERAL_INFO'  {...rest} match={match} >
         {
            ( Loading , user )=>Loading ? null : loading 
            ?  
@@ -426,7 +429,7 @@ const General_User_Info = ({match,...rest})=>{
                          UserMenuLinks.map((item)=>{
                                  return item.desc.toLowerCase() === subMenuIndex.split('_').join(' ').toLowerCase() 
                                  ? 
-                                 <h1 key={item.desc} style={{width:'100%',textAlign:'center' , color:'#4cbbb9',fontWeight:'bolder',fontSize:15}}>
+                                 <h1 key={item.desc} style={{width:'100%',textAlign:'center' , color:'#4cbbb9',fontWeight:'bolder',fontSize:17}}>
                                    {item.Icon}
                                    {item.desc}
                                  </h1>    
@@ -508,7 +511,16 @@ const General_User_Info = ({match,...rest})=>{
 
 
                   <Route path='/home/personel_listesi/bayiler/:id' exact render={()=><InputsWrapper style={{alignSelf:'stretch',justifyContent:'flex-start'}}>  
-                            <PersonelSubBranches role={userInformations.role}   id={match.params.id} setLoggedin={context.isLoggedinf} currentID={user._id} currentRole = {user.role} />                
+                            <PersonelSubBranches role={userInformations.role}   id={match.params.id} setLoggedin={context.isLoggedinf} currentID={user._id} currentUser = {user} />                
+                   </InputsWrapper> 
+                  }
+                  />
+
+
+                  <Route path='/home/personel_listesi/öğrenciler/:id' exact render={()=><InputsWrapper style={{alignSelf:'stretch',justifyContent:'flex-start'}}>  
+                                        
+                            <PersonelStudents role={userInformations.role}   id={match.params.id} setLoggedin={context.isLoggedinf} currentID={user._id} currentUser = {user}/>
+
                    </InputsWrapper> 
                   }
                   />
@@ -542,7 +554,7 @@ const General_User_Info = ({match,...rest})=>{
 
 }
 
-export const PersonelReports = ( { id , setLoggedin , role , notFoundText  , currentID } )=>{
+export const PersonelReports = ( { id , setLoggedin , role , notFoundText  } )=>{
     
   const [reports, setReports] = useState([]);
   const [ notFound , setNotFound ] = useState(null);
@@ -553,59 +565,8 @@ export const PersonelReports = ( { id , setLoggedin , role , notFoundText  , cur
   const location = useLocation() ; 
   const searchData = queryString.parse(location.search.slice(1)) ; 
 
-  const TopRows = [
-    'Görüşülen Kişi',
-    'Telefon Numarası',
-    'Görüşme Tipi',
-    'Görüşme Tarihi',
-    'Görüşme Durumu',
-    'Görüşen Kişi',
-    '',
-  ]
-  
-  
-  const filterIconOptions = (report)=>{
-
-    var  reportOptions = [
-      {
-        desc: 'Görüşme Bilgileri',
-        Icon: <i className="fas fa-user-friends"></i>
-      },
-    ]
-
-    return reportOptions ; //just for now
-
-  }
-  
-  const tableInformations = (item)=> {
-      
-    return [
-      restrictWord( item.relatedPersonName , 13 ),
-      item.relatedPersonPhoneNumber,
-      item.reportType === 'schoolReport' ? 'Okul Görüşmesi' : 'Öğrenci Görüşmesi'  ,
-      item.meetingDate,
-      item.isContacted ? <Capsule  style={ { background:'#21bf73' , fontSize:11.6 }} > Görüşme Yapıldı </Capsule> : <Capsule style={{background:'#e7305b' , fontSize:11.6}} > Beklemede </Capsule>,
-      !item.isContacted ? '—' : item.owner == id  ? <Capsule> { restrictWord(item.whoseDocument,13) } </Capsule> : restrictWord(item.whoseDocument,13)
-    ] 
-
-  }
-
-  const pathGenerator = ( item , id )=> '/home/raporlar/' + id ; 
-
-  // const nextPage = (page) => {
-
-  //   setLoading(true);
-  //   makeReportSearchRequest('post', {
-  //     role:role,
-  //     personelReportID:id,
-  //     pageNumber: page
-  //   },setLoggedin , setReports, ()=>{}, setSubPagesCount, setLoading);
-
-  // }
-
   useEffect(()=>{
       
-
     if(role) {
 
       setLoading(true);
@@ -615,30 +576,69 @@ export const PersonelReports = ( { id , setLoggedin , role , notFoundText  , cur
         role:role , 
         personelReportID:id,
       }, setLoggedin, setReports, ()=>{} , setSubPagesCount, setLoading , setNotFound );
+    }
 
+  },[ location.search , role  ])
+    
+  return <GeneralList 
+
+    width = {900}
+    data = { reports } 
+    loading = {loading} 
+    subPagesCount = {subPagesCount}
+    notFoundText = { notFoundText || `Bu ${role}ye Ait Bir Rapor Bulunmamaktadir`}
+    notFound = {notFound}
+    path = {'/home/personel_listesi'}
+    helperPackage = { reportListHelperPackage(id) }
+
+    />
+}
+
+export const PersonelStudents = ( { id , setLoggedin , role , notFoundText  } ) => {
+
+  const [students, setStudents] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [ notFound , setNotFound ] = useState(null);
+  const [subPagesCount , setSubPagesCount] = useState(null);
+
+
+  const location = useLocation() ; 
+  const searchData = queryString.parse(location.search.slice(1)) ; 
+
+  useEffect(()=>{
+    
+    if(role) {
+
+      setLoading(true);
+
+      makeStudentSearchRequest('post', {
+        role:role,
+        pageNumber: searchData.pageNumber - 1,
+        personelReportID:id,
+      }, setLoggedin, setStudents, ()=>{} , setSubPagesCount, setLoading , setNotFound , subPagesCount);
 
     }
 
 
   },[ location.search , role  ])
-    
+
   return <GeneralList 
-    width = {900}
-    data = { reports } 
-    topTitles = {TopRows} 
-    loading = {loading} 
-    tableInformations = {tableInformations}
-    iconOptions = {filterIconOptions}
-    subPagesCount = {subPagesCount}
-    notFoundText = { notFoundText || `Bu ${role}ye Ait Bir Rapor Bulunmamaktadir`}
-    notFound = {notFound}
-    path = {'/home/personel_listesi'}
-    pathGenerator = {pathGenerator}   />
+
+      width = {900}
+      data = { students }   
+      loading = {loading} 
+      subPagesCount = {subPagesCount}
+      notFoundText = { notFoundText || `Bu ${role}ye Ait Bir Öğrenci Bulunmamaktadır`}
+      notFound = {notFound}
+      helperPackage = { studentListHelperPackage(id) }
+  
+
+     />
+
 }
 
 
-
-export const PersonelSubBranches = ({ id , setLoggedin , role , notFoundText , currentRole  })=>{
+export const PersonelSubBranches = ( { id , setLoggedin , role , notFoundText , currentUser   } )=>{
     
   const [ subBranches, setSubBranches ] = useState([]);
   const [ notFound , setNotFound ] = useState(null);
@@ -647,49 +647,7 @@ export const PersonelSubBranches = ({ id , setLoggedin , role , notFoundText , c
 
   const location = useLocation() ; 
   const searchData = queryString.parse(location.search.slice(1)) ; 
- 
-  const TopRows  =  [
-    'İsim',
-    'Soy İsim',
-    'Rol',
-    'Bölge',
-    'Sözleşme Tarihi',
-    '',
-  ]
-  
-  const filterIconOptions = (user)=>{
 
-    var  PersonelOptions = [
-      {desc:'Genel Bilgiler',Icon:<i className="fas fa-user-friends"></i>},
-      {desc:'Bayiler',Icon:<i    className="fas fa-code-branch"/>},
-      {desc:'Raporlar',Icon:<i   className="fas fa-sticky-note"></i>},
-      {desc:'Yetkiler',Icon: <i  className="fas fa-unlock"></i>},
-    ]
-
-    const { role } = user ; 
-    
-    if( currentRole !== 'Admin' &&  currentRole ) PersonelOptions =  PersonelOptions.filter(( { desc } )=> desc !== 'Yetkiler' ) ;
-
-    if( role !== "Temsilci" ) PersonelOptions =  PersonelOptions.filter(( { desc } )=> desc !== 'Bayiler' ) ;
-    
-
-    return PersonelOptions ; 
-
-  }
-
-  const tableInformations = (item)=> {
-      
-    return [
-      restrictWord( item.firstName , 13) , 
-      restrictWord( item.lastName , 13),
-      item.role,
-      item.region,
-      item.contractDate
-    ] 
-
-  } 
-
-  const pathGenerator = ( item , id ) => '/home/personel_listesi/' + item.split(' ').join('_').toLowerCase() + '/' + id
 
   useEffect(()=>{
 
@@ -701,17 +659,15 @@ export const PersonelSubBranches = ({ id , setLoggedin , role , notFoundText , c
     
   return <GeneralList 
    
-    width = {780}
+    width = {900}
     data = { subBranches } 
-    topTitles = {TopRows} 
     loading = {loading} 
-    tableInformations = {tableInformations}
-    iconOptions = {filterIconOptions}
     subPagesCount = {subPagesCount}
     notFoundText ={ notFoundText || `Bu ${role}ye Bagli Bir  Bayi  Bulunmamaktadir`}
     notFound = {notFound}
     path = {'/home/personel_listesi'}
-    pathGenerator = {pathGenerator}  />
+    helperPackage={ personelListHelperPackage(currentUser) }
+    />
 
 }
 

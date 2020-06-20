@@ -88,7 +88,7 @@ text-transform: capitalize;
 padding:10px;
 position:relative;
 flex:0.8;
-font-size:14px;
+font-size:13px;
 box-sizing:border-box;
 `
 
@@ -165,9 +165,6 @@ cursor:pointer;
 const GeneralList = ( 
 
     { data, 
-      topTitles, 
-      iconOptions, 
-      tableInformations, 
       mainTitle, 
       titleIcon, 
       setIsModalOpen, 
@@ -176,22 +173,24 @@ const GeneralList = (
       subPagesCount, 
       notFoundText, 
       loading, 
-      pathGenerator, 
       width,
-      resetSubPage, } 
-      )=>{
+      resetSubPage,
+      helperPackage } 
+
+      ) => {
  
     const refs = useRef([]);  // we can also  use useRef hook for storing value or objects; 
 
     const pathName = useLocation().pathname ; 
     const loactionSearch = useLocation().search ; 
-    const history = useHistory() ;
 
     const queryObject = queryString.parse(loactionSearch.slice(1)) ; 
 
     const [ selectedSubPage , setSelectedSubPage ]  = useState(0);
     const [ oldQueryObject, setOldQueryObject ] = useState({});
     const [ oldLoactionSearch , setOldLoactionSearch ] = useState('');
+
+    const { filterIconOptions, pathGenerator, TopRows , tableInformations }  = helperPackage ;
     
     useEffect(()=>{ 
 
@@ -238,8 +237,9 @@ const GeneralList = (
         }
 
     }
+    
+
   
-   
     return   <HiddenWrapper>
   
             {
@@ -270,7 +270,7 @@ const GeneralList = (
                         <StudentListItemInnerWrapper>
     
                         {
-                            topTitles.map((item)=>{
+                            TopRows.map((item)=>{
                             return  !item  ? <InnerTopSpan style={{flex:'0.06',maxWidth:'29px',minWidth:'29px'}}  key={item}></InnerTopSpan> :  <InnerTopSpan key={item}>{item}</InnerTopSpan> 
                             })
                         }
@@ -319,7 +319,7 @@ const GeneralList = (
                   <div  style={{display:'flex',flex:1}} >
   
                     {
-                          iconOptions( mainItem ).map( ( item , Mainindex )=>{
+                          filterIconOptions( mainItem ).map( ( item , Mainindex )=>{
   
                               return   <StudentListIconWrapper key={item.desc} >
                                       

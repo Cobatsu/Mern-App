@@ -53,9 +53,6 @@ module.exports = async (req,res,next)=>{
                 if( Object.keys(updatedPermissions).length > 0 )  await User.updateOne({_id:user._id},{$set:{permissions:{...user.permissions,...updatedPermissions}}});
 
                 const getUpdatedUser = await User.findOne({_id:user._id})
-                 
-
-                console.log('HYE')
               
                 const token =  await jwt.sign({_id:user._id,userName:user.userName,firstName:user.firstName,lastName:user.lastName,role:user.role },process.env.SECRET_KEY,{expiresIn:'1d'});
              

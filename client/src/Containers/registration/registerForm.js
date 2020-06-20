@@ -52,11 +52,6 @@ class Register extends React.Component{
           english_language_proficiency:'',
           look_forward_to_study_at_rosedale:'',
           desired_university_studies:'',
-          time:{
-            month:moment.locale()=='tr' ?  Number(moment().format('L').split('/')[1]) :Number(moment().format('L').split('/')[0]) ,
-            day:moment.locale()=='tr' ? Number(moment().format('L').split('/')[0]) : Number(moment().format('L').split('/')[1] ),
-            year:Number(moment().format('L').split('/')[2]),
-          }
         },
         warning:null,
         warning_text:null,
@@ -128,7 +123,7 @@ class Register extends React.Component{
 
        }  
 
-        makeRequest('post', { token:this.token } ,this.activeCircle,this.backStage,this.setResult);
+        makeRequest('post', { token:this.token , ...this.state.studentInformations  } ,this.activeCircle,this.backStage,this.setResult);
    }
 
    changeHandlerFactory=(type)=> {

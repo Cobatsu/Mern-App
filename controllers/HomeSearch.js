@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const Reports = require('../models/reports');
+const mongoose = require('mongoose')
 
 module.exports = async (req,res,next)=>{
   
@@ -54,13 +55,17 @@ module.exports = async (req,res,next)=>{
                        
                          
                     lastArray = lastArray.concat( Report.filter(( report , index )=>{
-                        return report.owner ==  agenta._id  ;
+
+                        return  report.owner ==  agenta._id  ;
+
                     }))
+
+                    console.log(lastArray);
 
                     subBranches.forEach ( ( person , index )=>{
 
                         lastArray = lastArray.concat( Report.filter((report,index)=>{
-                            return  report.owner ==  person._id ;  
+                            return  report.owner ===  person._id ;  
                         }))
                         
                     })
@@ -104,6 +109,7 @@ module.exports = async (req,res,next)=>{
         return res.json({regionReportInfo});
 
       }
+
       else if ( user.role  === 'Temsilci' ){
           
          const subBranchesOfAgency  = await User.find( { relatedAgencyID : user._id} );
@@ -115,7 +121,7 @@ module.exports = async (req,res,next)=>{
          subBranchesOfAgency.forEach(( branch,index )=>{
  
             var matchedReports  = Report.filter((report,index)=>{
-                     return report.owner == branch._id  ;
+                     return report.owner === branch._id  ;
             })    
 
         
@@ -135,6 +141,7 @@ module.exports = async (req,res,next)=>{
         }) 
         
         return res.json({regionReportInfo});
+
       }
       else
       {

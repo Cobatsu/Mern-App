@@ -3,6 +3,7 @@ const Reports = require('../models/reports');
 const bcyrpt  = require('bcryptjs');
 const moment = require('moment');
 const Regions  = require('../regions2');
+const mongoose = require('mongoose');
 
 module.exports.Update = async (req,res,next)=>{ 
 
@@ -89,7 +90,7 @@ module.exports.addContactReport = async (req,res,next)=>{
       
         return user.role === 'Temsilci' ;
  
-    }).map((agency) => agency._id.toString() );
+    }).map((agency) => agency._id );
 
 
     const subBranch = relatedAgencies.find((user)=>{
@@ -112,7 +113,7 @@ module.exports.addContactReport = async (req,res,next)=>{
    
             }
    
-       },[subBranch._id.toString()])
+       },[subBranch._id])
 
    
     } else {
@@ -194,9 +195,11 @@ module.exports.reportSearch = async (req,res,next)=>{
        
         var documentCount = await Reports.countDocuments( searchData );    
              
-        var sortedData = await  Reports.find ( searchData ).sort({meetingDate:'descending'}).skip(10*pageNumber).limit(10);
-            
-         let copyReport = [...sortedData ];
+        var sortedData = await  Reports.find ( searchData ).sort({meetingDate:'descending'}).skip(10*pageNumber).limit(10).populate('owner');
+        
+        console.log(sortedData)
+        
+        let copyReport = [...sortedData ];
 
         copyReport.forEach((mainItem,index)=>{
             
@@ -220,10 +223,11 @@ module.exports.reportSearch = async (req,res,next)=>{
 }
 
 module.exports.getSpecificReport =async (req,res,next)=>{
+
     const {id} = req.params;
-    try 
-    {
-        const specificReport = await Reports.findOne({_id:id}).select('-__v -_id -allowedToSee');
+
+    try {
+        const specificReport = await Reports.findOne({_id:id}).populate('owner').select(' -__v -_id ');
         res.json({specificReport});
     } catch (error) {
         res.json({error});
@@ -240,8 +244,7 @@ module.exports.updateReport = async ( req,res,next)=>{
         if(body.meetingDetails) {
 
             body['isContacted'] = true ; 
-            body['owner'] = user._id.toString() ; 
-            body['whoseDocument'] = user.firstName + ' ' + user.lastName
+            body['owner'] = user._id ; 
 
             if( user.role !== 'Bayi' ) {
 
@@ -256,7 +259,7 @@ module.exports.updateReport = async ( req,res,next)=>{
         }
 
         await Reports.updateOne({_id:id},{$set:{...body }})
-        const updatedData = await  Reports.findOne({_id:id}).select('-__v -_id -allowedToSee');
+        const updatedData = await  Reports.findOne({_id:id}).populate('owner').select('-__v -_id');
 
         res.json({updatedData});
 

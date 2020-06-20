@@ -4,12 +4,12 @@ import styled from 'styled-components';
 import {UpdateLoggedin} from '../../isLoggedin/action'
 import { Link , useLocation } from 'react-router-dom'
 import Circle from '../../../UI/Circle'
-import {hasPermission,PermissionsNumbers,IconPermission} from '../../../UI/Permissions/permissionIcon'
+import { hasPermission,PermissionsNumbers,IconPermission } from '../../../UI/Permissions/permissionIcon'
 import { SearchStudentModal }  from '../../../UI/SearchModal/SearchStudent'
 import GeneralList from '../../../Components/GeneralList'
 import BackStage from '../../../UI/backStage'
 import { Context } from '../../../Context/Context'
-import {restrictWord} from '../../../Utilities/utilities'
+import { restrictWord , studentStatusColor , studentListHelperPackage } from '../../../Utilities/utilities'
 import queryString from 'querystring' 
 
 const ListWrapper = styled.div`
@@ -32,11 +32,12 @@ box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.03
 }
 
 `
+
+
+
 //------------------
 
 //-------------------------------------------------
-
-
 
 const Student =(props)=>{
 
@@ -52,59 +53,21 @@ const Student =(props)=>{
   const location = useLocation() ; 
   const searchData = queryString.parse(location.search.slice(1)) ; 
 
-
-  const TopRows = [
-    'İsim',
-    'Soy İsim',
-    'Kayıt Durumu',
-    'Referans',
-    'Kayıt Tarihi',
-    '',
-  ]
-
-  const tableInformations = ( item ) => {
-
-    return [
-
-      restrictWord( item.StudentInfo.information.surname , 13) , 
-      restrictWord( item.StudentInfo.information.dateofbirth , 13),
-      item.StudentInfo.information.kayitalan,
-      item.StudentInfo.registerstate.onkayit.state,
-      item.contractDate 
-    
-    ]
-
-  } 
-
   useEffect(()=>{
           
-    if( Object.keys( searchData ).length  > 0 ) {
+    if( Object.keys( searchData ).length  > 0 && user.role ) {
 
       setLoading(true);
 
       makeStudentSearchRequest('post', {
         ...searchData,
+        role:user.role,
         pageNumber: searchData.pageNumber - 1
-      }, isLoggedinf, setStudents, closeModal_1, setSubPagesCount, setLoading , setNotFound , subPagesCount);
+      }, isLoggedinf, setStudents, closeModal_1 , setSubPagesCount, setLoading , setNotFound , subPagesCount);
 
     }
     
-  },[ location.search ])
-
-  const filterIconOptions = (student)=>{
-
-    var  studentOptions = [
-      {
-        desc: ' Ön Kayıt Bilgileri ',
-        Icon: <i class="far fa-file-alt"></i>
-      },
-    ]
-
-    return studentOptions ; //just for now
-
-  }
-
-  const pathGenerator = ( _ , id )=> '/home/raporlar/' + id ; 
+  },[ location.search  , user.role])
 
   const closeModal_1 = () => {
     setIsModalOpen(false);
@@ -135,20 +98,17 @@ const Student =(props)=>{
             
             <GeneralList 
 
-                data = { students } 
-                topTitles = {TopRows} 
+                data = { students }               
                 mainTitle = 'Ön Kayıt Öğrenciler' 
                 titleIcon = {<i style={{marginRight:8}} class="fas fa-user-graduate"></i>} 
-                loading = {loading} 
-                tableInformations = {tableInformations}
+                loading = {loading}       
                 setIsModalOpen = {setIsModalOpen}
-                setBackstage = {setBackstage}
-                iconOptions = {filterIconOptions}
+                setBackstage = {setBackstage}         
                 subPagesCount = {subPagesCount}
                 notFoundText = 'Herhangi Bir Sonuç Bulunamadı.'
-                notFound = {notFound}
-                pathGenerator = {pathGenerator}
+                notFound = {notFound}     
                 resetSubPage = { !isModalOpen && backStage }
+                helperPackage = { studentListHelperPackage( user.id ) }
 
             />
 

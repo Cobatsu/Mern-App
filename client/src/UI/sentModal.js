@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import {CopyToClipboard} from 'react-copy-to-clipboard';
+import {CopyToClipboard} from 'react-copy-to-clipboard'
 
 const Modal = styled.div`
 position:fixed;
@@ -303,7 +303,7 @@ const SentModal = React.memo(({backStage, type, closeModal, deleteUser , formSen
           fontSize: 15,
           color: '#f73859',
           fontWeight: 'bolder'
-        }}>Lütfen Boş Alan Bırakmayınız ! </h2>
+        }}> Lütfen Alanlari Tam Doldurunuz ! </h2>
         <CloseButton onClick={closeModal}>KAPAT</CloseButton>
         </Modal>
 

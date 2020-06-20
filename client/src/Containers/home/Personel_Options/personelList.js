@@ -8,7 +8,7 @@ import BackStage from '../../../UI/backStage'
 import {SearchPersonModal as SearchModal} from '../../../UI/SearchModal/SearchPerson'
 import { Context } from '../../../Context/Context';
 import GeneralList from '../../../Components/GeneralList'
-import {restrictWord} from '../../../Utilities/utilities'
+import {restrictWord,personelListHelperPackage} from '../../../Utilities/utilities'
 import queryString from 'querystring' 
 
 const ListWrapper = styled.div`
@@ -43,83 +43,18 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
   const [ subPagesCount, setSubPagesCount ] = useState(0);
   const [ notFound , setNotFound ] = useState();
 
-  const { isLoggedinf , user:currentUser } = useContext(Context);
+  const { isLoggedinf } = useContext(Context);
 
   const location = useLocation() ; 
   const searchData = queryString.parse(location.search.slice(1)) ; 
 
 
-  const TopRows  =  [
-    'İsim',
-    'Soy İsim',
-    'Rol',
-    'Bölge',
-    'Sözleşme Tarihi',
-    '',
-  ]
-
-  // useEffect( ()=>{
-
-  //   const { personSearchData , personPageNumber , personDataLength  } = state ; 
-    
-  //   if( personels.length === 0 && !notFound  && personSearchData ) {
-      
-  //     setSubPagesCount(personDataLength);
-  //     setSearchData(personSearchData);
-  //     setLoading(true);
-      
-  //     makePersonSearchRequest('post', {
-  //       ...personSearchData,
-  //       pageNumber: personPageNumber
-  //     }, isLoggedinf, setPersonels, closeModal_1, setSubPagesCount, setLoading , setNotFound);
-
-  //   }
-
-  // },[])
   
   const closeModal_1 = () => {
     setIsModalOpen(false);
     setBackstage(false);
   }
    
-  const filterIconOptions = (user)=>{
-
-    var  PersonelOptions = [
-      {desc:'Genel Bilgiler',Icon:<i className="fas fa-user-friends"></i>},
-      {desc:'Bayiler',Icon:<i    className="fas fa-code-branch"/>},
-      {desc:'Raporlar',Icon:<i   className="fas fa-sticky-note"></i>},
-      {desc:'Yetkiler',Icon: <i  className="fas fa-unlock"></i>},
-    ]
-
-    const { role } = user ; 
-    
-    if( currentUser.role !== 'Admin' &&  currentUser.role ) PersonelOptions =  PersonelOptions.filter(( { desc } )=> desc !== 'Yetkiler' ) ;
-
-    if( role !== "Temsilci" ) PersonelOptions =  PersonelOptions.filter(( { desc } )=> desc !== 'Bayiler' ) ;
-
-    return PersonelOptions ; 
-    
-  }
-
-  const tableInformations = ( item )=> {
-
-    return [
-      
-      restrictWord( item.firstName , 13) , 
-      restrictWord( item.lastName , 13),
-      item.role,
-      item.role === 'Admin' ? '—' : item.region,
-      item.contractDate ]
-
-  }  
-
-  const pathGenerator = ( item , id ) => {
-
-     if( item === 'Raporlar' || item === 'Bayiler' ) { var pageQuery = '?pageNumber=1' } else { var pageQuery = '' }
-
-      return '/home/personel_listesi/' + item.split(' ').join('_').toLowerCase() + '/' + id + pageQuery ;
-  }
-
   useEffect(()=>{
           
     if( Object.keys( searchData ).length  > 0 ) {
@@ -167,21 +102,18 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
                       <GeneralList 
                       
                         listType = 'person'
-                        data = { personels } 
-                        topTitles = {TopRows} 
+                        data = { personels }                
                         mainTitle = {isOnlySubBranch ? 'Bayiler' : 'Personeller'} 
                         titleIcon = {<i style={{ marginRight: 8 }} className="fas fa-user-friends"></i>} 
-                        loading = {loading} 
-                        tableInformations = {tableInformations}
+                        loading = {loading}           
                         setIsModalOpen = {setIsModalOpen}
-                        setBackstage = {setBackstage}
-                        iconOptions = {filterIconOptions}
+                        setBackstage = {setBackstage}                   
                         subPagesCount = {subPagesCount}
                         notFoundText ='Herhangi Bir Sonuç Bulunamadı.'
-                        notFound = {notFound}
-                        pathGenerator = {pathGenerator}
+                        notFound = {notFound}                 
                         resetSubPage = { !isModalOpen && backStage }
-
+                        helperPackage = { personelListHelperPackage(user) }
+                        
                         />
 
           </ListWrapper>

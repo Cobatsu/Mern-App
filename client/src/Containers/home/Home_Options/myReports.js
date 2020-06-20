@@ -9,7 +9,7 @@ import BackStage from '../../../UI/backStage'
 import { hasPermission, PermissionsNumbers, IconPermission } from '../../../UI/Permissions/permissionIcon'
 import { SearchReportModal } from '../../../UI/SearchModal/SearchReport';
 import GeneralList from '../../../Components/GeneralList'
-import {restrictWord , statusColors} from '../../../Utilities/utilities'
+import {restrictWord , statusColors , reportListHelperPackage} from '../../../Utilities/utilities'
 import queryString from 'querystring' 
 
 const ListWrapper = styled.div`
@@ -38,8 +38,9 @@ display:flex;
 align-items:center;
 justify-content:center;
 border-radius:4px;
-background:#f57b51;
-color:white;
+background:rgba(255, 93, 108, .08);
+color:#fa4659;
+border:1px solid #fa4659;
 font-size:11.6px;
 padding:6px;
 `
@@ -60,44 +61,7 @@ const Student = (props) => {
   const location = useLocation() ; 
   const searchData = queryString.parse(location.search.slice(1)) ; 
  
-  const TopRows = [
-    'Görüşülen Kişi',
-    'Telefon Numarası',
-    'Görüşme Tipi',
-    'Görüşme Tarihi',
-    'Görüşme Durumu',
-    'Görüşen Kişi',
-    '',
-  ]
-  
 
-  const filterIconOptions = (report)=>{
-
-    var  reportOptions = [
-      {
-        desc: 'Görüşme Bilgileri',
-        Icon: <i className="fas fa-user-friends"></i>
-      },
-    ]
-
-    return reportOptions ; //just for now
-
-  }
-
-  const tableInformations = ( item  )=> {
-    
-    return [
-      restrictWord( item.relatedPersonName , 13 ) , 
-      item.relatedPersonPhoneNumber,
-      item.reportType === 'schoolReport' ? 'Okul Görüşmesi' : 'Öğrenci Görüşmesi'  ,
-      item.meetingDate,
-      <Capsule  style={ {...statusColors(item).style}} >  { statusColors(item).text } </Capsule>,
-      !item.isContacted ? '—' : item.owner == user._id  ? <Capsule> { restrictWord(item.whoseDocument,13) } </Capsule> : restrictWord(item.whoseDocument,13)
-    ] 
-
-  } 
-
-  const pathGenerator = ( _ , id )=> '/home/raporlar/' + id ; 
 
   const closeModal_1 = () => {
     setIsModalOpen(false);
@@ -143,21 +107,17 @@ const Student = (props) => {
                   
                     <GeneralList 
 
-                        listType = 'report'
-                        data = { reports } 
-                        topTitles = {TopRows} 
+                        data = { reports }            
                         mainTitle = 'Raporlar' 
                         titleIcon = {<i style={{marginRight:8}} class="fas fa-file-alt"></i>} 
-                        loading = {loading} 
-                        tableInformations = {tableInformations}
-                        setIsModalOpen = {setIsModalOpen}
-                        setBackstage = {setBackstage}
-                        iconOptions = {filterIconOptions}
-                        subPagesCount = {subPagesCount}
+                        loading = { loading }                   
+                        setIsModalOpen = { setIsModalOpen }
+                        setBackstage = { setBackstage }                 
+                        subPagesCount = { subPagesCount }
                         notFoundText = 'Herhangi Bir Sonuç Bulunamadı.'
-                        notFound = {notFound}
-                        pathGenerator = {pathGenerator}
+                        notFound = { notFound }               
                         resetSubPage = { !isModalOpen && backStage }
+                        helperPackage = { reportListHelperPackage(user._id) }
 
                     />
             
