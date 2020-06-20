@@ -9,7 +9,7 @@ import { SearchStudentModal }  from '../../../UI/SearchModal/SearchStudent'
 import GeneralList from '../../../Components/GeneralList'
 import BackStage from '../../../UI/backStage'
 import { Context } from '../../../Context/Context'
-import { restrictWord , studentStatusColor } from '../../../Utilities/utilities'
+import { restrictWord , studentStatusColor , studentListHelperPackage } from '../../../Utilities/utilities'
 import queryString from 'querystring' 
 
 const ListWrapper = styled.div`
@@ -33,24 +33,11 @@ box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.03
 
 `
 
-const Capsule = styled.div`
-display:flex;
-align-items:center;
-justify-content:center;
-border-radius:4px;
-background:rgba(255, 93, 108, .08);
-color:#fa4659;
-border:1px solid #fa4659;
-font-size:11.6px;
-padding:6px;
-`
 
 
 //------------------
 
 //-------------------------------------------------
-
-
 
 const Student =(props)=>{
 
@@ -65,33 +52,6 @@ const Student =(props)=>{
 
   const location = useLocation() ; 
   const searchData = queryString.parse(location.search.slice(1)) ; 
-
-  const TopRows = [
-    'İsim',
-    'Soy İsim',
-    'Kayıt Durumu',
-    'Referans Kişi',
-    'Kayıt Tarihi',
-    '',
-  ]
-
-  const tableInformations = ( item ) => {
-
-    var fullName = item.owner.firstName + ' ' + item.owner.lastName ; 
-
-    var docState = item.StudentInfo.registerState.onkayit.docState ; 
-
-    return [
-
-      restrictWord( item.StudentInfo.information.name , 13) , 
-      restrictWord( item.StudentInfo.information.surname , 13) ,
-      <Capsule  style={ {...studentStatusColor(docState).style}} >  { studentStatusColor(docState).text } </Capsule>,
-      item.owner._id === user._id ?  <Capsule>{restrictWord(fullName,13)}</Capsule> : restrictWord(fullName,13) ,
-      item.StudentInfo.registerdate 
-    
-    ]
-
-  } 
 
   useEffect(()=>{
           
@@ -108,23 +68,6 @@ const Student =(props)=>{
     }
     
   },[ location.search  , user.role])
-
-  const filterIconOptions = (student)=>{
-
-    var  studentOptions = [
-
-      {
-        desc: ' Ön Kayıt Bilgileri ',
-        Icon: <i class="far fa-file-alt"></i>
-      },
-      
-    ]
-
-    return studentOptions ; //just for now
-
-  }
-
-  const pathGenerator = ( _ , id )=> '/home/ön_kayıt/' + id ; 
 
   const closeModal_1 = () => {
     setIsModalOpen(false);
@@ -155,20 +98,17 @@ const Student =(props)=>{
             
             <GeneralList 
 
-                data = { students } 
-                topTitles = {TopRows} 
+                data = { students }               
                 mainTitle = 'Ön Kayıt Öğrenciler' 
                 titleIcon = {<i style={{marginRight:8}} class="fas fa-user-graduate"></i>} 
-                loading = {loading} 
-                tableInformations = {tableInformations}
+                loading = {loading}       
                 setIsModalOpen = {setIsModalOpen}
-                setBackstage = {setBackstage}
-                iconOptions = {filterIconOptions}
+                setBackstage = {setBackstage}         
                 subPagesCount = {subPagesCount}
                 notFoundText = 'Herhangi Bir Sonuç Bulunamadı.'
-                notFound = {notFound}
-                pathGenerator = {pathGenerator}
+                notFound = {notFound}     
                 resetSubPage = { !isModalOpen && backStage }
+                helperPackage = { studentListHelperPackage( user.id ) }
 
             />
 

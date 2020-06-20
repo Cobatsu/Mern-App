@@ -20,7 +20,7 @@ import {_PersonelList} from  './personelList'
 import UserMenu from '../../../Components/Usermenu'
 import {useViewport} from '../../home/navs/customHooks/viewPortHook'
 import GeneralList from '../../../Components/GeneralList'
-import {restrictWord , statusColors , studentStatusColor} from '../../../Utilities/utilities'
+import {restrictWord , statusColors , studentStatusColor , personelListHelperPackage , studentListHelperPackage , reportListHelperPackage} from '../../../Utilities/utilities'
 import queryString from 'querystring'
 import Student from '../Home_Options/students'
 
@@ -511,7 +511,7 @@ const General_User_Info = ({match,...rest})=>{
 
 
                   <Route path='/home/personel_listesi/bayiler/:id' exact render={()=><InputsWrapper style={{alignSelf:'stretch',justifyContent:'flex-start'}}>  
-                            <PersonelSubBranches role={userInformations.role}   id={match.params.id} setLoggedin={context.isLoggedinf} currentID={user._id} currentRole = {user.role} />                
+                            <PersonelSubBranches role={userInformations.role}   id={match.params.id} setLoggedin={context.isLoggedinf} currentID={user._id} currentUser = {user} />                
                    </InputsWrapper> 
                   }
                   />
@@ -519,7 +519,7 @@ const General_User_Info = ({match,...rest})=>{
 
                   <Route path='/home/personel_listesi/öğrenciler/:id' exact render={()=><InputsWrapper style={{alignSelf:'stretch',justifyContent:'flex-start'}}>  
                                         
-                            <PersonelStudents role={userInformations.role}   id={match.params.id} setLoggedin={context.isLoggedinf} currentID={user._id} currentRole = {user.role}/>
+                            <PersonelStudents role={userInformations.role}   id={match.params.id} setLoggedin={context.isLoggedinf} currentID={user._id} currentUser = {user}/>
 
                    </InputsWrapper> 
                   }
@@ -565,61 +565,8 @@ export const PersonelReports = ( { id , setLoggedin , role , notFoundText  } )=>
   const location = useLocation() ; 
   const searchData = queryString.parse(location.search.slice(1)) ; 
 
-  const TopRows = [
-    'Görüşülen Kişi',
-    'Telefon Numarası',
-    'Görüşme Tipi',
-    'Görüşme Tarihi',
-    'Görüşme Durumu',
-    'Görüşen Kişi',
-    '',
-  ]
-  
-  
-  const filterIconOptions = (report)=>{
-
-    var  reportOptions = [
-      {
-        desc: 'Görüşme Bilgileri',
-        Icon: <i className="fas fa-user-friends"></i>
-      },
-    ]
-
-    return reportOptions ; //just for now
-
-  }
-  
-  const tableInformations = (item)=> {
-
-    if(item.owner) { var fullName = item.owner.firstName + ' ' + item.owner.lastName ;  }
-      
-    return [
-      restrictWord( item.relatedPersonName , 13 ),
-      item.relatedPersonPhoneNumber,
-      item.reportType === 'schoolReport' ? 'Okul Görüşmesi' : 'Öğrenci Görüşmesi'  ,
-      item.meetingDate,
-      <Capsule  style={ {...statusColors(item).style}} >  { statusColors(item).text } </Capsule>,
-      !item.isContacted ? '—' : item.owner._id === id  ? <Capsule> { restrictWord(fullName,13) } </Capsule> : restrictWord(fullName,13)
-    ] 
-
-  }
-
-  const pathGenerator = ( item , id )=> '/home/raporlar/' + id ; 
-
-  // const nextPage = (page) => {
-
-  //   setLoading(true);
-  //   makeReportSearchRequest('post', {
-  //     role:role,
-  //     personelReportID:id,
-  //     pageNumber: page
-  //   },setLoggedin , setReports, ()=>{}, setSubPagesCount, setLoading);
-
-  // }
-
   useEffect(()=>{
       
-
     if(role) {
 
       setLoading(true);
@@ -629,28 +576,25 @@ export const PersonelReports = ( { id , setLoggedin , role , notFoundText  } )=>
         role:role , 
         personelReportID:id,
       }, setLoggedin, setReports, ()=>{} , setSubPagesCount, setLoading , setNotFound );
-
-
     }
-
 
   },[ location.search , role  ])
     
   return <GeneralList 
+
     width = {900}
     data = { reports } 
-    topTitles = {TopRows} 
     loading = {loading} 
-    tableInformations = {tableInformations}
-    iconOptions = {filterIconOptions}
     subPagesCount = {subPagesCount}
     notFoundText = { notFoundText || `Bu ${role}ye Ait Bir Rapor Bulunmamaktadir`}
     notFound = {notFound}
     path = {'/home/personel_listesi'}
-    pathGenerator = {pathGenerator}   />
+    helperPackage = { reportListHelperPackage(id) }
+
+    />
 }
 
-export const PersonelStudents = ( { id , setLoggedin , role , notFoundText } ) => {
+export const PersonelStudents = ( { id , setLoggedin , role , notFoundText  } ) => {
 
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -661,52 +605,8 @@ export const PersonelStudents = ( { id , setLoggedin , role , notFoundText } ) =
   const location = useLocation() ; 
   const searchData = queryString.parse(location.search.slice(1)) ; 
 
-  const TopRows = [
-    'İsim',
-    'Soy İsim',
-    'Kayıt Durumu',
-    'Referans Kişi',
-    'Kayıt Tarihi',
-    '',
-  ]
-
-  const tableInformations = ( item ) => {
-
-    var fullName = item.owner.firstName + ' ' + item.owner.lastName ; 
-
-    var docState = item.StudentInfo.registerState.onkayit.docState ; 
-
-    return [
-
-      restrictWord( item.StudentInfo.information.name , 13) , 
-      restrictWord( item.StudentInfo.information.surname , 13) ,
-      <Capsule  style={ {...studentStatusColor(docState).style}} >  { studentStatusColor(docState).text } </Capsule>,
-      item.owner._id === id ?  <Capsule>{restrictWord(fullName,13)}</Capsule> : restrictWord(fullName,13) ,
-      item.StudentInfo.registerdate 
-    
-    ]
-
-  } 
-
-  const filterIconOptions = (student)=>{
-
-    var  studentOptions = [
-      {
-        desc: ' Ön Kayıt Bilgileri ',
-        Icon: <i class="far fa-file-alt"></i>
-      },
-    ]
-
-    return studentOptions ; //just for now
-
-  }
-
-  const pathGenerator = ( _ , id )=> '/home/raporlar/' + id ; 
-
-
   useEffect(()=>{
-      
-
+    
     if(role) {
 
       setLoading(true);
@@ -725,22 +625,20 @@ export const PersonelStudents = ( { id , setLoggedin , role , notFoundText } ) =
   return <GeneralList 
 
       width = {900}
-      data = { students } 
-      topTitles = {TopRows} 
+      data = { students }   
       loading = {loading} 
-      tableInformations = {tableInformations}
-      iconOptions = {filterIconOptions}
       subPagesCount = {subPagesCount}
       notFoundText = { notFoundText || `Bu ${role}ye Ait Bir Öğrenci Bulunmamaktadır`}
       notFound = {notFound}
-      pathGenerator = {pathGenerator}
+      helperPackage = { studentListHelperPackage(id) }
+  
 
      />
 
 }
 
 
-export const PersonelSubBranches = ( { id , setLoggedin , role , notFoundText , currentRole  } )=>{
+export const PersonelSubBranches = ( { id , setLoggedin , role , notFoundText , currentUser   } )=>{
     
   const [ subBranches, setSubBranches ] = useState([]);
   const [ notFound , setNotFound ] = useState(null);
@@ -749,50 +647,7 @@ export const PersonelSubBranches = ( { id , setLoggedin , role , notFoundText , 
 
   const location = useLocation() ; 
   const searchData = queryString.parse(location.search.slice(1)) ; 
- 
-  const TopRows  =  [
-    'İsim',
-    'Soy İsim',
-    'Rol',
-    'Bölge',
-    'Sözleşme Tarihi',
-    '',
-  ]
-  
-  const filterIconOptions = (user)=>{
 
-    var  PersonelOptions = [
-      {desc:'Genel Bilgiler',Icon:<i className="fas fa-user-friends"></i>},
-      {desc:'Bayiler',Icon:<i    className="fas fa-code-branch"/>},
-      {desc:'Raporlar',Icon:<i   className="fas fa-sticky-note"></i>},
-      {desc:'Yetkiler',Icon: <i  className="fas fa-unlock"></i>},
-      {desc:'Öğrenciler', Icon:<i class="fas fa-user-graduate"></i>}
-    ]
-
-    const { role } = user ; 
-    
-    if( currentRole !== 'Admin' &&  currentRole ) PersonelOptions =  PersonelOptions.filter(( { desc } )=> desc !== 'Yetkiler' ) ;
-
-    if( role !== "Temsilci" ) PersonelOptions =  PersonelOptions.filter(( { desc } )=> desc !== 'Bayiler' ) ;
-    
-
-    return PersonelOptions ; 
-
-   }
-
-  const tableInformations = (item)=> {
-      
-    return [
-      restrictWord( item.firstName , 13) , 
-      restrictWord( item.lastName , 13),
-      item.role,
-      item.region,
-      item.contractDate
-    ] 
-
-  } 
-
-  const pathGenerator = ( item , id ) => '/home/personel_listesi/' + item.split(' ').join('_').toLowerCase() + '/' + id
 
   useEffect(()=>{
 
@@ -806,15 +661,13 @@ export const PersonelSubBranches = ( { id , setLoggedin , role , notFoundText , 
    
     width = {900}
     data = { subBranches } 
-    topTitles = {TopRows} 
     loading = {loading} 
-    tableInformations = {tableInformations}
-    iconOptions = {filterIconOptions}
     subPagesCount = {subPagesCount}
     notFoundText ={ notFoundText || `Bu ${role}ye Bagli Bir  Bayi  Bulunmamaktadir`}
     notFound = {notFound}
     path = {'/home/personel_listesi'}
-    pathGenerator = {pathGenerator}  />
+    helperPackage={ personelListHelperPackage(currentUser) }
+    />
 
 }
 
