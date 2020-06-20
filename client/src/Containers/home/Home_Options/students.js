@@ -112,17 +112,19 @@ const Student =(props)=>{
   const filterIconOptions = (student)=>{
 
     var  studentOptions = [
+
       {
         desc: ' Ön Kayıt Bilgileri ',
         Icon: <i class="far fa-file-alt"></i>
       },
+      
     ]
 
     return studentOptions ; //just for now
 
   }
 
-  const pathGenerator = ( _ , id )=> '/home/raporlar/' + id ; 
+  const pathGenerator = ( _ , id )=> '/home/ön_kayıt/' + id ; 
 
   const closeModal_1 = () => {
     setIsModalOpen(false);

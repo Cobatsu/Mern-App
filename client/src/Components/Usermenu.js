@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom'
 import {restrictWord}  from '../Utilities/utilities'
 
 const UserMenu = styled.div`
-flex:0.1;
+flex:0.2;
 flex-flow:column;
 display:flex;
 justify-content:center;

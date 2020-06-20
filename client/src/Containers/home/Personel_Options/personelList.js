@@ -89,6 +89,7 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
       {desc:'Bayiler',Icon:<i    className="fas fa-code-branch"/>},
       {desc:'Raporlar',Icon:<i   className="fas fa-sticky-note"></i>},
       {desc:'Yetkiler',Icon: <i  className="fas fa-unlock"></i>},
+      {desc:'Öğrenciler', Icon:<i class="fas fa-user-graduate"></i>}
     ]
 
     const { role } = user ; 

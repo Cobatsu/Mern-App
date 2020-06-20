@@ -13,6 +13,7 @@ import Stage from '../../../UI/backStage';
 import {Checkbox,TextField,Tab,Tabs,Paper,InputLabel,MenuItem,Selec} from '@material-ui/core'
 import {makeAddReportRequest}  from '../../../request/requset'
 import {Regions} from '../../../Regions/regions'
+import NumberFormat from 'react-number-format'
 
 const MainWrapper = styled.form`
 display:flex;
@@ -96,7 +97,7 @@ align-items:center;
 const initialReportStateFirst={
   schoolName:'',
   relatedPersonName:'',
-  relatedPersonPhoneNumber: '',
+  relatedPersonPhoneNumber:'+90 (___) ___-____',
   meetingDate:new Date(),
   relatedPersonEmail:'',
   meetingDetails:'',
@@ -167,18 +168,26 @@ export const  AddReport = React.memo((props)=>{
          
             e.preventDefault();
 
+              let isPhoneNumberFilled = initialReportState['relatedPersonPhoneNumber'].split('').slice(3).filter((item) => parseInt(item) || item === '0' ).length < 10 ; 
+              
+
+              if(isPhoneNumberFilled) { 
+
+                return setEmptyWarning(true);
+
+              }
+
+
               for (const key in initialReportState) {
 
                   const element = initialReportState[key];
                 
                   if(reportType === 'schoolReport')
                     {
-                      if(!element)
-                      {
+
+                      if(!element) {
                         return setEmptyWarning(true);
-                      }  
-                      else
-                      {
+                      }  else {
                         if (key !== 'meetingDate') initialReportState[key] = initialReportState[key].trim();
                       }    
 
@@ -248,8 +257,8 @@ export const Report = ( { SubmitOnChange,State,setBackStage,setDate,disable,type
           <ReportTextFields>
                   
                 {reportType === 'schoolReport' ? <TextField value={State['schoolName']}   InputLabelProps={{style:{zIndex:1}}}  disabled={disable}   onChange = {SubmitOnChange('schoolName')}   label='Okul İsmi'  style={{width:'85%',padding:'10px 0',marginBottom:5}}  inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}} /> : null }
-                <TextField value={State['relatedPersonName']}   InputLabelProps={{style:{zIndex:1}}}  disabled={disable}   onChange = {SubmitOnChange('relatedPersonName')}   label='Görüşülen Kişinin İsmi'  style={{width:'85%',padding:'10px 0',marginBottom:5}} inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}   />
-                <TextField value={State['relatedPersonPhoneNumber']}   InputLabelProps={{style:{zIndex:1}}}  disabled={disable}   onChange = {SubmitOnChange('relatedPersonPhoneNumber')}   label='Görüşülen Kişinin Telefon Numarası'  style={{width:'85%',padding:'10px 0'}}  inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}  />
+                <TextField   value={State['relatedPersonName']}   InputLabelProps={{style:{zIndex:1}}}  disabled={disable}   onChange = {SubmitOnChange('relatedPersonName')}   label='Görüşülen Kişinin İsmi'  style={{width:'85%',padding:'10px 0',marginBottom:5}} inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}   />
+                <NumberFormat   value={State['relatedPersonPhoneNumber']}  InputLabelProps={{style:{zIndex:1}}}  disabled={disable}  onChange = {SubmitOnChange('relatedPersonPhoneNumber')}   customInput={TextField} format="+90 (###) ###-####" label='Görüşülen Kişinin Telefon Numarası' style={{width:'85%',padding:'10px 0'}} inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}   allowEmptyFormatting mask="_"/>
                 <TextField value={State['relatedPersonEmail']}   InputLabelProps={{style:{zIndex:1}}}  disabled={disable}   onChange = {SubmitOnChange('relatedPersonEmail')}   label='Görüşülen Kişinin Mail Adresi'  style={{width:'85%',padding:'10px 0'}} inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}   />
 
                         <TextField  InputLabelProps={{style:{zIndex:1}}}  disabled={disable}    style={{width:'85%',padding:'10px 0'}} inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}  onChange={SubmitOnChange('region')}  id="select" label="Bölge" value={State['region']}  select>

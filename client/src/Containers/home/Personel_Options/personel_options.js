@@ -1,6 +1,6 @@
 import React, {useEffect,useState,useContext,useCallback,useRef,createRef,useMemo,useReducer} from 'react';
 import {UpdateLoggedin}  from '../../isLoggedin/action'
-import {makeSpecificPersonRequest,makeUpdateUserRequest,makeRemoveUserRequest,makeReportSearchRequest,makeRelatedAgencyRequest,makePersonSearchRequest}  from '../../../request/requset'
+import {makeSpecificPersonRequest,makeUpdateUserRequest,makeRemoveUserRequest,makeReportSearchRequest,makeRelatedAgencyRequest,makePersonSearchRequest,makeStudentSearchRequest}  from '../../../request/requset'
 import styled from 'styled-components';
 import Circle from '../../../UI/Circle';
 import {IconPermission} from '../../../UI/Permissions/permissionIcon';
@@ -20,8 +20,9 @@ import {_PersonelList} from  './personelList'
 import UserMenu from '../../../Components/Usermenu'
 import {useViewport} from '../../home/navs/customHooks/viewPortHook'
 import GeneralList from '../../../Components/GeneralList'
-import {restrictWord , statusColors} from '../../../Utilities/utilities'
+import {restrictWord , statusColors , studentStatusColor} from '../../../Utilities/utilities'
 import queryString from 'querystring'
+import Student from '../Home_Options/students'
 
 
 const MainWrapper = styled.form`
@@ -33,7 +34,7 @@ align-items:center;
 justify-content:center;
 margin-top:2%;
 margin-bottom:20px;
-padding:30px;
+padding:30px 5px;
 border-radius:3px;
 flex-flow:column;
 @media (max-width: 1030px) {
@@ -67,7 +68,7 @@ align-items:flex-start;
 //-------------------------------
 
 const InputsWrapper = styled.div`
-flex:0.7;
+flex:0.75;
 display:flex;
 align-items:center;
 justify-content:center;
@@ -89,7 +90,7 @@ margin-bottom:5px;
 
 
 const PermissionsWrapper = styled.div`
-flex:0.7;
+flex:0.75;
 display:flex;
 flex-flow:column;
 padding: 15px 8px;
@@ -405,7 +406,7 @@ const General_User_Info = ({match,...rest})=>{
     }
    
      //
-    return <UpdateLoggedin page='PERSONEL_GENERAL_INFO'  {...rest} match={match}>
+    return <UpdateLoggedin page='PERSONEL_GENERAL_INFO'  {...rest} match={match} >
         {
            ( Loading , user )=>Loading ? null : loading 
            ?  
@@ -428,7 +429,7 @@ const General_User_Info = ({match,...rest})=>{
                          UserMenuLinks.map((item)=>{
                                  return item.desc.toLowerCase() === subMenuIndex.split('_').join(' ').toLowerCase() 
                                  ? 
-                                 <h1 key={item.desc} style={{width:'100%',textAlign:'center' , color:'#4cbbb9',fontWeight:'bolder',fontSize:15}}>
+                                 <h1 key={item.desc} style={{width:'100%',textAlign:'center' , color:'#4cbbb9',fontWeight:'bolder',fontSize:17}}>
                                    {item.Icon}
                                    {item.desc}
                                  </h1>    
@@ -502,7 +503,7 @@ const General_User_Info = ({match,...rest})=>{
                   </InputsWrapper>
                    } />
 
-                  <Route path='/home/personel_listesi/raporlar/:id' exact render={()=><InputsWrapper style={{alignSelf:'stretch',justifyContent:'flex-start' , flex:0.86}}>  
+                  <Route path='/home/personel_listesi/raporlar/:id' exact render={()=><InputsWrapper style={{alignSelf:'stretch',justifyContent:'flex-start'}}>  
                             <PersonelReports role={userInformations.role}    id={match.params.id} setLoggedin={context.isLoggedinf} currentID={user._id}  currentRole = {user.role} />                
                    </InputsWrapper> 
                   }
@@ -511,6 +512,15 @@ const General_User_Info = ({match,...rest})=>{
 
                   <Route path='/home/personel_listesi/bayiler/:id' exact render={()=><InputsWrapper style={{alignSelf:'stretch',justifyContent:'flex-start'}}>  
                             <PersonelSubBranches role={userInformations.role}   id={match.params.id} setLoggedin={context.isLoggedinf} currentID={user._id} currentRole = {user.role} />                
+                   </InputsWrapper> 
+                  }
+                  />
+
+
+                  <Route path='/home/personel_listesi/öğrenciler/:id' exact render={()=><InputsWrapper style={{alignSelf:'stretch',justifyContent:'flex-start'}}>  
+                                        
+                            <PersonelStudents role={userInformations.role}   id={match.params.id} setLoggedin={context.isLoggedinf} currentID={user._id} currentRole = {user.role}/>
+
                    </InputsWrapper> 
                   }
                   />
@@ -544,7 +554,7 @@ const General_User_Info = ({match,...rest})=>{
 
 }
 
-export const PersonelReports = ( { id , setLoggedin , role , notFoundText  , currentID } )=>{
+export const PersonelReports = ( { id , setLoggedin , role , notFoundText  } )=>{
     
   const [reports, setReports] = useState([]);
   const [ notFound , setNotFound ] = useState(null);
@@ -640,9 +650,97 @@ export const PersonelReports = ( { id , setLoggedin , role , notFoundText  , cur
     pathGenerator = {pathGenerator}   />
 }
 
+export const PersonelStudents = ( { id , setLoggedin , role , notFoundText } ) => {
+
+  const [students, setStudents] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [ notFound , setNotFound ] = useState(null);
+  const [subPagesCount , setSubPagesCount] = useState(null);
 
 
-export const PersonelSubBranches = ({ id , setLoggedin , role , notFoundText , currentRole  })=>{
+  const location = useLocation() ; 
+  const searchData = queryString.parse(location.search.slice(1)) ; 
+
+  const TopRows = [
+    'İsim',
+    'Soy İsim',
+    'Kayıt Durumu',
+    'Referans Kişi',
+    'Kayıt Tarihi',
+    '',
+  ]
+
+  const tableInformations = ( item ) => {
+
+    var fullName = item.owner.firstName + ' ' + item.owner.lastName ; 
+
+    var docState = item.StudentInfo.registerState.onkayit.docState ; 
+
+    return [
+
+      restrictWord( item.StudentInfo.information.name , 13) , 
+      restrictWord( item.StudentInfo.information.surname , 13) ,
+      <Capsule  style={ {...studentStatusColor(docState).style}} >  { studentStatusColor(docState).text } </Capsule>,
+      item.owner._id === id ?  <Capsule>{restrictWord(fullName,13)}</Capsule> : restrictWord(fullName,13) ,
+      item.StudentInfo.registerdate 
+    
+    ]
+
+  } 
+
+  const filterIconOptions = (student)=>{
+
+    var  studentOptions = [
+      {
+        desc: ' Ön Kayıt Bilgileri ',
+        Icon: <i class="far fa-file-alt"></i>
+      },
+    ]
+
+    return studentOptions ; //just for now
+
+  }
+
+  const pathGenerator = ( _ , id )=> '/home/raporlar/' + id ; 
+
+
+  useEffect(()=>{
+      
+
+    if(role) {
+
+      setLoading(true);
+
+      makeStudentSearchRequest('post', {
+        role:role,
+        pageNumber: searchData.pageNumber - 1,
+        personelReportID:id,
+      }, setLoggedin, setStudents, ()=>{} , setSubPagesCount, setLoading , setNotFound , subPagesCount);
+
+    }
+
+
+  },[ location.search , role  ])
+
+  return <GeneralList 
+
+      width = {900}
+      data = { students } 
+      topTitles = {TopRows} 
+      loading = {loading} 
+      tableInformations = {tableInformations}
+      iconOptions = {filterIconOptions}
+      subPagesCount = {subPagesCount}
+      notFoundText = { notFoundText || `Bu ${role}ye Ait Bir Öğrenci Bulunmamaktadır`}
+      notFound = {notFound}
+      pathGenerator = {pathGenerator}
+
+     />
+
+}
+
+
+export const PersonelSubBranches = ( { id , setLoggedin , role , notFoundText , currentRole  } )=>{
     
   const [ subBranches, setSubBranches ] = useState([]);
   const [ notFound , setNotFound ] = useState(null);
@@ -668,6 +766,7 @@ export const PersonelSubBranches = ({ id , setLoggedin , role , notFoundText , c
       {desc:'Bayiler',Icon:<i    className="fas fa-code-branch"/>},
       {desc:'Raporlar',Icon:<i   className="fas fa-sticky-note"></i>},
       {desc:'Yetkiler',Icon: <i  className="fas fa-unlock"></i>},
+      {desc:'Öğrenciler', Icon:<i class="fas fa-user-graduate"></i>}
     ]
 
     const { role } = user ; 
@@ -679,7 +778,7 @@ export const PersonelSubBranches = ({ id , setLoggedin , role , notFoundText , c
 
     return PersonelOptions ; 
 
-  }
+   }
 
   const tableInformations = (item)=> {
       
@@ -705,7 +804,7 @@ export const PersonelSubBranches = ({ id , setLoggedin , role , notFoundText , c
     
   return <GeneralList 
    
-    width = {780}
+    width = {900}
     data = { subBranches } 
     topTitles = {TopRows} 
     loading = {loading} 

@@ -104,6 +104,4 @@ export const statusColors = (report) => {
 
     }
 
-
-
 }

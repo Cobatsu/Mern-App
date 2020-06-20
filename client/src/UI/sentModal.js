@@ -303,7 +303,7 @@ const SentModal = React.memo(({backStage, type, closeModal, deleteUser , formSen
           fontSize: 15,
           color: '#f73859',
           fontWeight: 'bolder'
-        }}>Lütfen Boş Alan Bırakmayınız ! </h2>
+        }}> Lütfen Alanlari Tam Doldurunuz ! </h2>
         <CloseButton onClick={closeModal}>KAPAT</CloseButton>
         </Modal>
 

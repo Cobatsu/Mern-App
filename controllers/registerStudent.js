@@ -279,7 +279,7 @@ module.exports.studentSearch = async (req,res,next)=>{
 
         },{})
 
-        var documentCount = await Student.countDocuments();    
+        var documentCount = await Student.countDocuments(finalSearchQuery);    
              
         var sortedData = await  Student.find(finalSearchQuery).populate('owner').sort({ 'StudentInfo.registerdate' : 'descending' }).skip(10*pageNumber).limit(10);
 
