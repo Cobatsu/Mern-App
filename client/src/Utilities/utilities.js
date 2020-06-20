@@ -8,7 +8,6 @@ justify-content:center;
 border-radius:4px;
 background:rgba(255, 93, 108, .08);
 color:#fa4659;
-border:1px solid #fa4659;
 font-size:11.6px;
 padding:6px;
 `
@@ -23,38 +22,7 @@ export const restrictWord = (word,limit)=>{
 
 }
 
-export const studentStatusColor = ( docState )=>{
 
-  
-    if( docState ) { 
-
-
-        return {
-
-            text: 'Belgeler Tamamlandı' , 
-            style:{
-                backgroundColor: 'rgba(121, 215, 15, .1)' , 
-                border:'1px solid #0c9463',
-                color:'#0c9463',
-             }
-
-       }
-
-    } else {
-
-        return {
-
-            text: 'Belgeler Eksik' , 
-            style:{
-               backgroundColor:'rgba(226, 151, 156, 0.1)' , 
-               border:'1px solid #e7305b',
-               color:'#e7305b',
-            }
-
-       }
-    }
-
-}
 
 export const studentListHelperPackage = ( id )=>{
     
@@ -251,7 +219,6 @@ export const statusColors = (report) => {
             text: 'Beklemede' , 
             style:{
                backgroundColor:'rgba(226, 151, 156, 0.1)' , 
-               border:'1px solid #e7305b',
                color:'#e7305b',
             }
 
@@ -265,7 +232,6 @@ export const statusColors = (report) => {
              text: 'Görüşme Yapıldı' , 
              style:{
                 backgroundColor: 'rgba(121, 215, 15, .1)' , 
-                border:'1px solid #0c9463',
                 color:'#0c9463',
              }
 
@@ -278,7 +244,6 @@ export const statusColors = (report) => {
             text: 'Form Gönderildi' , 
             style:{
                backgroundColor: 'rgba(249, 196, 154, .25)' , 
-               border:'1px solid #f37121',
                color:'#f37121',
             }
 
@@ -290,12 +255,43 @@ export const statusColors = (report) => {
 
             text: 'Ön Kayıt' , 
             style:{
-               backgroundColor: 'rgba(9, 108, 71, .1)' , 
-               border:'1px solid #096c47',
-               color:'#096c47',
+               backgroundColor: 'rgba(0, 168, 181, .1)' , 
+               color:'#00a8b5',
             }
 
        }
       
     }
+}
+
+
+export const studentStatusColor = ( docState )=>{
+
+  
+  if( docState ) { 
+
+
+      return {
+
+          text: 'Belgeler Tamamlandı' , 
+          style:{
+              backgroundColor: 'rgba(121, 215, 15, .1)' , 
+              color:'#0c9463',
+           }
+
+     }
+
+  } else {
+
+      return {
+
+          text: 'Belgeler Eksik' , 
+          style:{
+             backgroundColor:'rgba(226, 151, 156, 0.1)' , 
+             color:'#e7305b',
+          }
+
+     }
+  }
+
 }
