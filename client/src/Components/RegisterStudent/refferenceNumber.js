@@ -172,7 +172,7 @@ const RefferenceNumber= (props)=>{
 
         return  <div style={{display:'flex' , justifyContent:'center',alignItems:'center' , width:'100%' , height:'100%'}}>
             
-            <ErrorCapsule style={{background:'#42b883'}}> İletişim Formunuz Gönderilmiştir . En Kısa Sürede Size Dönüş Yapılacaktır  </ErrorCapsule>
+            <ErrorCapsule style={{background:'#42b883'}}> İletişim Formunuz Gönderilmiştir . En Kısa Sürede Size Geri Dönüş Yapılacaktır.  </ErrorCapsule>
 
         </div>
 
