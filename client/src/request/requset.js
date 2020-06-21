@@ -85,6 +85,7 @@ export const makeSpecificUserRequest = (Type,id,setLoading,setStudent)=>{
    }
   })
   .catch((err)=>{
+    
       console.log(err);
   });
 }
@@ -346,13 +347,18 @@ export const makeSpecificReportRequest = (Type,id,setLoading,setInitialReport,re
 
     const {specificReport} =res.data;
 
-    ReactDOM.unstable_batchedUpdates(()=>{
+    if(specificReport) { 
 
-      setInitialReport((prevState)=>({...prevState,...specificReport , owner:specificReport.owner || {} }));
-      reIsetInitalReport((prevState)=>({...prevState,...specificReport  , owner:specificReport.owner || {}  }));
-      setLoading(false);
+      ReactDOM.unstable_batchedUpdates(()=>{
 
-    })
+        setInitialReport((prevState)=>({...prevState,...specificReport , owner:specificReport.owner || {} }));
+        reIsetInitalReport((prevState)=>({...prevState,...specificReport  , owner:specificReport.owner || {}  }));
+        setLoading(false);
+  
+      })
+
+    }
+
 
   })
   .catch((res)=>{
