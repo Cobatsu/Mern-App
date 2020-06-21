@@ -51,13 +51,13 @@ justify-content:center;
 
 const ImageFields = [
 
-    "A government issued photo identification" , 
+    "Kimlik Belgesi" , 
 
-    "Rosedale English Proficiency Test Results" ,
+    "Rosedale İngilizce Yeterlilik Testi" ,
 
-    "English Proficiency Test Results",
+    "İngilizce Yeterlilik Testi Sonuçları",
 
-    "A copy of translated transcripts ",
+    "Transkript Çevirisi",
 
 ]
 
@@ -137,7 +137,7 @@ const RequiredDocs = ()=>{
 
         return  <div style={{display:'flex' , justifyContent:'center',alignItems:'center' , width:'100%' , height:'100%'}}>
             
-            <ErrorCapsule style={{background:'#42b883'}}> Belgeleriniz Gönderilmiştir .  </ErrorCapsule>
+            <ErrorCapsule style={{background:'#42b883'}}> Belgeleriniz Gönderilmiştir . Bu Bağlantı Tek Seferliktir . Belgelerinizi Tekrar Gönderemeyeceksiniz </ErrorCapsule>
 
         </div>
 
@@ -147,7 +147,8 @@ const RequiredDocs = ()=>{
             
             <ErrorCapsule > 
 
-                Hatalı Token ,    
+                Hatalı Token ,
+
                 Bu Bağlantıyı Yalnızca Bir Kez Kullanabilirsiniz !  
                 
             </ErrorCapsule>
@@ -160,7 +161,7 @@ const RequiredDocs = ()=>{
         
         <Item onSubmit={submitImages}>
             
-        <h1 style={{textAlign:'center' , fontSize:25 , marginBottom:30}}>REQUIRED DOCUMENTS</h1>
+        <h1 style={{textAlign:'center' , fontSize:25 , marginBottom:30}}> GEREKLİ BELGELER</h1>
 
                 <div className='Fields' style={{minHeight:'220px'}}>
                            

@@ -25,6 +25,12 @@ export const restrictWord = (word,limit)=>{
 
 }
 
+export const checkPhoneNumber = (input)=>{
+
+    return input.split('').slice(3).filter((item) => parseInt(item) || item === '0' ).length < 10 ; 
+
+}
+
 
 export const studentListHelperPackage = ( id )=>{
     
@@ -155,7 +161,7 @@ export const personelListHelperPackage = ( currentUser ) => {
         '',
     ]
 
-    const filterIconOptions = ( user )=>{
+    const filterIconOptions = ( user ) => {
 
         var  PersonelOptions = [
           {desc:'Genel Bilgiler',Icon:<i className="fas fa-user-friends"></i>},
@@ -167,9 +173,23 @@ export const personelListHelperPackage = ( currentUser ) => {
     
         const { role } = user ; 
         
-        if( currentUser.role !== 'Admin' &&  currentUser.role ) PersonelOptions =  PersonelOptions.filter(( { desc } )=> desc !== 'Yetkiler' ) ;
+        if( currentUser.role !== 'Admin' ) {  
+            
+          PersonelOptions =  PersonelOptions.filter(( { desc } )=> desc !== 'Yetkiler' ) ;
+
+        } 
     
-        if( role !== "Temsilci" ) PersonelOptions =  PersonelOptions.filter(( { desc } )=> desc !== 'Bayiler' ) ;
+        if( role !== "Temsilci" ) { 
+
+          PersonelOptions =  PersonelOptions.filter(( { desc } )=> desc !== 'Bayiler' ) ;
+
+        } 
+        
+        if ( role === "Admin" ) {
+
+            PersonelOptions =  PersonelOptions.filter(( { desc } )=> desc !== 'Raporlar' &&  desc !== 'Öğrenciler' ) ;
+
+        }
     
         return PersonelOptions ; 
         

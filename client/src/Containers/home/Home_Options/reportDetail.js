@@ -14,7 +14,8 @@ import {Checkbox,TextField,Tab,Tabs,Paper,InputLabel,MenuItem,Stepper,StepLabel,
 import {makeUpdateReportRequest,makeDeleteReportRequest,makeSpecificReportRequest , makeSendFormRequest}  from '../../../request/requset'
 import {Report} from './addReport';
 import NotFoundPage from '../../../Components/NotFoundPage'
-import {restrictWord} from '../../../Utilities/utilities'
+import {restrictWord , checkPhoneNumber} from '../../../Utilities/utilities'
+import validator from 'email-validator'
 
 const MainWrapper = styled.form`
 display:flex;
@@ -95,7 +96,7 @@ const initialGeneralReportState={
     schoolName:'',
     relatedPersonName:'',
     relatedPersonPhoneNumber: '',
-    meetingDate:new Date(Date(Date.now())),
+    meetingDate:new Date(),
     relatedPersonEmail:'',
     meetingDetails:'',
     region:'',
@@ -165,6 +166,8 @@ const ReportDetail  = ({match,...rest })=>{
     const  [deleted , setDeleted ] = useState(false);
     const  [notFoundPage , setNotFoundPage ] = useState(false);
 
+    const  [isSubmitted , setIsSubmitted ] = useState(false);
+
     const  [ sendForm , setSendForm ] = useState(false);
 
     const  [ formSent , setFormSent ] = useState({text:'REQUEST' , payload:null});
@@ -179,7 +182,6 @@ const ReportDetail  = ({match,...rest })=>{
         const {id} = match.params;
         makeSpecificReportRequest('get',id,setLoading,setInitalReportState,reIsetInitalReportState,setNotFoundPage,initialGeneralReportState);
     },[])
-
 
     const sendFormHandler = (requestType) => event =>{
 
@@ -205,7 +207,7 @@ const ReportDetail  = ({match,...rest })=>{
 
     }
 
-    const SubmitOnChange =Type=>event=>{
+    const SubmitOnChange = Type => event => {
 
          const prevStateFirst = {...initalReportStates}
 
@@ -263,33 +265,46 @@ const ReportDetail  = ({match,...rest })=>{
       }
     }
 
+   
     const submitUpdatedReport = (e)=>{
 
         e.preventDefault();
-        setbackStageOpen(true)
 
+        setbackStageOpen(true)
+        setIsSubmitted(true);
+       
+        let result = checkPhoneNumber(initalReportStates['relatedPersonPhoneNumber']) ; 
+
+        let isEmailCorrect = validator.validate(initalReportStates['relatedPersonEmail']) ; 
+    
+        if ( result || !isEmailCorrect ) { 
+
+          return setEmptyWarning(true);
+
+        }
 
         for (const key in initalReportStates) {
 
             const element = initalReportStates[key];
 
-            if(initalReportStates.reportType === 'schoolReport')
-            {
+            if(initalReportStates.reportType === 'schoolReport') {
 
-                if(!element && key!=='meetingDetails' ){
+                if(!element && typeof initalReportStates[key] === 'string' ) {
+
                     return setEmptyWarning(true);
-                }
-                else{
 
-                    if(key !== 'meetingDate') {
-                        if(initalReportStates[key]) initalReportStates[key] = initalReportStates[key].trim(); 
-                    }
+                }  else {
+
+                    if(key !== 'meetingDate' &&  typeof initalReportStates[key] === 'string' ) {
+                        
+                        initalReportStates[key] = initalReportStates[key].trim(); 
+
+                    } 
 
                 }
 
             }
-            else
-            {
+            else {
                 
                 if( !element && key !=='schoolName' && key!=='meetingDetails' && key!=='townShip' && typeof initalReportStates[key] === 'string') {
                 
@@ -308,6 +323,7 @@ const ReportDetail  = ({match,...rest })=>{
             }
         }
 
+        setIsSubmitted(false);
 
         makeUpdateReportRequest('patch', match.params.id ,initalReportStates,context.isLoggedinf,setInitalReportState,reIsetInitalReportState,setUpdatedModal,setDisable);
     }
@@ -337,16 +353,21 @@ const ReportDetail  = ({match,...rest })=>{
                 <Modal backStage={deleted}       closeModal={closeModal_4} type='DELETED_REPORT'/>
                 <Modal backStage={sendForm}  formSent={formSent}     closeModal={closeModal_5} type='SEND_STUDENT_FORM' sendForm = {sendFormHandler}  />
                 
-                <Stepper style={{width:'90%'}} alternativeLabel activeStep={activeStep}>
-                    
-                            {steps.map((label) => ( 
+                {
+                    initalReportStates.reportType === 'studentReport' &&
 
-                            <Step key={label}>
-                                <StepLabel>{label}</StepLabel>
-                            </Step>
+                        <Stepper style={{width:'90%'}} alternativeLabel activeStep={activeStep}>
+                            
+                                    {steps.map((label) => ( 
 
-                            ))}
-                </Stepper>
+                                    <Step key={label}>
+                                        <StepLabel>{label}</StepLabel>
+                                    </Step>
+
+                                    ))}
+                        </Stepper> 
+
+                }
 
                <Form onSubmit={submitUpdatedReport}>
                    
@@ -370,7 +391,7 @@ const ReportDetail  = ({match,...rest })=>{
                          
 
                         {
-                           initalReportStates.isContacted && !initalReportStates.isFormSent &&  ( initalReportStates.owner._id === user._id ) ?  <Icon style={{background:'#e16262'}} onClick= {()=>{ setSendForm(true); setbackStageOpen(true) }}> Ön Kayıt Formu Gönder <i class="fas fa-file-signature"></i> </Icon> : null
+                           initalReportStates.isContacted &&  initalReportStates.reportType === 'studentReport' && !initalReportStates.isFormSent &&  ( initalReportStates.owner._id === user._id ) ?  <Icon style={{background:'#e16262'}} onClick= {()=>{ setSendForm(true); setbackStageOpen(true) }}> Ön Kayıt Formu Gönder <i class="fas fa-file-signature"></i> </Icon> : null
                         }
 
                         {
@@ -383,7 +404,21 @@ const ReportDetail  = ({match,...rest })=>{
 
                    </InnerItems>
 
-                    <Report State={initalReportStates} isContactStudent = { !initalReportStates['townShip'] ? true : false  } townships={townships} SubmitOnChange={SubmitOnChange} disable={disable} setDate={setDate}  type='detail' reportType={initalReportStates.reportType}/>
+                    <Report  
+                    
+                            State={initalReportStates} 
+                            isContactStudent = { !initalReportStates['townShip'] ? true : false  } 
+                            townships={townships} 
+                            SubmitOnChange={SubmitOnChange} 
+                            disable={disable} 
+                            setDate={setDate}  
+                            type='detail' 
+                            reportType={initalReportStates.reportType}
+                            isSubmitted={isSubmitted}
+                            isPhoneNumberFilled={checkPhoneNumber( initalReportStates['relatedPersonPhoneNumber']) }
+                            isEmailCorrect = {validator.validate( initalReportStates['relatedPersonEmail']) }
+                    
+                    />
 
                     
 

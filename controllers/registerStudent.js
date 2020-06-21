@@ -11,9 +11,6 @@ module.exports.add = async (req,res,next)=>{
       const { token } = req.body ; 
       const tokenData  = await jwt.verify( token , process.env.SECRET_KEY ) ; 
 
-
-        console.log(tokenData);
-
        const newStudent=new Student({StudentInfo:{
          information:{
              name:req.body.name,
@@ -360,7 +357,7 @@ module.exports.sendForm = async ( req , res , next )=>{
 
             if (error) {
 
-              console.log(error);
+                res.json({result:'Error'});
 
             } else {
       

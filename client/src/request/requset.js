@@ -586,19 +586,16 @@ export const makeSendFormRequest = ( Type , data , setSentForm , setFormSent )=>
        
     const { result , tokenLink } = response.data ; 
 
-
-    if(result === 'Success') {
-
-         setFormSent({text:data.requestType , payload:tokenLink}) ; 
-
-    }
-
+    setFormSent( {result:result , text:data.requestType , payload:tokenLink} ) ; 
+    
     setSentForm(true);
 
   })
   .catch((error)=>{
  
-    console.log(error);
+    setFormSent( {result:'Error' }) ; 
+
+    setSentForm(true);
     
   })
 

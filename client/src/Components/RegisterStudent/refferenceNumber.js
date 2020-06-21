@@ -5,8 +5,8 @@ import Circle from '../../UI/Circle'
 import NumberFormat from 'react-number-format'
 import {Regions} from '../../Regions/regions'
 import axios from 'axios'
-
-
+import validator from 'email-validator'
+import {checkPhoneNumber} from '../../Utilities/utilities'
 
 const ErrorCapsule = styled.div`
 
@@ -18,7 +18,6 @@ background:#e00543;
 color:white;
 
 `
-
 const GeneralWrapper  = styled.div`
 display:flex;
 align-items:center;
@@ -84,9 +83,6 @@ border-radius:15px 0 15px 0  ;
 }
 `
 
-
-
-
 const initialState = {
 
     name:'',
@@ -100,8 +96,6 @@ const initialState = {
 
 const RefferenceNumber= (props)=>{
 
-    
-    
     const [ contactForm , setContactForm ] = useState(initialState);
     const [ responseResult  , setResponseResult ] = useState('');
     const [ loading , setLoading ] = useState(false);
@@ -139,10 +133,9 @@ const RefferenceNumber= (props)=>{
 
     }
 
-    let isPhoneNumberFilled = contactForm['phoneNumber'].split('')
-    .slice(3)
-    .filter((item) => parseInt(item) || item === '0' ).length < 10 ; 
+    let isPhoneNumberFilled = checkPhoneNumber( contactForm['phoneNumber'] )
 
+    let isEmailCorrect = validator.validate( contactForm['e_mail'] );
 
     let result = Object.keys(contactForm).every((key) => {
 
@@ -150,9 +143,13 @@ const RefferenceNumber= (props)=>{
 
         return false ; 
 
+      } else if ( key === 'e_mail' && !isEmailCorrect  ) {
+
+        return false ; 
+
       } else {
 
-        return contactForm[key] ; 
+        return contactForm[key] ;  
 
       }
 
@@ -166,7 +163,6 @@ const RefferenceNumber= (props)=>{
         setContactForm((prevState)=>({...prevState , [type]:value}));
 
     }
-
 
     if( responseResult  === 'Success' ) {
 
@@ -182,13 +178,15 @@ const RefferenceNumber= (props)=>{
             
             <ErrorCapsule > 
 
-               Hata Oluştu , Formunuz Gönderilmedi !  
+               Bir Hata Oluştu , Formunuz Gönderilmedi !  
                 
             </ErrorCapsule>
 
         </div>
 
     }
+
+
 
     return <GeneralWrapper>
 

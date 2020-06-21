@@ -19,6 +19,8 @@ import {Regions}  from '../../../Regions/regions'
 import {makePermissionRequest} from '../../../request/requset'
 import Circle from '../../../UI/Circle';
 import  {useViewport} from '../../home/navs/customHooks/viewPortHook'
+import NumberFormat from 'react-number-format'
+import {checkPhoneNumber} from '../../../Utilities/utilities'
 
 const MainWrapper = styled.form`
 display:flex;
@@ -220,7 +222,7 @@ const initialState = {
     password:'',
     gender:'',
     mailAddress:'',
-    phoneNumber:'',
+    phoneNumber:'+90 (___) ___-____',
     region:'',
     township:'',
     responsibleCities:[],
@@ -381,9 +383,12 @@ const AddPerson  = React.memo((props)=>{
 
       let mainState = { ...userInformations , permissions }  ;
 
-      const { relatedAgency , role } = userInformations;
+      let result =  checkPhoneNumber(userInformations['phoneNumber'])
+
+      if(result) {  return setwarningPopUp(true); }
+
+      const { role } = userInformations;
       
-       
       for (const key in userInformations) 
       {
 
@@ -391,26 +396,31 @@ const AddPerson  = React.memo((props)=>{
 
           const element = userInformations[key];
           
-          if(role === 'Bayi' && currentUser.role === 'Temsilci')
-          {  
-             if( ( !element && key !== 'relatedAgency' )  ||  userInformations['responsibleCities'].length <= 0)
-             {
+          if(role === 'Bayi' && currentUser.role === 'Temsilci') {
+
+             if( ( !element && key !== 'relatedAgency' )  ||  userInformations['responsibleCities'].length <= 0) {
+
                return setwarningPopUp(true);
-             }  
-          }
-          else if (role === 'Admin')
-          {
-             if(!element && key !== 'region' && key !=='township' && key !== 'relatedAgency')
-             {
-              return setwarningPopUp(true);
+
              }
-          }
-          else
-          {
-             if(!element && key !=='township' && key !== 'relatedAgency')
-             {
+
+          } else if (role === 'Admin') {
+
+
+             if(!element && key !== 'region' && key !=='township' && key !== 'relatedAgency') {
+
+              return setwarningPopUp(true);
+
+             }
+
+          } else {
+
+             if(!element && key !=='township' && key !== 'relatedAgency') {
+
                return setwarningPopUp(true);
+
              }  
+             
           }
            
         }
@@ -764,7 +774,7 @@ export const UserInputs = React.memo(({userInformations,townships,textChangeHand
             
             item[0] === 'phoneNumber' 
             ?   
-            <TextField   InputLabelProps={{style:{color:'black',zIndex:1}}}  inputProps={{style:{padding:10,background:disabled ?  '#eeeeee' : 'white',color:'#333'}}}   value={userInformations[item[0]]} disabled={disabled}  onChange={textChangeHandler(item[0])}  id="outlined-basic" label={item[1]}  style={{width:'100%'}} />
+            <NumberFormat   value={userInformations[item[0]]}  InputLabelProps={{style:{color:'black',zIndex:1}}}   disabled={disabled}  onChange = {textChangeHandler(item[0])}   customInput={TextField} format="+90 (###) ###-####" label={item[1]} style={{width:'100%'}} inputProps={{style:{padding:10,background:disabled ?  '#eeeeee' : 'white', color:'#333'}}}   allowEmptyFormatting mask="_"/>
             :
             item[0] !== 'password' &&  item[0] !== 'responsibleCities' ? 
             <TextField    value={userInformations[item[0]]} disabled={disabled}  onChange={textChangeHandler(item[0])}  id="outlined-basic" InputLabelProps={{style:{color:'black',zIndex:1}}}  label={item[1]} inputProps={{style:{padding:10,background:disabled ?  '#eeeeee' : 'white',color:'#333'}}} style={{width:'100%'}}   /> 
