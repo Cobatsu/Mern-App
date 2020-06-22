@@ -28,7 +28,7 @@ class  Home extends React.Component {
             
              <Switch>
               
-              <Route 
+              {/* <Route 
                 path = {'/home/ön_kayıt'}  
                 exact  
                 render = { (props)=> 
@@ -36,7 +36,7 @@ class  Home extends React.Component {
                         <Student {...props}/>
                      </ErrorBoundary> }
               
-              />
+              /> */}
 
               <Route 
                 path={'/home'}  
