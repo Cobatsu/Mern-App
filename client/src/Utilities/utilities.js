@@ -27,7 +27,8 @@ export const restrictWord = (word,limit)=>{
 
 export const checkPhoneNumber = (input)=>{
 
-    return input.split('').slice(3).filter((item) => parseInt(item) || item === '0' ).length < 10 ; 
+
+    return input.split('').filter((item) => parseInt(item) || item === '0' ).length < 10 ; 
 
 }
 
@@ -95,7 +96,7 @@ export const studentListHelperPackage = ( id )=>{
 export const reportListHelperPackage = (id) => {
 
     const TopRows = [
-        'Görüşülen Kişi',
+        'Kişi / Okul',
         'Telefon Numarası',
         'Görüşme Tipi',
         'Görüşme Tarihi',
@@ -123,14 +124,16 @@ export const reportListHelperPackage = (id) => {
         if(item.owner) {
           var fullName = item.owner.firstName + ' ' + item.owner.lastName ; 
         }
+
+        console.log(item);
     
         return [
-          restrictWord( item.relatedPersonName , 13 ) , 
+          restrictWord( item.reportType === 'schoolReport' ? item.schoolName : item.relatedPersonName , 16 ) , 
           item.relatedPersonPhoneNumber,
           item.reportType === 'schoolReport' ? 'Okul Görüşmesi' : 'Öğrenci Görüşmesi'  ,
           item.meetingDate,
           <Capsule  style={ {...statusColors(item).style}} >  { statusColors(item).text } </Capsule>,
-          !item.isContacted ? '—' : item.owner._id == id ? <Capsule> { restrictWord(fullName,13) } </Capsule> : restrictWord(fullName,13)
+          !item.isContacted ? '—' : item.owner._id == id ? <Capsule> { restrictWord(fullName,15) } </Capsule> : restrictWord(fullName,13)
         ] 
     
       } 

@@ -99,7 +99,7 @@ align-items:center;
 const initialReportStateFirst={
   schoolName:'',
   relatedPersonName:'',
-  relatedPersonPhoneNumber:'+90 (___) ___-____',
+  relatedPersonPhoneNumber:'(___) ___-____',
   meetingDate:new Date(),
   relatedPersonEmail:'',
   meetingDetails:'',
@@ -279,7 +279,7 @@ export const Report = ( { SubmitOnChange,State,setBackStage,setDate,disable,type
                   
                 {reportType === 'schoolReport' ? <TextField error={ isSubmitted  && !State['schoolName'] }   value={State['schoolName']}   InputLabelProps={{style:{zIndex:1}}}  disabled={disable}   onChange = {SubmitOnChange('schoolName')}   label='Okul İsmi'  style={{width:'85%',padding:'10px 0',marginBottom:5}}  inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}} /> : null }
                 <TextField     error={ isSubmitted  && !State['relatedPersonName'] } value={State['relatedPersonName']}   InputLabelProps={{style:{zIndex:1}}}  disabled={disable}   onChange = {SubmitOnChange('relatedPersonName')}   label='Görüşülen Kişinin İsmi'  style={{width:'85%',padding:'10px 0',marginBottom:5}} inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}   />
-                <NumberFormat  error={  isSubmitted && isPhoneNumberFilled  }   value={State['relatedPersonPhoneNumber']}  InputLabelProps={{style:{zIndex:1}}}  disabled={disable}  onChange = {SubmitOnChange('relatedPersonPhoneNumber')}   customInput={TextField} format="+90 (###) ###-####" label='Görüşülen Kişinin Telefon Numarası' style={{width:'85%',padding:'10px 0'}} inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}   allowEmptyFormatting mask="_"/>
+                <NumberFormat  error={  isSubmitted && isPhoneNumberFilled  }   value={State['relatedPersonPhoneNumber']}  InputLabelProps={{style:{zIndex:1}}}  disabled={disable}  onChange = {SubmitOnChange('relatedPersonPhoneNumber')}   customInput={TextField} format="(###) ###-####" label='Görüşülen Kişinin Telefon Numarası' style={{width:'85%',padding:'10px 0'}} inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}   allowEmptyFormatting mask="_"/>
                 <TextField     error={  isSubmitted && !isEmailCorrect }   value={State['relatedPersonEmail']}   InputLabelProps={{style:{zIndex:1}}}  disabled={disable}   onChange = {SubmitOnChange('relatedPersonEmail')}   label='Görüşülen Kişinin Mail Adresi'  style={{width:'85%',padding:'10px 0'}} inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}   />
 
                         <TextField error={  isSubmitted && !State['region']  }   InputLabelProps={{style:{zIndex:1}}}  disabled={disable}    style={{width:'85%',padding:'10px 0'}} inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}  onChange={SubmitOnChange('region')}  id="select" label="Bölge" value={State['region']}  select>

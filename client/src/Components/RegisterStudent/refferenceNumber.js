@@ -88,7 +88,7 @@ const initialState = {
     name:'',
     surname:'',
     e_mail:'',
-    phoneNumber:'+90 (___) ___-____',
+    phoneNumber:'(___) ___-____',
     region:'',
 
 }
@@ -134,6 +134,7 @@ const RefferenceNumber= (props)=>{
     }
 
     let isPhoneNumberFilled = checkPhoneNumber( contactForm['phoneNumber'] )
+    
 
     let isEmailCorrect = validator.validate( contactForm['e_mail'] );
 
@@ -154,7 +155,6 @@ const RefferenceNumber= (props)=>{
       }
 
     }) ; 
-
 
     const OnchangeHandler = type => event => {
          
@@ -207,7 +207,7 @@ const RefferenceNumber= (props)=>{
 
                            <TextField style={{width:'100%'}} onChange={OnchangeHandler('e_mail')}  label='E-posta Adresi / E-mail Address'  />
 
-                           <NumberFormat style={{width:'100%'}}  onChange={OnchangeHandler('phoneNumber')}   customInput={TextField} format="+90 (###) ###-####" label='Telefon Numarası / Phone Number' allowEmptyFormatting mask="_"/>
+                           <NumberFormat style={{width:'100%'}}  onChange={OnchangeHandler('phoneNumber')}   customInput={TextField} format="(###) ###-####" label='Telefon Numarası / Phone Number' allowEmptyFormatting mask="_"/>
 
                             <TextField style={{width:'100%'}} value={contactForm['region']}   onChange={OnchangeHandler('region')}  id="select" label="Şehir / City"   select>
 

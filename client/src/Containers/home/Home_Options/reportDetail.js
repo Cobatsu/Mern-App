@@ -177,7 +177,9 @@ const ReportDetail  = ({match,...rest })=>{
     const activeStep = useMemo( determineStep(initalReportStates) ,[initalReportStates.owner])
 
     const steps = ['İletişime Geçildi' , 'Öğrenci Formu Gönderildi' , 'Öğrenci Formu Dolduruldu']
-     
+    
+    console.log(initalReportStates)
+
     useEffect(()=>{
         const {id} = match.params;
         makeSpecificReportRequest('get',id,setLoading,setInitalReportState,reIsetInitalReportState,setNotFoundPage,initialGeneralReportState);
@@ -388,11 +390,11 @@ const ReportDetail  = ({match,...rest })=>{
                         }
 
                         {
-                           user.permissions.Rapor_Bilgileri.includes(PermissionsNumbers.UPDATE) &&  ( !initalReportStates.isContacted || initalReportStates.owner._id === user._id ) && user.role !== 'Admin'   ?  <Icon onClick= { ()=>setDisable(false)}>Düzenle <i className="fas fa-edit"/></Icon> : null
+                           user.permissions.Rapor_Bilgileri.includes(PermissionsNumbers.UPDATE) ?  <Icon onClick= { ()=>setDisable(false)}>Düzenle <i className="fas fa-edit"/></Icon> : null
                         }
                         
                         {
-                           user.permissions.Rapor_Bilgileri.includes(PermissionsNumbers.REMOVE) &&  ( initalReportStates.owner._id === user._id || user.role === 'Admin' ) ?    <Icon style={{background:'#d9455f'}} onClick={()=>{setDeleteModal(true); setbackStageOpen(true)}} > Raporu  Sil <i className="fas fa-trash-alt"></i></Icon> : null
+                           user.permissions.Rapor_Bilgileri.includes(PermissionsNumbers.REMOVE)  ?    <Icon style={{background:'#d9455f'}} onClick={()=>{setDeleteModal(true); setbackStageOpen(true)}} > Raporu  Sil <i className="fas fa-trash-alt"></i></Icon> : null
                         }
 
                    </InnerItems>

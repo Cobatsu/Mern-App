@@ -40,6 +40,14 @@ app.use(function(req, res, next) { //this is always going to be called
   next();
 }); 
 
+app.use((req,res,next)=>{
+
+  console.log('asd')
+
+  next()
+
+})
+
 routes(app);
 
 

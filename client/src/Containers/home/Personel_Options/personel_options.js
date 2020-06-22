@@ -152,6 +152,45 @@ padding:6px;
 
 
 //---------------------------------
+const setUserMenuItems = (userInformations,user)=>{
+
+  return ()=>{
+
+      switch(userInformations.role) {
+
+            case 'Admin':
+
+            return Admin();
+
+            break;
+
+            case 'Temsilci':
+              
+              return Temsilci();
+
+            break;
+
+            case 'Bayi':
+              
+              if(user.role === 'Temsilci') {
+                return Bayi().filter(( menuItem , index ) => menuItem.desc !== 'Yetkiler'  );
+              }
+              else {
+                return Bayi();
+              }
+              
+            break;
+
+            default : 
+                return [];
+            break;
+            
+      }
+
+  }
+
+}
+
 
 export const PermissionsNumbers = {
   REMOVE: 1,
@@ -168,7 +207,7 @@ const  initialUserInformations = {
   userName:'',
   password:'',
   gender:'',
-  phoneNumber:'',
+  phoneNumber:'(___) ___-____',
   region:'',
   mailAddress:'',
   township:'',
@@ -200,42 +239,9 @@ const General_User_Info = ({match,...rest})=>{
     const [relatedAgencyLoading , setrelatedAgencyLoading]= useState(false);
     const [relatedAgency , setRelatedAgency] = useState({});
    
-    
     const { user , isLoggedinf } =  useContext(Context);
 
-    const UserMenuLinks = useMemo(()=>{
-
-            switch(userInformations.role) {
-
-              case 'Admin':
-
-              return Admin();
-
-              break;
-
-              case 'Temsilci':
-                 
-                return Temsilci();
-
-              break;
-
-              case 'Bayi':
-                 
-                if(user.role === 'Temsilci') {
-                   return Bayi().filter(( menuItem , index ) => menuItem.desc !== 'Yetkiler'  );
-                }
-                else {
-                   return Bayi();
-                }
-                
-              break;
-
-              default : 
-                  return [];
-              break;
-            }
-
-    },[userInformations]);
+    const UserMenuLinks = useMemo( setUserMenuItems(userInformations,user) , [userInformations] );
 
                   
         const closeModal_1 = useCallback(event=>{
@@ -403,7 +409,7 @@ const General_User_Info = ({match,...rest})=>{
     }
    
     
-    if( user.role !== 'Admin' && subMenuIndex === 'yetkiler' ) {
+    if( user.role !== 'Admin' &&  ( subMenuIndex === 'yetkiler' || match.params.id == user._id ) ) {
             
        throw new Error( ' You  are not allowed to see the page ' )
  

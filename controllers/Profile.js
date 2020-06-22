@@ -246,7 +246,7 @@ module.exports.updateReport = async ( req,res,next)=>{
     
     try {
 
-        if( body.meetingDetails ) {
+        if( body.meetingDetails && Object.values(body['owner']).length ===  0  ) {
 
             body['isContacted'] = true ; 
             body['owner'] = user._id ; 
@@ -257,21 +257,25 @@ module.exports.updateReport = async ( req,res,next)=>{
 
             } 
 
-        } else {
-
-            body['isContacted'] = false ; 
-
-        }
+        } 
 
         await Reports.updateOne({_id:id},{$set:{...body }});
-        
-        const updatedData = await  Reports.findOne({_id:id}).populate('owner').select('-__v -_id');
+
+        if ( Object.values(body['owner']).length > 0  ) { 
+
+            var updatedData = await  Reports.findOne({_id:id}).populate('owner').select('-__v -_id');
+
+        } else {
+
+            var updatedData = await  Reports.findOne({_id:id}).select('-__v -_id');
+
+        }
+            
 
         res.json({updatedData});
 
     } catch (error) {
 
-        console.log(error)
         res.json({error});
 
     }

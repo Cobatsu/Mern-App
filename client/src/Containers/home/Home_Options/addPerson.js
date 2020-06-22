@@ -222,7 +222,7 @@ const initialState = {
     password:'',
     gender:'',
     mailAddress:'',
-    phoneNumber:'+90 (___) ___-____',
+    phoneNumber:'(___) ___-____',
     region:'',
     township:'',
     responsibleCities:[],
@@ -777,7 +777,7 @@ export const UserInputs = React.memo(({userInformations,townships,textChangeHand
             
             item[0] === 'phoneNumber' 
             ?   
-            <NumberFormat   value={userInformations[item[0]]}  InputLabelProps={{style:{color:'black',zIndex:1}}}   disabled={disabled}  onChange = {textChangeHandler(item[0])}   customInput={TextField} format="+90 (###) ###-####" label={item[1]} style={{width:'100%'}} inputProps={{style:{padding:10,background:disabled ?  '#eeeeee' : 'white', color:'#333'}}}   allowEmptyFormatting mask="_"/>
+            <NumberFormat   value={userInformations[item[0]]}  InputLabelProps={{style:{color:'black',zIndex:1}}}   disabled={disabled}  onChange = {textChangeHandler(item[0])}   customInput={TextField} format="(###) ###-####" label={item[1]} style={{width:'100%'}} inputProps={{style:{padding:10,background:disabled ?  '#eeeeee' : 'white', color:'#333'}}}   allowEmptyFormatting mask="_"/>
             :
             item[0] !== 'password' &&  item[0] !== 'responsibleCities' ? 
             <TextField    value={userInformations[item[0]]} disabled={disabled}  onChange={textChangeHandler(item[0])}  id="outlined-basic" InputLabelProps={{style:{color:'black',zIndex:1}}}  label={item[1]} inputProps={{style:{padding:10,background:disabled ?  '#eeeeee' : 'white',color:'#333'}}} style={{width:'100%'}}   /> 

@@ -41,10 +41,11 @@ class  Home extends React.Component {
               <Route 
                 path={'/home'}  
                 exact  
-                render = { (props)=>  
+                render = { (props)=>(
                    <ErrorBoundary {...props}> 
                         <MainPage {...props} />
-                   </ErrorBoundary>}
+                   </ErrorBoundary>
+                )}
               />
 
               <Route 
