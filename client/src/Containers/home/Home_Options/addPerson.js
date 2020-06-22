@@ -434,6 +434,12 @@ const AddPerson  = React.memo((props)=>{
     const City = Regions.find((item)=> item['il'] === userInformations.region);  //just get first one matched
     var townships = City.ilceleri;
   }
+
+  if( User.role === 'Bayi' ) {
+
+    throw new Error( ' You  are not allowed to see the page ' )
+
+  }
   
   
   return <MainWrapper onSubmit={submitHandler}> 

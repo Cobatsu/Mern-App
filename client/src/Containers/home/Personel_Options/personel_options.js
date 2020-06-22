@@ -403,7 +403,7 @@ const General_User_Info = ({match,...rest})=>{
     }
    
     
-    if( user.role !== 'Admin' && subMenuIndex === 'yetkiler') {
+    if( user.role !== 'Admin' && subMenuIndex === 'yetkiler' ) {
             
        throw new Error( ' You  are not allowed to see the page ' )
  

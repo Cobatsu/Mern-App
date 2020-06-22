@@ -32,7 +32,7 @@ class  Home extends React.Component {
                 path = {'/home/ön_kayıt'}  
                 exact  
                 render = { (props)=> 
-                     <ErrorBoundary> 
+                     <ErrorBoundary {...props}> 
                         <Student {...props}/>
                      </ErrorBoundary> }
               
@@ -42,7 +42,7 @@ class  Home extends React.Component {
                 path={'/home'}  
                 exact  
                 render = { (props)=>  
-                   <ErrorBoundary> 
+                   <ErrorBoundary {...props}> 
                         <MainPage {...props} />
                    </ErrorBoundary>}
               />
@@ -52,7 +52,7 @@ class  Home extends React.Component {
                 exact   
                 render = {(props)=> 
                     
-                    <ErrorBoundary>
+                    <ErrorBoundary {...props}>
                       <PersonelList  isOnlySubBranch={false} {...props}  />
                     </ErrorBoundary>
 
@@ -64,7 +64,7 @@ class  Home extends React.Component {
                 exact 
                 render = {(props)=> 
                     
-                  <ErrorBoundary>
+                  <ErrorBoundary {...props}>
                     <PersonelList  isOnlySubBranch={true} {...props}  />
                   </ErrorBoundary>
 
@@ -76,7 +76,7 @@ class  Home extends React.Component {
                 exact 
                 render = { (props)=> 
                 
-                <ErrorBoundary>    
+                <ErrorBoundary {...props}>    
                     <AddPerson {...props} />
                 </ErrorBoundary>
                 
@@ -88,7 +88,7 @@ class  Home extends React.Component {
                 exact 
                 render={(props)=>
 
-                  <ErrorBoundary>    
+                  <ErrorBoundary {...props}>    
                     <AddPerson {...props} />
                   </ErrorBoundary> 
                 
@@ -99,7 +99,7 @@ class  Home extends React.Component {
                 exact  
                 render={(props)=>
                 
-                  <ErrorBoundary>  
+                  <ErrorBoundary {...props}>  
                     < Personel_options {...props} />
                   </ErrorBoundary>
 
@@ -111,7 +111,7 @@ class  Home extends React.Component {
                 exact 
                 render={(props)=>
                 
-                  <ErrorBoundary>  
+                  <ErrorBoundary {...props}>  
                     < Profile {...props} />
                   </ErrorBoundary>
 
@@ -122,8 +122,10 @@ class  Home extends React.Component {
                 exact 
                 render={(props)=>
                 
-                  <ErrorBoundary>  
+                  <ErrorBoundary {...props}>  
+
                     < AddReport {...props} />
+
                   </ErrorBoundary>
 
                 }  />
@@ -133,7 +135,7 @@ class  Home extends React.Component {
                 exact 
                 render={(props)=>
                 
-                  <ErrorBoundary>  
+                  <ErrorBoundary {...props}>  
                     < MyReports {...props} />
                   </ErrorBoundary>
 
@@ -144,7 +146,7 @@ class  Home extends React.Component {
                 exact  
                 render={(props)=>
                 
-                  <ErrorBoundary>  
+                  <ErrorBoundary {...props}>  
                     < ReportDetail {...props} />
                   </ErrorBoundary>
 

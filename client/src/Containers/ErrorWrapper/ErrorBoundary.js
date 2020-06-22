@@ -28,14 +28,23 @@ class ErrorBoundary extends React.Component {
 
     static getDerivedStateFromError(error) {
                 
-        return { hasError: true , errorMessage:error.message};
+        return { hasError: true , errorMessage:error.message };
 
     }
 
-    componentDidUpdate() {
-           
+    componentDidUpdate( prevProps ) {
+          
+         const { location:PrevPath = {} } = prevProps; 
 
+         const { location:CurrentPath = {} } = this.props;
+    
+  
+         if( PrevPath.pathname !== CurrentPath.pathname )  {
 
+              this.setState({ hasError: false , errorMessage:'' })
+
+         }
+         
     }
 
     render() {
@@ -58,23 +67,23 @@ class ErrorBoundary extends React.Component {
 
             } else {
 
-                if (  Loading  ) {
+                    if (  Loading  ) {
 
-                    return null
-                    
-                } else {
-
-                    if( isLoggedin ) {
-
-                        return this.props.children ;
-
+                        return null
+                        
                     } else {
-                         
-                        return <Redirect to='/'/>
+
+                        if( isLoggedin ) {
+
+                            return this.props.children ;
+
+                        } else {
+                            
+                            return <Redirect to='/'/>
+
+                        }
 
                     }
-
-                }
 
             }
     }
