@@ -4,12 +4,8 @@ import Register from './Components/RegisterStudent/refferenceNumber'
 import Student_Form from './Containers/registration/registerForm'
 import Login from './Containers/login/Login'
 import UploadDocument from './Containers/uploadDocument/uploadDoc'
-import {makeVerifyRequest} from './request/requset'
 import Home  from './Containers/home/home'
 import NotFoundPage from './Components/NotFoundPage';
-import {Context} from './Context/Context'
-import {UpdateLoggedin} from './Containers/isLoggedin/action'
-import Circle from './UI/Circle';
 import './Containers/registration/register.css'
 
 class  App extends React.Component{

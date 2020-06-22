@@ -16,16 +16,18 @@ module.exports.Update = async (req,res,next)=>{
          
             bcyrpt.compare(oldPassword,findUser.password , async (err,result)=>{
                
-                if(result)
-                {
+                if(result) {
+
                     bcyrpt.hash(newPassword,10,async (err,hash)=>{
                         const updated = await User.updateOne({_id:id},{$set:{password:hash}}) //User can not update his FirstName and LastName
                         res.json({message:updated})
                     })
+
                 }
-                else
-                {
+                else {
+
                        res.json({notMatched:true})
+                       
                 }
 
             })

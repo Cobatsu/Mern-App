@@ -1,5 +1,5 @@
 import React, {useEffect,useMemo,useState,useContext,useCallback} from 'react';
-import {UpdateLoggedin} from '../../isLoggedin/action';
+import {UpdateLoggedin} from '../../ErrorWrapper/ErrorBoundary';
 import styled from 'styled-components';
 import {Link,Route} from 'react-router-dom'
 import {Context} from '../../../Context/Context';
@@ -166,6 +166,8 @@ const ReportDetail  = ({match,...rest })=>{
     const  [deleted , setDeleted ] = useState(false);
     const  [notFoundPage , setNotFoundPage ] = useState(false);
 
+    const { isLoggedinf , user } = useContext(Context);
+
     const  [isSubmitted , setIsSubmitted ] = useState(false);
 
     const  [ sendForm , setSendForm ] = useState(false);
@@ -175,8 +177,6 @@ const ReportDetail  = ({match,...rest })=>{
     const activeStep = useMemo( determineStep(initalReportStates) ,[initalReportStates.owner])
 
     const steps = ['İletişime Geçildi' , 'Öğrenci Formu Gönderildi' , 'Öğrenci Formu Dolduruldu']
-
-    const context = useContext(Context);
      
     useEffect(()=>{
         const {id} = match.params;
@@ -325,24 +325,17 @@ const ReportDetail  = ({match,...rest })=>{
 
         setIsSubmitted(false);
 
-        makeUpdateReportRequest('patch', match.params.id ,initalReportStates,context.isLoggedinf,setInitalReportState,reIsetInitalReportState,setUpdatedModal,setDisable);
+        makeUpdateReportRequest('patch', match.params.id ,initalReportStates,isLoggedinf,setInitalReportState,reIsetInitalReportState,setUpdatedModal,setDisable);
     }
    
     const deleteReport = ()=>{
          setDeleteModal(false);
          const {id} = match.params;
-         makeDeleteReportRequest('delete',id,context.isLoggedinf,setDeleted);
+         makeDeleteReportRequest('delete',id,isLoggedinf,setDeleted);
     }
    
-    if(!notFoundPage) 
+       return loading ? <Circle marginTop={30} Load={loading} position='static'/> :
 
-       return <UpdateLoggedin {...rest}>
-
-        {
-            (Loading,user)=>Loading ? null : loading
-            ?
-            <Circle marginTop={30} Load={loading} position='static'/>
-            :
             <MainWrapper>
 
                 <Stage backStage={backStageOpen} loading={!emptyWarning && !uptadedModal && !deleteModal && !deleted && !sendForm } close={emptyWarning ? closeModal_1 : uptadedModal ? closeModal_2 : deleteModal ? closeModal_3 : deleted ?  closeModal_4 : sendForm  ? closeModal_5 : null } />
@@ -442,13 +435,7 @@ const ReportDetail  = ({match,...rest })=>{
                </Form> 
                    
             </MainWrapper>   
-        }
-    </UpdateLoggedin>
-
-  else 
-
-     return   <NotFoundPage/>
-
+   
 }
 
 export default  ReportDetail;

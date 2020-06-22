@@ -1,5 +1,5 @@
 import React, {useEffect,useMemo,useState,useContext,useCallback} from 'react';
-import {UpdateLoggedin} from '../../isLoggedin/action';
+import {UpdateLoggedin} from '../../ErrorWrapper/ErrorBoundary';
 import styled from 'styled-components';
 import {Link,Route} from 'react-router-dom'
 import {Context} from '../../../Context/Context';
@@ -222,11 +222,7 @@ export const  AddReport = React.memo((props)=>{
 
     } 
      
-    return <UpdateLoggedin {...props} >
-    {
-        (Loading)=>Loading ? null : 
-
-        <MainWrapper> 
+    return  <MainWrapper> 
 
               <Stage backStage={backStage} loading={!emptyWarning && !reportAdded}   close={emptyWarning ?  closeEmptyModal : null}/>
               <Modal backStage={emptyWarning} closeModal={closeEmptyModal} type='EMPTY_FİELD'/>
@@ -269,8 +265,7 @@ export const  AddReport = React.memo((props)=>{
               </form>
 
        </MainWrapper>
-    }  
-   </UpdateLoggedin> 
+    
 });
 
 export const Report = ( { SubmitOnChange,State,setBackStage,setDate,disable,type,reportType,townships,isContactStudent,isSubmitted,isPhoneNumberFilled , isEmailCorrect} )=>{

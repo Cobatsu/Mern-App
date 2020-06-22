@@ -1,6 +1,6 @@
 import React, {useEffect,useState,useContext,useMemo} from 'react';
 import Generator  from 'generate-password';
-import {UpdateLoggedin} from '../../isLoggedin/action'
+import {UpdateLoggedin} from '../../ErrorWrapper/ErrorBoundary'
 import styled from 'styled-components';
 import {Checkbox,TextField,Tab,Tabs,Paper,InputLabel,MenuItem,IconButton,InputAdornment} from '@material-ui/core'
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -259,7 +259,7 @@ const AddPerson  = React.memo((props)=>{
 
   const [userInformations , setUserInformations ] = useState(initialState);
    
-  const {isLoggedinf , user:currentUser} =  useContext(Context);
+  const {isLoggedinf , user:User} =  useContext(Context);
 
   const [permissions  ,  setPermissions ]  = useState({});
   const [fetchPermission  , setFetchPermission] = useState({});
@@ -396,7 +396,7 @@ const AddPerson  = React.memo((props)=>{
 
           const element = userInformations[key];
           
-          if(role === 'Bayi' && currentUser.role === 'Temsilci') {
+          if(role === 'Bayi' && User.role === 'Temsilci') {
 
              if( ( !element && key !== 'relatedAgency' )  ||  userInformations['responsibleCities'].length <= 0) {
 
@@ -436,10 +436,7 @@ const AddPerson  = React.memo((props)=>{
   }
   
   
-  return  <UpdateLoggedin page='ADD_USER' {...props}>
-    {
-    
-        (Loading,User)=> Loading  ? null : <MainWrapper onSubmit={submitHandler}> 
+  return <MainWrapper onSubmit={submitHandler}> 
 
 
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -494,8 +491,8 @@ const AddPerson  = React.memo((props)=>{
            <SubmitButton type='submit'>EKLE</SubmitButton>
            </MuiPickersUtilsProvider>
         </MainWrapper>
-    }
-  </UpdateLoggedin>
+    
+
 })
 
 

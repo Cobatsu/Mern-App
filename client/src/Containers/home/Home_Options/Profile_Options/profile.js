@@ -1,5 +1,4 @@
 import React, {useEffect,useMemo,useState,useContext,useCallback} from 'react';
-import {UpdateLoggedin} from '../../../isLoggedin/action'
 import styled from 'styled-components';
 import {Link,Route} from 'react-router-dom'
 import {Context} from '../../../../Context/Context';
@@ -246,24 +245,15 @@ const Profile = ({match,...rest})=>{
     },[userInformations]);
 
 
-    return <UpdateLoggedin page='PROFİLE' {...rest}>
-     {
-          (Loading,user)=> Loading   //this is for unloggedin access  ,  user will see blank page
+    return   <MainWrapper>
 
-          ?
+                   <Stage backStage={backStageOpen} loading={!isChanged && !warning && !dontMatch && !isOldPasswordTrue}   close={isChanged ? closeModal_1 : warning ? closeModal_2: dontMatch ?  closeModal_3 : isOldPasswordTrue ? closeModal_4 : null }/>
 
-          <Circle  Load={true} position='static' marginTop={30}/>
+                    <Modal backStage={isChanged} closeModal={closeModal_1} type='CHANGED_PASSWORD'/>
+                    <Modal backStage={warning} closeModal={closeModal_2} type='EMPTY_FİELD'/>
+                    <Modal backStage={dontMatch} closeModal={closeModal_3} type='PASSWORDS_DONT_MATCH'/>
+                    <Modal backStage={isOldPasswordTrue} closeModal={closeModal_4} type='OLD_PASSWORD_WRONG'/>
 
-          :
-
-            <MainWrapper>
-
-           <Stage backStage={backStageOpen} loading={!isChanged && !warning && !dontMatch && !isOldPasswordTrue}   close={isChanged ? closeModal_1 : warning ? closeModal_2: dontMatch ?  closeModal_3 : isOldPasswordTrue ? closeModal_4 : null }/>
-
-            <Modal backStage={isChanged} closeModal={closeModal_1} type='CHANGED_PASSWORD'/>
-            <Modal backStage={warning} closeModal={closeModal_2} type='EMPTY_FİELD'/>
-            <Modal backStage={dontMatch} closeModal={closeModal_3} type='PASSWORDS_DONT_MATCH'/>
-            <Modal backStage={isOldPasswordTrue} closeModal={closeModal_4} type='OLD_PASSWORD_WRONG'/>
                      {
                          UserMenuLinks.map((item)=>{ 
                                  return item.desc.toUpperCase() === subMenuIndex.split('_').join(' ').toUpperCase() ? 
@@ -335,8 +325,7 @@ const Profile = ({match,...rest})=>{
                    </MuiPickersUtilsProvider>  
                    </InnerContainer>
                 </MainWrapper>
-     }
-    </UpdateLoggedin>
+
 }
 
 const ChangePassword = React.memo(({passwordChangeHandler,passwordSubmitHandler,password})=>{

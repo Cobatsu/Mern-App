@@ -1,7 +1,6 @@
 import React,{ useEffect,useState,createRef,useRef,useContext} from 'react';
 import {makeStudentSearchRequest} from '../../../request/requset';
 import styled from 'styled-components';
-import {UpdateLoggedin} from '../../isLoggedin/action'
 import { Link , useLocation } from 'react-router-dom'
 import Circle from '../../../UI/Circle'
 import { hasPermission,PermissionsNumbers,IconPermission } from '../../../UI/Permissions/permissionIcon'
@@ -74,15 +73,7 @@ const Student =(props)=>{
     setBackstage(false);
   }
 
-  return <UpdateLoggedin page='STUDENT' {...props}>
-    {
-        (Loading)=>Loading ? 
-
-          null
-
-          :
-
-          <ListWrapper> 
+  return  <ListWrapper> 
 
             <BackStage backStage={backStage} loading={!isModalOpen}  close={isModalOpen ? closeModal_1 : null} />
 
@@ -113,10 +104,7 @@ const Student =(props)=>{
             />
 
           </ListWrapper>
-       
-    }
-
-  </UpdateLoggedin> 
+        
 }
 
 

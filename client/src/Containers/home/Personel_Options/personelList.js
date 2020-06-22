@@ -1,5 +1,5 @@
 import React,{useEffect,useState,createRef,useRef,useContext} from 'react';
-import {UpdateLoggedin} from '../../isLoggedin/action'
+import {UpdateLoggedin} from '../../ErrorWrapper/ErrorBoundary'
 import styled from 'styled-components';
 import { Link , useLocation } from 'react-router-dom'
 import {makePersonelRequest, makePersonSearchRequest} from '../../../request/requset';
@@ -34,7 +34,7 @@ box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.03
 
 
 
-const PersonelList  = ({isOnlySubBranch,...rest})=>{
+const PersonelList  = ( { isOnlySubBranch } )=>{
 
   const [ personels,setPersonels ] = useState([]);
   const [ loading , setLoading ] = useState(false);
@@ -43,13 +43,11 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
   const [ subPagesCount, setSubPagesCount ] = useState(0);
   const [ notFound , setNotFound ] = useState();
 
-  const { isLoggedinf } = useContext(Context);
+  const { isLoggedinf , user } = useContext(Context);
 
   const location = useLocation() ; 
   const searchData = queryString.parse(location.search.slice(1)) ; 
 
-
-  
   const closeModal_1 = () => {
     setIsModalOpen(false);
     setBackstage(false);
@@ -72,17 +70,7 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
 
  // we can also  use useRef hook for storing value or objects; 
 
-    return <UpdateLoggedin page='PERSONEL_LİST' {...rest}  >
-
-      {
-          ( Loading , user )=> Loading 
-
-          ?
-
-          null 
-                
-          :
-              <ListWrapper> 
+    return    <ListWrapper> 
 
                      <BackStage backStage={backStage} loading={!isModalOpen}   close={isModalOpen ? closeModal_1 : null}/>
 
@@ -113,14 +101,11 @@ const PersonelList  = ({isOnlySubBranch,...rest})=>{
                         notFound = {notFound}                 
                         resetSubPage = { !isModalOpen && backStage }
                         helperPackage = { personelListHelperPackage(user) }
-                        
+
                         />
 
           </ListWrapper>
 
-      }
-
-    </UpdateLoggedin>
 }
 
 

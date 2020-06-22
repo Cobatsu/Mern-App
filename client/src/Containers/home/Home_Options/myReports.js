@@ -2,7 +2,7 @@ import React, { useEffect, useState, createRef, useRef, useContext } from 'react
 import { makeReportsRequest, makeReportSearchRequest } from '../../../request/requset';
 import { Context } from '../../../Context/Context'
 import styled from 'styled-components';
-import { UpdateLoggedin } from '../../isLoggedin/action'
+import { UpdateLoggedin } from '../../ErrorWrapper/ErrorBoundary'
 import { Route, Link , useLocation , useHistory } from 'react-router-dom'
 import Circle from '../../../UI/Circle'
 import BackStage from '../../../UI/backStage'
@@ -85,12 +85,7 @@ const Student = (props) => {
   },[ location.search , user.role ]);
 
   
-  return <UpdateLoggedin page='REPORT_LİST' {...props}>
-    {
-
-    (Loading,user) => Loading ? null :
-
-      <ListWrapper> 
+  return    <ListWrapper> 
            
                     <BackStage backStage={backStage} loading={!isModalOpen}   close={isModalOpen ? closeModal_1 : null}/>
 
@@ -123,13 +118,6 @@ const Student = (props) => {
             
        </ListWrapper>
 
-    }
-
-  </UpdateLoggedin>
 }
-
-
-
-
 
 export default Student;

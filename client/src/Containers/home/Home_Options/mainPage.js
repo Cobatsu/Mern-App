@@ -1,12 +1,13 @@
-import React,{useEffect,useState} from 'react';
+import React,{useEffect,useState,useContext} from 'react';
 import {makeStudentRequest} from '../../../request/requset';
 import styled from 'styled-components';
-import {UpdateLoggedin} from '../../isLoggedin/action'
+import {UpdateLoggedin} from '../../ErrorWrapper/ErrorBoundary'
 import {Route,Redirect} from 'react-router-dom'
 import Circle from '../../../UI/Circle'
 import axios from 'axios';
 import ReactDOM from 'react-dom';
 import {restrictWord} from '../../../Utilities/utilities'
+import { Context } from '../../../Context/Context'
 
 const MainPageWrapper = styled.div`
 display:flex;
@@ -100,6 +101,8 @@ const MainPage = (props)=>{
     const [ loading , setLoading  ] = useState( true );
 
     const [totalDailyReportNumber , setTotalDailyReportNumber] = useState(null);
+
+    const { user } = useContext(Context)
        
     useEffect(()=>{
 
@@ -133,13 +136,8 @@ const MainPage = (props)=>{
     },[]);
 
     
-    return  <UpdateLoggedin page='MAİN_PAGE' {...props}>
-    {
-        ( Loading , user )=> Loading ? null : 
-        
-           <React.Fragment>
-
-                    
+    return   <React.Fragment>
+       
                     { ( user.role === 'Admin' || user.role === 'Temsilci' ) && <MainPageWrapper style={{marginBottom:30}}>    
 
                         <TopTitle>
@@ -226,9 +224,6 @@ const MainPage = (props)=>{
                     }
 
          </React.Fragment>
-    }
-   
-    </UpdateLoggedin> 
 }
 
 export default MainPage;

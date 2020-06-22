@@ -1,5 +1,4 @@
 import React, {useEffect,useState,useContext,useCallback,useRef,createRef,useMemo,useReducer} from 'react';
-import {UpdateLoggedin}  from '../../isLoggedin/action'
 import {makeSpecificPersonRequest,makeUpdateUserRequest,makeRemoveUserRequest,makeReportSearchRequest,makeRelatedAgencyRequest,makePersonSearchRequest,makeStudentSearchRequest}  from '../../../request/requset'
 import styled from 'styled-components';
 import Circle from '../../../UI/Circle';
@@ -202,9 +201,7 @@ const General_User_Info = ({match,...rest})=>{
     const [relatedAgency , setRelatedAgency] = useState({});
    
     
-    
-    
-    const context =  useContext(Context);
+    const { user , isLoggedinf } =  useContext(Context);
 
     const UserMenuLinks = useMemo(()=>{
 
@@ -224,7 +221,7 @@ const General_User_Info = ({match,...rest})=>{
 
               case 'Bayi':
                  
-                if(context.user.role === 'Temsilci') {
+                if(user.role === 'Temsilci') {
                    return Bayi().filter(( menuItem , index ) => menuItem.desc !== 'Yetkiler'  );
                 }
                 else {
@@ -282,7 +279,7 @@ const General_User_Info = ({match,...rest})=>{
        useEffect(()=>{
 
           if(userInformations.relatedAgencyID) 
-               makeRelatedAgencyRequest('get',userInformations.relatedAgencyID,setrelatedAgencyLoading,setRelatedAgency,context.isLoggedinf);
+               makeRelatedAgencyRequest('get',userInformations.relatedAgencyID,setrelatedAgencyLoading,setRelatedAgency,isLoggedinf);
 
        },[userInformations.relatedAgencyID])
 
@@ -306,7 +303,7 @@ const General_User_Info = ({match,...rest})=>{
     const removeUser = ()=>{
         setDeletePopUP(false);
         const person_id = match.params.id;
-        makeRemoveUserRequest('delete',person_id,context.isLoggedinf,setDeletePopUP,setIsDeleted);
+        makeRemoveUserRequest('delete',person_id,isLoggedinf,setDeletePopUP,setIsDeleted);
     }
 
     const submitHandler =(e)=>{  
@@ -346,7 +343,7 @@ const General_User_Info = ({match,...rest})=>{
           }             
         }
 
-        makeUpdateUserRequest('patch',match.params.id,{...rest,permissions:permissionsState},context.isLoggedinf,setAlreadyInUse,setmodalShow,setreuseUser,setrePermissions,setDisable,setUserInformations);
+        makeUpdateUserRequest('patch',match.params.id,{...rest,permissions:permissionsState},isLoggedinf,setAlreadyInUse,setmodalShow,setreuseUser,setrePermissions,setDisable,setUserInformations);
     }
 
    
@@ -405,13 +402,21 @@ const General_User_Info = ({match,...rest})=>{
       townships = City.ilceleri;
     }
    
-     //
-    return <UpdateLoggedin page='PERSONEL_GENERAL_INFO'  {...rest} match={match} >
-        {
-           ( Loading , user )=>Loading ? null : loading 
+    
+    if( user.role !== 'Admin' && subMenuIndex === 'yetkiler') {
+            
+       throw new Error( ' You  are not allowed to see the page ' )
+ 
+    }
+
+    return   loading
+
            ?  
+
            <Circle  Load={loading} position='static' marginTop={50}/>
+
            :
+
            <React.Fragment>
 
            <MainWrapper onSubmit={submitHandler}> 
@@ -504,14 +509,14 @@ const General_User_Info = ({match,...rest})=>{
                    } />
 
                   <Route path='/home/personel_listesi/raporlar/:id' exact render={()=><InputsWrapper style={{alignSelf:'stretch',justifyContent:'flex-start'}}>  
-                            <PersonelReports role={userInformations.role}    id={match.params.id} setLoggedin={context.isLoggedinf} currentID={user._id}  currentRole = {user.role} />                
+                            <PersonelReports role={userInformations.role}    id={match.params.id} setLoggedin={isLoggedinf} currentID={user._id}  currentRole = {user.role} />                
                    </InputsWrapper> 
                   }
                   />
 
 
                   <Route path='/home/personel_listesi/bayiler/:id' exact render={()=><InputsWrapper style={{alignSelf:'stretch',justifyContent:'flex-start'}}>  
-                            <PersonelSubBranches role={userInformations.role}   id={match.params.id} setLoggedin={context.isLoggedinf} currentID={user._id} currentUser = {user} />                
+                            <PersonelSubBranches role={userInformations.role}   id={match.params.id} setLoggedin={isLoggedinf} currentID={user._id} currentUser = {user} />                
                    </InputsWrapper> 
                   }
                   />
@@ -519,7 +524,7 @@ const General_User_Info = ({match,...rest})=>{
 
                   <Route path='/home/personel_listesi/öğrenciler/:id' exact render={()=><InputsWrapper style={{alignSelf:'stretch',justifyContent:'flex-start'}}>  
                                         
-                            <PersonelStudents role={userInformations.role}   id={match.params.id} setLoggedin={context.isLoggedinf} currentID={user._id} currentUser = {user}/>
+                            <PersonelStudents role={userInformations.role}   id={match.params.id} setLoggedin={isLoggedinf} currentID={user._id} currentUser = {user}/>
 
                    </InputsWrapper> 
                   }
@@ -548,10 +553,6 @@ const General_User_Info = ({match,...rest})=>{
           </MainWrapper>
 
         </React.Fragment>     
-      }
-      
-    </UpdateLoggedin>
-
 }
 
 export const PersonelReports = ( { id , setLoggedin , role , notFoundText  } )=>{
