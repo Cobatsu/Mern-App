@@ -306,22 +306,26 @@ module.exports.studentSearch = async (req,res,next)=>{
 module.exports.getOneStudent = async (req,res,next)=>{
 
     const {id} = req.params;
+
+    console.log('Hİİİ');
   
     try 
     {
         const specificStudent = await Student.findOne({_id:id});
-        if(specificStudent)
-        {
+
+        if(specificStudent) {
+
             res.json({specificStudent});
-        }  
-        else 
-        {
-            res.json({message:'Server Error',error});
+
+        } else  {
+
+            res.json( { error:'Error' } );
+
         }
                        
     } catch (error) 
     {
-        res.json({error})  
+        res.json( { error } )  
     } 
 
 }

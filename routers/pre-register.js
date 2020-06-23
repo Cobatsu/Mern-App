@@ -11,6 +11,8 @@ router.post('/uploadDocuments' , uploadMulter.upload.array('imgCollection',4), r
 router.route('/sendForm').post(auth,registerStudent.sendForm);
 
 router.route('/get_students').post(auth,registerStudent.studentSearch);
-router.post('/get_students/:id',registerStudent.getOneStudent);
+
+router.get('/get_student/:id',registerStudent.getOneStudent);
+
 module.exports = router;
 

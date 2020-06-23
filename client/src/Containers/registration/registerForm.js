@@ -23,11 +23,10 @@ color:white;
 
 `
 
-
-
-class Register extends React.Component{
+class RegisterForm extends React.Component{
    
-   state={
+   state = {
+
         studentInformations:{
           name:'',
           surname:'',
@@ -55,6 +54,7 @@ class Register extends React.Component{
           look_forward_to_study_at_rosedale:'Grade 10',
           desired_university_studies:'Engineering &  Physics',
         },
+
         warning:null,
         warning_text:null,
         circle:false,
@@ -62,6 +62,7 @@ class Register extends React.Component{
         warningModal:false,
         result:'',
         users:[],
+
    }
 
    token = new URLSearchParams(this.props.location.search).get('token'); 
@@ -77,6 +78,23 @@ class Register extends React.Component{
 
    setResult = (value) => {
     this.setState({result:value});
+   }
+
+
+   static getDerivedStateFromProps( props , state ) {
+
+      const { student } = props ; 
+     
+      if(student) {
+
+        return { ...state , studentInformations:student }
+
+      } else {
+
+        return state ; 
+
+      }
+
    }
 
 
@@ -118,7 +136,7 @@ class Register extends React.Component{
 
             if( type === 'date_of_birth' || type === 'first_date_of_grade_9') {
              
-              value = new Date(e.target.value)
+              value = new Date(e.target.value) ;
               
             } 
           
@@ -128,27 +146,28 @@ class Register extends React.Component{
       }
    }
 
+
    
-   render()
-   {
+   render() {
 
-      console.log(this.state.studentInformations)
+        console.log(this.state.studentInformations)
 
-      if(!this.token) {
+  
+      // if(!this.token) {
 
-        return <div style={{display:'flex' , justifyContent:'center',alignItems:'center' , width:'100%' , height:'100%'}}>
+      //   return <div style={{display:'flex' , justifyContent:'center',alignItems:'center' , width:'100%' , height:'100%'}}>
             
-        <ErrorCapsule > 
+      //   <ErrorCapsule > 
 
-            Hatalı Token ,
+      //       Hatalı Token ,
 
-            Bu Bağlantıyı Yalnızca Bir Kez Kullanabilirsiniz !  
+      //       Bu Bağlantıyı Yalnızca Bir Kez Kullanabilirsiniz !  
             
-        </ErrorCapsule>
+      //   </ErrorCapsule>
 
-       </div>
+      //  </div>
 
-      }
+      // }
     
       return (
         
@@ -174,4 +193,4 @@ class Register extends React.Component{
 }
 
 
-export default Register;
+export default RegisterForm;

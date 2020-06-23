@@ -27,7 +27,6 @@ export const restrictWord = (word,limit)=>{
 
 export const checkPhoneNumber = (input)=>{
 
-
     return input.split('').filter((item) => parseInt(item) || item === '0' ).length < 10 ; 
 
 }
@@ -70,10 +69,10 @@ export const studentListHelperPackage = ( id )=>{
     
         return [
     
-          restrictWord( item.StudentInfo.information.name , 13) , 
-          restrictWord( item.StudentInfo.information.surname , 13) ,
+          restrictWord( item.StudentInfo.information.name , 16) , 
+          restrictWord( item.StudentInfo.information.surname , 16) ,
           <Capsule  style={ {...studentStatusColor(docState).style}} >  { studentStatusColor(docState).text } </Capsule>,
-          item.owner._id === id  ?  <Capsule>{restrictWord(fullName,13)}</Capsule> : restrictWord(fullName,13) ,
+          item.owner._id === id  ?  <Capsule>{restrictWord(fullName,16)}</Capsule> : restrictWord(fullName,16) ,
           item.StudentInfo.registerdate 
         
         ]
