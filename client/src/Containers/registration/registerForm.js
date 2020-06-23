@@ -1,16 +1,26 @@
 import React from 'react';
 import './register.css'
-import {makeRequest,makeFileRequest,makeGetRequest} from '../../request/requset'
+import {makeRequest} from '../../request/requset'
 import StudentInformations  from './sections/Student-Information';
 import StudentsHomeAdress from './sections/Students-Home-Adress';
 import AboutRegisteringStudent from './sections/About-registering-Student';
 import ParentInformation from './sections/Parent-Information';
 import PrevSchoolInfo from './sections/Prevıous-school-information';
 import Submit from './sections/Submit';
-import moment from 'moment';
 import Header from './sections/Header';
-import RefferenceNumber  from '../../Components/RegisterStudent/refferenceNumber'
-import { id } from 'date-fns/locale';
+
+
+
+const ErrorCapsule = styled.div`
+
+padding:30px;
+box-shadow: 0 1px 6px -1px rgba(0, 0, 0,0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+min-width:200px;
+text-align:center;
+background:#e00543;
+color:white;
+
+`
 
 
 
@@ -131,10 +141,6 @@ class Register extends React.Component{
       return (e)=>{
             const copyStudent = {...this.state.studentInformations}         
             let value = e.target.value;
-            if(type==='date_of_birth' || type==='first_date_of_grade_9' )
-            {
-              value=e.target.value.split('-').reverse().join('/');
-            }
            this.setState({studentInformations:{...copyStudent,[type]:value},warningModal:false})        
       }
    }
@@ -145,7 +151,17 @@ class Register extends React.Component{
 
       if(!this.token) {
 
-        return <h1> ERROR </h1>; 
+        return <div style={{display:'flex' , justifyContent:'center',alignItems:'center' , width:'100%' , height:'100%'}}>
+            
+        <ErrorCapsule > 
+
+            Hatalı Token ,
+
+            Bu Bağlantıyı Yalnızca Bir Kez Kullanabilirsiniz !  
+            
+        </ErrorCapsule>
+
+       </div>
 
       }
     
