@@ -275,14 +275,11 @@ module.exports.updateReport = async ( req,res,next)=>{
 
             var { owner , ...actualBody }  = body ;
 
-            await Reports.updateOne({_id:id},{$set:{...actualBody }});
+            body = actualBody ;  
 
-        } else {
+        } 
 
-
-            await Reports.updateOne({_id:id},{$set:{...body }});
-
-        }
+        await Reports.updateOne({_id:id},{$set:{...body }});
 
         
         var updatedData = await  Reports.findOne({_id:id}).populate('owner').select('-__v -_id');
