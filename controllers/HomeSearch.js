@@ -50,22 +50,21 @@ module.exports = async (req,res,next)=>{
                     var lastArray = [] ;
 
                     var subBranches =  SubBranches.filter( ( person,index )=>{
-                              return person.relatedAgencyID == agenta._id
+                              return person.relatedAgencyID.toString() == agenta._id.toString()
                     } ) 
                        
                          
                     lastArray = lastArray.concat( Report.filter(( report , index )=>{
 
-                        return  report.owner ==  agenta._id  ;
+                        return  report.owner.toString() ===  agenta._id.toString()  ;
 
                     }))
 
-                    console.log(lastArray);
 
                     subBranches.forEach ( ( person , index )=>{
 
                         lastArray = lastArray.concat( Report.filter((report,index)=>{
-                            return  report.owner ===  person._id ;  
+                            return  report.owner.toString() ==  person._id.toString() ;  
                         }))
                         
                     })
@@ -112,7 +111,8 @@ module.exports = async (req,res,next)=>{
 
       else if ( user.role  === 'Temsilci' ){
           
-         const subBranchesOfAgency  = await User.find( { relatedAgencyID : user._id} );
+         const subBranchesOfAgency  = await User.find( { relatedAgencyID : user._id } );
+
 
          const Report = await Reports.find({ meetingDate:{ $gte:today }});
      
@@ -121,7 +121,10 @@ module.exports = async (req,res,next)=>{
          subBranchesOfAgency.forEach(( branch,index )=>{
  
             var matchedReports  = Report.filter((report,index)=>{
-                     return report.owner === branch._id  ;
+                
+
+                     return report.owner.toString() === branch._id.toString()  ;
+
             })    
 
         

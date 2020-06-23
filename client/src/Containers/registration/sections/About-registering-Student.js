@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-const registeringStudent =({country_of_birth,country_of_citizenship,native_language,first_date_of_grade_9_ref,changeHandler,warning,warning_text})=><div className='Item'>
+const registeringStudent =({country_of_birth,country_of_citizenship,native_language,changeHandler,warning,warning_text})=><div className='Item'>
 <h1>3. ABOUT REGISTERING STUDENT</h1>
 <div className='Fields'>
 
@@ -17,12 +17,12 @@ const registeringStudent =({country_of_birth,country_of_citizenship,native_langu
      {
          country_of_citizenship  ? null  :warning  
      }  
-     <input type='text' className={country_of_citizenship ? null : warning_text}  onChange={changeHandler('country_of_citizenship')}/>
+     <input value={country_of_citizenship} type='text' className={country_of_citizenship ? null : warning_text}  onChange={changeHandler('country_of_citizenship')}/>
    </div>
 
    <div>
      <label>First Date of Grade 9</label>
-     <input type='date' defaultValue={new Date().toISOString().substr(0, 10)} ref={first_date_of_grade_9_ref}  onChange={changeHandler('first_date_of_grade_9')}/>
+     <input type='date'  onChange={changeHandler('first_date_of_grade_9')}/>
    </div>
 
    <div>
@@ -30,7 +30,7 @@ const registeringStudent =({country_of_birth,country_of_citizenship,native_langu
      {
          native_language  ? null  :warning  
      }
-     <input type='text' className={native_language ? null : warning_text}  onChange={changeHandler('native_language')}/>
+     <input value = {native_language} type='text' className={native_language ? null : warning_text}  onChange={changeHandler('native_language')}/>
    </div>
    
 </div>

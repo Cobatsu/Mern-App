@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-const studentInfo  =({name,warning,warningText,surname,phoneNumber,eMail,date_of_birth_ref,gender_ref,changeHandler,state})=><div className='Item'>
+const studentInfo  =({name,warning,warningText,surname,phoneNumber,eMail,changeHandler,state})=><div className='Item'>
 <h1>1. STUDENT INFORMATION</h1>
 <div className='Fields'>
 
@@ -9,7 +9,7 @@ const studentInfo  =({name,warning,warningText,surname,phoneNumber,eMail,date_of
      {
          name  ? null  : warning  
      }          
-     <input type='text' className={ name ? null : warningText } placeholder='Fatih' id='1' onChange={changeHandler('name')}/>
+     <input  type='text' value={name} className={ name ? null : warningText } placeholder='Fatih' id='1' onChange={changeHandler('name')}/>
    </div>
 
    <div>
@@ -17,7 +17,7 @@ const studentInfo  =({name,warning,warningText,surname,phoneNumber,eMail,date_of
      {
        surname ? null : warning
      }   
-     <input type='text'placeholder='Özer' className={surname ? null : warningText }  id='2.' onChange={changeHandler('surname')}/>
+     <input type='text'  value={surname}  placeholder='Özer' className={surname ? null : warningText }  id='2.' onChange={changeHandler('surname')}/>
    </div>
 
    <div>
@@ -25,7 +25,7 @@ const studentInfo  =({name,warning,warningText,surname,phoneNumber,eMail,date_of
      {
          phoneNumber ? null  :warning 
      } 
-     <input type='text' id='2'className={phoneNumber ? null : warningText } onChange={changeHandler('phone_number')}/>
+     <input type='text'  value={phoneNumber} id='2'className={phoneNumber ? null : warningText } onChange={changeHandler('phone_number')}/>
    </div>
 
    <div>
@@ -33,17 +33,17 @@ const studentInfo  =({name,warning,warningText,surname,phoneNumber,eMail,date_of
      {
          eMail  ? null  :warning 
      } 
-     <input   type='text' id='3' className={eMail  ? null : warningText } onChange={changeHandler('e_mail')}/>
+     <input   type='text'value={eMail} id='3' className={eMail  ? null : warningText } onChange={changeHandler('e_mail')}/>
    </div>
    
    <div>
      <label htmlFor='4'>Date of Birth</label>
-     <input type='date'  defaultValue={new Date().toISOString().substr(0, 10)} id='4' ref={date_of_birth_ref}  onChange={changeHandler('date_of_birth')}/>
+     <input type='date'     id='4'   onChange={changeHandler('date_of_birth')}/>
    </div>
 
    <div>
      <label htmlFor='5'>Gender</label>
-     <select onClick={changeHandler('gender')} ref={gender_ref}>
+     <select onClick={changeHandler('gender')} >
           <option>Male</option>
           <option>Female</option>
      </select>
