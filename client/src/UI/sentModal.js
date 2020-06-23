@@ -176,38 +176,78 @@ const SentModal = React.memo(({backStage, type, closeModal, deleteUser , formSen
         </Modal>
 
      } else if (formSent.text === 'LİNK' ) {
+       
             
+           if ( formSent.result === 'Error ' ) {
+
+                return <Modal  display={modalY.display} >
+
+                          <CloseIcon onClick={closeModal} > <i class="fas fa-times"></i> </CloseIcon>
+              
+                          <span style={{ background:'#e00543' , color:'white' , display:'block' , textAlign:'center',  padding:10 , fontSize:14 , borderRadius:5 , boxShadow:'0 1px 6px -1px rgba(0, 0, 0,0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.05)' }}> 
+                          
+                              Bir Sorun Oluştu , Link Oluşturulamadı .
+              
+                          </span>
+    
+                </Modal>
+
+           } else {
+
+              return  <Modal  display={modalY.display} style = {{ maxWidth:500, minHeight:210  , justifyContent:'center'}} >
+
+                    <CloseIcon onClick={closeModal} > <i class="fas fa-times"></i> </CloseIcon>
+
+                    <span style={{marginBottom:25, display:'block' , padding:8 , fontSize:14 , borderRadius:5 , boxShadow:'0 1px 6px -1px rgba(0, 0, 0,0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.05)' , background:'#58b4ae' , color:'white' }}> Linkiniz Oluşturuldu !  </span>
+
+                  
+                        <input className="foo" value = {formSent.payload} style={{width:'80%'}}/>
+
+                        <CopyToClipboard text={formSent.payload} >
+                            <CloseButton style ={{marginTop:15 , padding:10}} type='button'> Linki Kopyala </CloseButton>
+                      </CopyToClipboard>
+                          
+                    
+              </Modal>
+
+           }
         
-           return  <Modal  display={modalY.display} style = {{ maxWidth:500, minHeight:210  , justifyContent:'center'}} >
-
-                 <CloseIcon onClick={closeModal} > <i class="fas fa-times"></i> </CloseIcon>
-
-                 <span style={{marginBottom:25, display:'block' , padding:8 , fontSize:14 , borderRadius:5 , boxShadow:'0 1px 6px -1px rgba(0, 0, 0,0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.05)' , background:'#58b4ae' , color:'white' }}> Linkiniz Oluşturuldu !  </span>
-
-               
-                    <input className="foo" value = {formSent.payload} style={{width:'80%'}}/>
-
-                    <CopyToClipboard text={formSent.payload} >
-                         <CloseButton style ={{marginTop:15 , padding:10}} type='button'> Linki Kopyala </CloseButton>
-                   </CopyToClipboard>
-                       
-                
-           </Modal>
             
 
      } else if (formSent.text === 'MAİL') {
 
-           return <Modal  display={modalY.display} >
 
-           <CloseIcon onClick={closeModal} > <i class="fas fa-times"></i> </CloseIcon>
 
-           <span style={{ background:'#58b4ae' , color:'white' , display:'block' , textAlign:'center',  padding:10 , fontSize:14 , borderRadius:5 , boxShadow:'0 1px 6px -1px rgba(0, 0, 0,0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.05)' }}> 
-           
-             Ön Kayıt Formu Başarıyla Gönderildi . 
+            if ( formSent.result === 'Error ' ) {
 
-           </span>
+                  return <Modal  display={modalY.display} >
 
-     </Modal>
+                          <CloseIcon onClick={closeModal} > <i class="fas fa-times"></i> </CloseIcon>
+              
+                          <span style={{ background:'#e00543' , color:'white' , display:'block' , textAlign:'center',  padding:10 , fontSize:14 , borderRadius:5 , boxShadow:'0 1px 6px -1px rgba(0, 0, 0,0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.05)' }}> 
+                          
+                              Bir Sorun Oluştu , Ön Kayıt Formu Gönderilemedi . 
+              
+                          </span>
+
+                </Modal>
+
+            } else {
+
+              return <Modal  display={modalY.display} >
+
+                    <CloseIcon onClick={closeModal} > <i class="fas fa-times"></i> </CloseIcon>
+
+                    <span style={{ background:'#58b4ae' , color:'white' , display:'block' , textAlign:'center',  padding:10 , fontSize:14 , borderRadius:5 , boxShadow:'0 1px 6px -1px rgba(0, 0, 0,0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.05)' }}> 
+                    
+                      Ön Kayıt Formu Başarıyla Gönderildi . 
+
+                    </span>
+
+              </Modal>
+
+            }
+
 
      }  
 

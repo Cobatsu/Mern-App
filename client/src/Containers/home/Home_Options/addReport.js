@@ -1,5 +1,5 @@
 import React, {useEffect,useMemo,useState,useContext,useCallback} from 'react';
-import {UpdateLoggedin} from '../../isLoggedin/action';
+import {UpdateLoggedin} from '../../ErrorWrapper/ErrorBoundary';
 import styled from 'styled-components';
 import {Link,Route} from 'react-router-dom'
 import {Context} from '../../../Context/Context';
@@ -14,6 +14,8 @@ import {Checkbox,TextField,Tab,Tabs,Paper,InputLabel,MenuItem,Selec} from '@mate
 import {makeAddReportRequest}  from '../../../request/requset'
 import {Regions} from '../../../Regions/regions'
 import NumberFormat from 'react-number-format'
+import {checkPhoneNumber} from '../../../Utilities/utilities'
+import validator from 'email-validator'
 
 const MainWrapper = styled.form`
 display:flex;
@@ -97,7 +99,7 @@ align-items:center;
 const initialReportStateFirst={
   schoolName:'',
   relatedPersonName:'',
-  relatedPersonPhoneNumber:'+90 (___) ___-____',
+  relatedPersonPhoneNumber:'(___) ___-____',
   meetingDate:new Date(),
   relatedPersonEmail:'',
   meetingDetails:'',
@@ -116,7 +118,8 @@ export const  AddReport = React.memo((props)=>{
    const  [reportAdded ,setReportAdded] = useState(false);
    const  [backStage , setBackStage ] = useState(false); 
    const  [date , setDate] = useState(new Date());
-   
+   const  [isSubmitted , setIsSubmitted] = useState(false);
+
     useEffect(()=>{  //this is just because of Date issue //--------      
       if(reportType) setinitialReportState(prevState =>({...prevState,meetingDate:date}));
     },[date])
@@ -165,25 +168,27 @@ export const  AddReport = React.memo((props)=>{
     }
 
     const SubmitReport = (e)=>{
+
+            setIsSubmitted(true);
          
             e.preventDefault();
 
-              let isPhoneNumberFilled = initialReportState['relatedPersonPhoneNumber'].split('').slice(3).filter((item) => parseInt(item) || item === '0' ).length < 10 ; 
-              
+            
+              let result = checkPhoneNumber(initialReportState['relatedPersonPhoneNumber']) ; 
 
-              if(isPhoneNumberFilled) { 
+              let isEmailCorrect = validator.validate(initialReportState['relatedPersonEmail']) ; 
 
-                return setEmptyWarning(true);
+              if( result || !isEmailCorrect ) { 
 
+                 return setEmptyWarning(true);
+          
               }
-
-
+            
               for (const key in initialReportState) {
 
                   const element = initialReportState[key];
                 
-                  if(reportType === 'schoolReport')
-                    {
+                  if(reportType === 'schoolReport') {
 
                       if(!element) {
                         return setEmptyWarning(true);
@@ -193,30 +198,31 @@ export const  AddReport = React.memo((props)=>{
 
                   }
                   else
-                    {
-                      if( !element && key !== 'schoolName')
-                      {
+                  {
+
+                      if( !element && key !== 'schoolName') {
+
                         return setEmptyWarning(true);
+
                       }  
-                      else
-                      {
+                      else {
+
                         if (key !== 'meetingDate') initialReportState[key] = initialReportState[key].trim();
+
                       } 
+
                   }
               }
                
               setinitialReportState(initialReportStateFirst);
             
+              setIsSubmitted(false);
 
               makeAddReportRequest('post',initialReportState,setReportAdded,isLoggedinf,reportType);     
 
     } 
      
-    return <UpdateLoggedin {...props} >
-    {
-        (Loading)=>Loading ? null : 
-
-        <MainWrapper> 
+    return  <MainWrapper> 
 
               <Stage backStage={backStage} loading={!emptyWarning && !reportAdded}   close={emptyWarning ?  closeEmptyModal : null}/>
               <Modal backStage={emptyWarning} closeModal={closeEmptyModal} type='EMPTY_FİELD'/>
@@ -236,19 +242,34 @@ export const  AddReport = React.memo((props)=>{
               <form style={{width:'100%'}} onSubmit={SubmitReport}>
 
                 {
-                  (reportType && initialReportState) && <Report townships={townships} SubmitOnChange={SubmitOnChange} State={initialReportState} setBackStage={setBackStage} date={date} setDate={setDate} reportType={reportType} />
+                  (reportType && initialReportState) && 
+                  
+                  <Report 
+
+                    townships={townships} 
+                    SubmitOnChange={SubmitOnChange} 
+                    State={initialReportState} 
+                    setBackStage={setBackStage} 
+                    date={date} 
+                    setDate={setDate} 
+                    reportType={reportType}
+                    warning = {emptyWarning}
+                    isSubmitted={isSubmitted}
+                    isPhoneNumberFilled={checkPhoneNumber(initialReportState['relatedPersonPhoneNumber'])}
+                    isEmailCorrect = {validator.validate(initialReportState['relatedPersonEmail'])}
+                    
+                    />
+
                 } 
 
               </form>
 
        </MainWrapper>
-    }  
-   </UpdateLoggedin> 
+    
 });
 
-export const Report = ( { SubmitOnChange,State,setBackStage,setDate,disable,type,reportType,townships,isContactStudent } )=>{
+export const Report = ( { SubmitOnChange,State,setBackStage,setDate,disable,type,reportType,townships,isContactStudent,isSubmitted,isPhoneNumberFilled , isEmailCorrect} )=>{
   
-  console.log(isContactStudent)
 
   return <React.Fragment>
      
@@ -256,12 +277,12 @@ export const Report = ( { SubmitOnChange,State,setBackStage,setDate,disable,type
 
           <ReportTextFields>
                   
-                {reportType === 'schoolReport' ? <TextField value={State['schoolName']}   InputLabelProps={{style:{zIndex:1}}}  disabled={disable}   onChange = {SubmitOnChange('schoolName')}   label='Okul İsmi'  style={{width:'85%',padding:'10px 0',marginBottom:5}}  inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}} /> : null }
-                <TextField   value={State['relatedPersonName']}   InputLabelProps={{style:{zIndex:1}}}  disabled={disable}   onChange = {SubmitOnChange('relatedPersonName')}   label='Görüşülen Kişinin İsmi'  style={{width:'85%',padding:'10px 0',marginBottom:5}} inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}   />
-                <NumberFormat   value={State['relatedPersonPhoneNumber']}  InputLabelProps={{style:{zIndex:1}}}  disabled={disable}  onChange = {SubmitOnChange('relatedPersonPhoneNumber')}   customInput={TextField} format="+90 (###) ###-####" label='Görüşülen Kişinin Telefon Numarası' style={{width:'85%',padding:'10px 0'}} inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}   allowEmptyFormatting mask="_"/>
-                <TextField value={State['relatedPersonEmail']}   InputLabelProps={{style:{zIndex:1}}}  disabled={disable}   onChange = {SubmitOnChange('relatedPersonEmail')}   label='Görüşülen Kişinin Mail Adresi'  style={{width:'85%',padding:'10px 0'}} inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}   />
+                {reportType === 'schoolReport' ? <TextField error={ isSubmitted  && !State['schoolName'] }   value={State['schoolName']}   InputLabelProps={{style:{zIndex:1}}}  disabled={disable}   onChange = {SubmitOnChange('schoolName')}   label='Okul İsmi'  style={{width:'85%',padding:'10px 0',marginBottom:5}}  inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}} /> : null }
+                <TextField     error={ isSubmitted  && !State['relatedPersonName'] } value={State['relatedPersonName']}   InputLabelProps={{style:{zIndex:1}}}  disabled={disable}   onChange = {SubmitOnChange('relatedPersonName')}   label='Görüşülen Kişinin İsmi'  style={{width:'85%',padding:'10px 0',marginBottom:5}} inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}   />
+                <NumberFormat  error={  isSubmitted && isPhoneNumberFilled  }   value={State['relatedPersonPhoneNumber']}  InputLabelProps={{style:{zIndex:1}}}  disabled={disable}  onChange = {SubmitOnChange('relatedPersonPhoneNumber')}   customInput={TextField} format="(###) ###-####" label='Görüşülen Kişinin Telefon Numarası' style={{width:'85%',padding:'10px 0'}} inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}   allowEmptyFormatting mask="_"/>
+                <TextField     error={  isSubmitted && !isEmailCorrect }   value={State['relatedPersonEmail']}   InputLabelProps={{style:{zIndex:1}}}  disabled={disable}   onChange = {SubmitOnChange('relatedPersonEmail')}   label='Görüşülen Kişinin Mail Adresi'  style={{width:'85%',padding:'10px 0'}} inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}   />
 
-                        <TextField  InputLabelProps={{style:{zIndex:1}}}  disabled={disable}    style={{width:'85%',padding:'10px 0'}} inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}  onChange={SubmitOnChange('region')}  id="select" label="Bölge" value={State['region']}  select>
+                        <TextField error={  isSubmitted && !State['region']  }   InputLabelProps={{style:{zIndex:1}}}  disabled={disable}    style={{width:'85%',padding:'10px 0'}} inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}  onChange={SubmitOnChange('region')}  id="select" label="Bölge" value={State['region']}  select>
 
                           {                 
                             Regions.map((item)=> <MenuItem value={item['il'].toString()}>{item['il']}</MenuItem>)
@@ -271,7 +292,7 @@ export const Report = ( { SubmitOnChange,State,setBackStage,setDate,disable,type
  
                         {
 
-                          ( State.region && !isContactStudent )  ? <TextField disabled={disable} InputLabelProps={{style:{zIndex:1}}}  disabled={disable}       style={{width:'85%',padding:'10px 0'}} inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}  onChange={SubmitOnChange('townShip')}  id="select" label="İlçe" value={State['townShip']}  select>
+                          ( State.region && !isContactStudent )  ? <TextField   disabled={disable} InputLabelProps={{style:{zIndex:1}}}  disabled={disable} error = {  isSubmitted && !State['townShip']  }       style={{width:'85%',padding:'10px 0'}} inputProps={{style:{padding:10,background:disable ?  '#eeeeee' : 'white', color:'#333'}}}  onChange={SubmitOnChange('townShip')}  id="select" label="İlçe" value={State['townShip']}  select>
 
                             {                
                               townships.map((item)=> <MenuItem value={item}>{item}</MenuItem>)
@@ -299,13 +320,15 @@ export const Report = ( { SubmitOnChange,State,setBackStage,setDate,disable,type
                   label="Görüşme Tarihi"   
                   value={State['meetingDate']} 
                   onChange={setDate} 
-                  style={{width:'85%',margin:'10px 0'}}/>
+                  style={{width:'85%',margin:'10px 0'}}
+                  
+                  />
 
                </MuiPickersUtilsProvider>
 
           </ReportTextFields>
           
-          <ReportDescripton disabled={disable} value={State['meetingDetails']}   onChange = {SubmitOnChange('meetingDetails')}  placeholder='Görüşme Detayları'/>
+          <ReportDescripton disabled={disable} value={State['meetingDetails']} error={  isSubmitted && !State['meetingDetails']  }    onChange = {SubmitOnChange('meetingDetails')}  placeholder='Görüşme Detayları'/>
 
     </ReportContainer>   
 

@@ -5,8 +5,19 @@ import Circle from '../../UI/Circle'
 import NumberFormat from 'react-number-format'
 import {Regions} from '../../Regions/regions'
 import axios from 'axios'
+import validator from 'email-validator'
+import {checkPhoneNumber} from '../../Utilities/utilities'
 
+const ErrorCapsule = styled.div`
 
+padding:30px;
+box-shadow: 0 1px 6px -1px rgba(0, 0, 0,0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+min-width:200px;
+text-align:center;
+background:#e00543;
+color:white;
+
+`
 const GeneralWrapper  = styled.div`
 display:flex;
 align-items:center;
@@ -72,15 +83,12 @@ border-radius:15px 0 15px 0  ;
 }
 `
 
-
-
-
 const initialState = {
 
     name:'',
     surname:'',
     e_mail:'',
-    phoneNumber:'+90 (___) ___-____',
+    phoneNumber:'(___) ___-____',
     region:'',
 
 }
@@ -88,8 +96,6 @@ const initialState = {
 
 const RefferenceNumber= (props)=>{
 
-    
-    
     const [ contactForm , setContactForm ] = useState(initialState);
     const [ responseResult  , setResponseResult ] = useState('');
     const [ loading , setLoading ] = useState(false);
@@ -127,10 +133,10 @@ const RefferenceNumber= (props)=>{
 
     }
 
-    let isPhoneNumberFilled = contactForm['phoneNumber'].split('')
-    .slice(3)
-    .filter((item) => parseInt(item) || item === '0' ).length < 10 ; 
+    let isPhoneNumberFilled = checkPhoneNumber( contactForm['phoneNumber'] )
+    
 
+    let isEmailCorrect = validator.validate( contactForm['e_mail'] );
 
     let result = Object.keys(contactForm).every((key) => {
 
@@ -138,14 +144,17 @@ const RefferenceNumber= (props)=>{
 
         return false ; 
 
+      } else if ( key === 'e_mail' && !isEmailCorrect  ) {
+
+        return false ; 
+
       } else {
 
-        return contactForm[key] ; 
+        return contactForm[key] ;  
 
       }
 
     }) ; 
-
 
     const OnchangeHandler = type => event => {
          
@@ -155,16 +164,27 @@ const RefferenceNumber= (props)=>{
 
     }
 
+    if( responseResult  === 'Success' ) {
 
-    if( responseResult === 'Success' ) { 
-      
-      return <h1> Formunuz gönderilmiştir .En geç 1 gün içinde sizinle iletişime geçilecektir </h1>  
+        return  <div style={{display:'flex' , justifyContent:'center',alignItems:'center' , width:'100%' , height:'100%'}}>
+            
+            <ErrorCapsule style={{background:'#42b883'}}> İletişim Formunuz Gönderilmiştir . En Kısa Sürede Size Geri Dönüş Yapılacaktır.  </ErrorCapsule>
 
-    } else if ( responseResult === 'Error' ) {
+        </div>
 
-      return <h1> Bir Hata Oluştu  </h1>  
+    } else if (responseResult === 'Error') {
 
-    } 
+        return <div style={{display:'flex' , justifyContent:'center',alignItems:'center' , width:'100%' , height:'100%'}}>
+            
+            <ErrorCapsule > 
+
+               Bir Hata Oluştu , Formunuz Gönderilmedi !  
+                
+            </ErrorCapsule>
+
+        </div>
+
+    }
 
 
 
@@ -187,7 +207,7 @@ const RefferenceNumber= (props)=>{
 
                            <TextField style={{width:'100%'}} onChange={OnchangeHandler('e_mail')}  label='E-posta Adresi / E-mail Address'  />
 
-                           <NumberFormat style={{width:'100%'}}  onChange={OnchangeHandler('phoneNumber')}   customInput={TextField} format="+90 (###) ###-####" label='Telefon Numarası / Phone Number' allowEmptyFormatting mask="_"/>
+                           <NumberFormat style={{width:'100%'}}  onChange={OnchangeHandler('phoneNumber')}   customInput={TextField} format="(###) ###-####" label='Telefon Numarası / Phone Number' allowEmptyFormatting mask="_"/>
 
                             <TextField style={{width:'100%'}} value={contactForm['region']}   onChange={OnchangeHandler('region')}  id="select" label="Şehir / City"   select>
 

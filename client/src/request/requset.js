@@ -85,6 +85,7 @@ export const makeSpecificUserRequest = (Type,id,setLoading,setStudent)=>{
    }
   })
   .catch((err)=>{
+    
       console.log(err);
   });
 }
@@ -125,10 +126,10 @@ export const makeVerifyRequest = (Type,setUser,setLoggedin,setLoading )=>{
     headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}}).then((res)=>{
         const {user,isLoggedin} = res.data;
 
-            setLoggedin(isLoggedin);
-            setUser(user);
-            setLoading(false);
-     
+           setLoggedin(isLoggedin);
+           setUser(user);
+           setLoading(false);
+
   })
   .catch((err)=>{
     console.log(err);
@@ -137,17 +138,18 @@ export const makeVerifyRequest = (Type,setUser,setLoggedin,setLoading )=>{
 }
 
 export const makeAuthenticationRequest = (Type,Body,redirectTo,setContext)=>{
+
    setContext.setLoadingf(true);
+   
    axios[Type]('/api/login',Body).then((res)=>{
 
     if(res.data.user)
     {
-      const isLoggedState = {isLoggedin:true}
+      const isLoggedState = { isLoggedin:true }
 
-      const {user,token} = res.data;
+      const { user , token } = res.data;
 
-
-        localStorage.setItem('auth_token',token);
+          localStorage.setItem('auth_token',token);
 
           setContext.setLoadingf(false);
           setContext.setUser(user);
@@ -334,9 +336,6 @@ export const makeReportsRequest = (Type,setReports,setLoading)=>{
 }
 
 
-
-
-
 export const makeSpecificReportRequest = (Type,id,setLoading,setInitialReport,reIsetInitalReport,setNotFoundPage,initialGeneralReportState)=>{
 
   axios[Type]('/api/profile/report/'+id)
@@ -349,13 +348,18 @@ export const makeSpecificReportRequest = (Type,id,setLoading,setInitialReport,re
 
     const {specificReport} =res.data;
 
-    ReactDOM.unstable_batchedUpdates(()=>{
+    if(specificReport) { 
 
-      setLoading(false);
-      setInitialReport((prevState)=>({...prevState,...specificReport}));
-      reIsetInitalReport((prevState)=>({...prevState,...specificReport}));
-    
-    })
+      ReactDOM.unstable_batchedUpdates(()=>{
+
+        setInitialReport((prevState)=>({...prevState,...specificReport , owner:specificReport.owner || {} }));
+        reIsetInitalReport((prevState)=>({...prevState,...specificReport  , owner:specificReport.owner || {}  }));
+        setLoading(false);
+  
+      })
+
+    }
+
 
   })
   .catch((res)=>{
@@ -589,19 +593,16 @@ export const makeSendFormRequest = ( Type , data , setSentForm , setFormSent )=>
        
     const { result , tokenLink } = response.data ; 
 
-
-    if(result === 'Success') {
-
-         setFormSent({text:data.requestType , payload:tokenLink}) ; 
-
-    }
-
+    setFormSent( {result:result , text:data.requestType , payload:tokenLink} ) ; 
+    
     setSentForm(true);
 
   })
   .catch((error)=>{
  
-    console.log(error);
+    setFormSent( {result:'Error' }) ; 
+
+    setSentForm(true);
     
   })
 

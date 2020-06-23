@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom'
 import './notFound.css'
 import {useHistory} from 'react-router-dom'
 
-const NotFoundPage = ({path})=>{
+const NotFoundPage = ()=>{
 
 	const history = useHistory();
 

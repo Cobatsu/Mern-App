@@ -6,9 +6,11 @@ const Capsule = styled.div`
 display:flex;
 align-items:center;
 justify-content:center;
+box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
 border-radius:4px;
 background:rgba(255, 93, 108, .08);
 color:#fa4659;
+font-weight:bold;
 font-size:11.6px;
 padding:6px;
 `
@@ -23,6 +25,12 @@ export const restrictWord = (word,limit)=>{
 
 }
 
+export const checkPhoneNumber = (input)=>{
+
+
+    return input.split('').filter((item) => parseInt(item) || item === '0' ).length < 10 ; 
+
+}
 
 
 export const studentListHelperPackage = ( id )=>{
@@ -88,7 +96,7 @@ export const studentListHelperPackage = ( id )=>{
 export const reportListHelperPackage = (id) => {
 
     const TopRows = [
-        'Görüşülen Kişi',
+        'Kişi / Okul',
         'Telefon Numarası',
         'Görüşme Tipi',
         'Görüşme Tarihi',
@@ -116,14 +124,16 @@ export const reportListHelperPackage = (id) => {
         if(item.owner) {
           var fullName = item.owner.firstName + ' ' + item.owner.lastName ; 
         }
+
+        console.log(item);
     
         return [
-          restrictWord( item.relatedPersonName , 13 ) , 
+          restrictWord( item.reportType === 'schoolReport' ? item.schoolName : item.relatedPersonName , 16 ) , 
           item.relatedPersonPhoneNumber,
           item.reportType === 'schoolReport' ? 'Okul Görüşmesi' : 'Öğrenci Görüşmesi'  ,
           item.meetingDate,
           <Capsule  style={ {...statusColors(item).style}} >  { statusColors(item).text } </Capsule>,
-          !item.isContacted ? '—' : item.owner._id == id ? <Capsule> { restrictWord(fullName,13) } </Capsule> : restrictWord(fullName,13)
+          !item.isContacted ? '—' : item.owner._id == id ? <Capsule> { restrictWord(fullName,15) } </Capsule> : restrictWord(fullName,13)
         ] 
     
       } 
@@ -154,7 +164,7 @@ export const personelListHelperPackage = ( currentUser ) => {
         '',
     ]
 
-    const filterIconOptions = ( user )=>{
+    const filterIconOptions = ( user ) => {
 
         var  PersonelOptions = [
           {desc:'Genel Bilgiler',Icon:<i className="fas fa-user-friends"></i>},
@@ -166,9 +176,23 @@ export const personelListHelperPackage = ( currentUser ) => {
     
         const { role } = user ; 
         
-        if( currentUser.role !== 'Admin' &&  currentUser.role ) PersonelOptions =  PersonelOptions.filter(( { desc } )=> desc !== 'Yetkiler' ) ;
+        if( currentUser.role !== 'Admin' ) {  
+            
+          PersonelOptions =  PersonelOptions.filter(( { desc } )=> desc !== 'Yetkiler' ) ;
+
+        } 
     
-        if( role !== "Temsilci" ) PersonelOptions =  PersonelOptions.filter(( { desc } )=> desc !== 'Bayiler' ) ;
+        if( role !== "Temsilci" ) { 
+
+          PersonelOptions =  PersonelOptions.filter(( { desc } )=> desc !== 'Bayiler' ) ;
+
+        } 
+        
+        if ( role === "Admin" ) {
+
+            PersonelOptions =  PersonelOptions.filter(( { desc } )=> desc !== 'Raporlar' &&  desc !== 'Öğrenciler' ) ;
+
+        }
     
         return PersonelOptions ; 
         
@@ -263,6 +287,7 @@ export const statusColors = (report) => {
        }
       
     }
+  
 }
 
 

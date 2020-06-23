@@ -1,18 +1,18 @@
 import React,{useContext,useState,useEffect,useRef,createRef,useMemo,useCallback} from 'react';
 import styled from 'styled-components';
 import {Context} from '../../../Context/Context'
-import {makeLogoutRequest,makeStudentRequest} from '../../../request/requset'
-import {Link} from 'react-router-dom'
-import UpdateLoggedin from '../../isLoggedin/action'
+import {makeLogoutRequest} from '../../../request/requset'
+import {Link , useRouteMatch} from 'react-router-dom'
 import {useViewport} from './customHooks/viewPortHook'; 
 import {Admin,Bayi,Temsilci} from './roleBars/roleBars'
 import NotResponsive  from './navBars/NotResponsiveNav';
 import Responsive  from './navBars/ResponsiveNav';
 
 
-export const Nav = ({isLoggedinf,setLoadingf,user,location,match,...rest})=>{
+export const Nav = ()=>{
     
-    const {Loading}  =  useContext(Context);
+    const  { Loading , user , isLoggedinf , setLoadingf }  =  useContext(Context);
+    const match = useRouteMatch();
     const  { width } = useViewport();
     const breakPoint = 1030 ;
 

@@ -1,5 +1,5 @@
 import React, {useEffect,useMemo,useState,useContext,useCallback} from 'react';
-import {UpdateLoggedin} from '../../isLoggedin/action';
+import {UpdateLoggedin} from '../../ErrorWrapper/ErrorBoundary';
 import styled from 'styled-components';
 import {Link,Route} from 'react-router-dom'
 import {Context} from '../../../Context/Context';
@@ -14,7 +14,8 @@ import {Checkbox,TextField,Tab,Tabs,Paper,InputLabel,MenuItem,Stepper,StepLabel,
 import {makeUpdateReportRequest,makeDeleteReportRequest,makeSpecificReportRequest , makeSendFormRequest}  from '../../../request/requset'
 import {Report} from './addReport';
 import NotFoundPage from '../../../Components/NotFoundPage'
-import {restrictWord} from '../../../Utilities/utilities'
+import {restrictWord , checkPhoneNumber} from '../../../Utilities/utilities'
+import validator from 'email-validator'
 
 const MainWrapper = styled.form`
 display:flex;
@@ -95,7 +96,7 @@ const initialGeneralReportState={
     schoolName:'',
     relatedPersonName:'',
     relatedPersonPhoneNumber: '',
-    meetingDate:new Date(Date(Date.now())),
+    meetingDate:new Date(),
     relatedPersonEmail:'',
     meetingDetails:'',
     region:'',
@@ -123,8 +124,31 @@ const QontoConnector = withStyles({
       borderTopWidth: 3,
       borderRadius: 1,
     },
-  })(StepConnector);
+})(StepConnector);
 
+const determineStep = (initalReportStates) => {
+            
+   return ()=> {
+    
+        if ( initalReportStates.isContacted && !initalReportStates.isFormSent ) {
+
+            return 1
+
+        } else if ( initalReportStates.isFormSent && !initalReportStates.isFormFilled ) { 
+
+            return 2
+
+        } else if( initalReportStates.isFormFilled ) {
+
+            return 3 
+
+        }
+
+        return 0; 
+
+    }
+
+}
 
   
 
@@ -142,42 +166,24 @@ const ReportDetail  = ({match,...rest })=>{
     const  [deleted , setDeleted ] = useState(false);
     const  [notFoundPage , setNotFoundPage ] = useState(false);
 
+    const { isLoggedinf , user } = useContext(Context);
+
+    const  [isSubmitted , setIsSubmitted ] = useState(false);
+
     const  [ sendForm , setSendForm ] = useState(false);
 
     const  [ formSent , setFormSent ] = useState({text:'REQUEST' , payload:null});
 
+    const activeStep = useMemo( determineStep(initalReportStates) ,[initalReportStates.owner])
+
+    const steps = ['İletişime Geçildi' , 'Öğrenci Formu Gönderildi' , 'Öğrenci Formu Dolduruldu']
     
     console.log(initalReportStates)
 
-    const activeStep = useMemo(()=>{
-            
-        if ( initalReportStates.isContacted && !initalReportStates.isFormSent ) {
-
-            return 1
-
-        } else if ( initalReportStates.isFormSent && !initalReportStates.isFormFilled ) { 
-
-            return 2
-
-        } else if( initalReportStates.isFormFilled ) {
-
-            return 3 
-
-        }
-
-        return 0; 
- 
-    },[initalReportStates.owner])
-
-    const steps = ['İletişime Geçildi' , 'Öğrenci Formu Gönderildi' , 'Öğrenci Formu Dolduruldu']
-
-    const context = useContext(Context);
-     
     useEffect(()=>{
         const {id} = match.params;
         makeSpecificReportRequest('get',id,setLoading,setInitalReportState,reIsetInitalReportState,setNotFoundPage,initialGeneralReportState);
     },[])
-
 
     const sendFormHandler = (requestType) => event =>{
 
@@ -203,7 +209,7 @@ const ReportDetail  = ({match,...rest })=>{
 
     }
 
-    const SubmitOnChange =Type=>event=>{
+    const SubmitOnChange = Type => event => {
 
          const prevStateFirst = {...initalReportStates}
 
@@ -248,6 +254,7 @@ const ReportDetail  = ({match,...rest })=>{
     useEffect(()=>{  //this is just because of Date issue //--------
         setInitalReportState(prevState =>({...prevState,meetingDate:date}));
     },[date])
+
   
     if(  initalReportStates.reportType )
     {
@@ -260,33 +267,46 @@ const ReportDetail  = ({match,...rest })=>{
       }
     }
 
+   
     const submitUpdatedReport = (e)=>{
 
         e.preventDefault();
-        setbackStageOpen(true)
 
+        setbackStageOpen(true)
+        setIsSubmitted(true);
+       
+        let result = checkPhoneNumber(initalReportStates['relatedPersonPhoneNumber']) ; 
+
+        let isEmailCorrect = validator.validate(initalReportStates['relatedPersonEmail']) ; 
+    
+        if ( result || !isEmailCorrect ) { 
+
+          return setEmptyWarning(true);
+
+        }
 
         for (const key in initalReportStates) {
 
             const element = initalReportStates[key];
 
-            if(initalReportStates.reportType === 'schoolReport')
-            {
+            if(initalReportStates.reportType === 'schoolReport') {
 
-                if(!element && key!=='meetingDetails' ){
+                if(!element && typeof initalReportStates[key] === 'string' ) {
+
                     return setEmptyWarning(true);
-                }
-                else{
 
-                    if(key !== 'meetingDate') {
-                        if(initalReportStates[key]) initalReportStates[key] = initalReportStates[key].trim(); 
-                    }
+                }  else {
+
+                    if(key !== 'meetingDate' &&  typeof initalReportStates[key] === 'string' ) {
+                        
+                        initalReportStates[key] = initalReportStates[key].trim(); 
+
+                    } 
 
                 }
 
             }
-            else
-            {
+            else {
                 
                 if( !element && key !=='schoolName' && key!=='meetingDetails' && key!=='townShip' && typeof initalReportStates[key] === 'string') {
                 
@@ -305,25 +325,19 @@ const ReportDetail  = ({match,...rest })=>{
             }
         }
 
+        setIsSubmitted(false);
 
-        makeUpdateReportRequest('patch', match.params.id ,initalReportStates,context.isLoggedinf,setInitalReportState,reIsetInitalReportState,setUpdatedModal,setDisable);
+        makeUpdateReportRequest('patch', match.params.id ,initalReportStates,isLoggedinf,setInitalReportState,reIsetInitalReportState,setUpdatedModal,setDisable);
     }
    
     const deleteReport = ()=>{
          setDeleteModal(false);
          const {id} = match.params;
-         makeDeleteReportRequest('delete',id,context.isLoggedinf,setDeleted);
+         makeDeleteReportRequest('delete',id,isLoggedinf,setDeleted);
     }
    
-    if(!notFoundPage) 
+       return loading ? <Circle marginTop={30} Load={loading} position='static'/> :
 
-       return <UpdateLoggedin {...rest}>
-
-        {
-            (Loading,user)=>Loading ? null : loading
-            ?
-            <Circle marginTop={30} Load={loading} position='static'/>
-            :
             <MainWrapper>
 
                 <Stage backStage={backStageOpen} loading={!emptyWarning && !uptadedModal && !deleteModal && !deleted && !sendForm } close={emptyWarning ? closeModal_1 : uptadedModal ? closeModal_2 : deleteModal ? closeModal_3 : deleted ?  closeModal_4 : sendForm  ? closeModal_5 : null } />
@@ -334,16 +348,21 @@ const ReportDetail  = ({match,...rest })=>{
                 <Modal backStage={deleted}       closeModal={closeModal_4} type='DELETED_REPORT'/>
                 <Modal backStage={sendForm}  formSent={formSent}     closeModal={closeModal_5} type='SEND_STUDENT_FORM' sendForm = {sendFormHandler}  />
                 
-                <Stepper style={{width:'90%'}} alternativeLabel activeStep={activeStep}>
-                    
-                            {steps.map((label) => ( 
+                {
+                    initalReportStates.reportType === 'studentReport' &&
 
-                            <Step key={label}>
-                                <StepLabel>{label}</StepLabel>
-                            </Step>
+                        <Stepper style={{width:'90%'}} alternativeLabel activeStep={activeStep}>
+                            
+                                    {steps.map((label) => ( 
 
-                            ))}
-                </Stepper>
+                                    <Step key={label}>
+                                        <StepLabel>{label}</StepLabel>
+                                    </Step>
+
+                                    ))}
+                        </Stepper> 
+
+                }
 
                <Form onSubmit={submitUpdatedReport}>
                    
@@ -354,7 +373,7 @@ const ReportDetail  = ({match,...rest })=>{
                                 initalReportStates.owner && initalReportStates.isContacted && initalReportStates.owner._id != user._id  ?  <Icon style={{background:'#63b7af',padding:0}}>
 
                                         <Link to={'/home/personel_listesi/raporlar/' + initalReportStates.owner._id + '?pageNumber=1'} style={{width:'100%',height:'100%',textTransform:'capitalize',textDecoration:'none',color:'white',display:'block',padding:'5px 10px'}}>
-                                            Görüşen Kişi :  { restrictWord( initalReportStates.owner.firstName + ' ' +  initalReportStates.owner.lastName , 13)}   <i class="fas fa-user"></i> 
+                                            Görüşen Kişi :  { restrictWord( initalReportStates.owner.firstName + ' ' +  initalReportStates.owner.lastName , 16)}   <i class="fas fa-user"></i> 
                                         </Link>
                                         
                                 </Icon> : null 
@@ -367,20 +386,34 @@ const ReportDetail  = ({match,...rest })=>{
                          
 
                         {
-                           initalReportStates.isContacted && !initalReportStates.isFormSent &&  ( initalReportStates.owner._id === user._id ) ?  <Icon style={{background:'#e16262'}} onClick= {()=>{ setSendForm(true); setbackStageOpen(true) }}> Ön Kayıt Formu Gönder <i class="fas fa-file-signature"></i> </Icon> : null
+                           initalReportStates.isContacted &&  initalReportStates.reportType === 'studentReport' && !initalReportStates.isFormSent &&  ( initalReportStates.owner._id === user._id ) ?  <Icon style={{background:'#e16262'}} onClick= {()=>{ setSendForm(true); setbackStageOpen(true) }}> Ön Kayıt Formu Gönder <i class="fas fa-file-signature"></i> </Icon> : null
                         }
 
                         {
-                           user.permissions.Rapor_Bilgileri.includes(PermissionsNumbers.UPDATE) &&  ( !initalReportStates.isContacted || initalReportStates.owner._id === user._id ) && user.role !== 'Admin'   ?  <Icon onClick= { ()=>setDisable(false)}>Düzenle <i className="fas fa-edit"/></Icon> : null
+                           user.permissions.Rapor_Bilgileri.includes(PermissionsNumbers.UPDATE) ?  <Icon onClick= { ()=>setDisable(false)}>Düzenle <i className="fas fa-edit"/></Icon> : null
                         }
                         
                         {
-                           user.permissions.Rapor_Bilgileri.includes(PermissionsNumbers.REMOVE) &&  ( initalReportStates.owner._id === user._id || user.role === 'Admin' ) ?    <Icon style={{background:'#d9455f'}} onClick={()=>{setDeleteModal(true); setbackStageOpen(true)}} > Raporu  Sil <i className="fas fa-trash-alt"></i></Icon> : null
+                           user.permissions.Rapor_Bilgileri.includes(PermissionsNumbers.REMOVE)  ?    <Icon style={{background:'#d9455f'}} onClick={()=>{setDeleteModal(true); setbackStageOpen(true)}} > Raporu  Sil <i className="fas fa-trash-alt"></i></Icon> : null
                         }
 
                    </InnerItems>
 
-                    <Report State={initalReportStates} isContactStudent = { !initalReportStates['townShip'] ? true : false  } townships={townships} SubmitOnChange={SubmitOnChange} disable={disable} setDate={setDate}  type='detail' reportType={initalReportStates.reportType}/>
+                    <Report  
+                    
+                            State={initalReportStates} 
+                            isContactStudent = { !initalReportStates['townShip'] ? true : false  } 
+                            townships={townships} 
+                            SubmitOnChange={SubmitOnChange} 
+                            disable={disable} 
+                            setDate={setDate}  
+                            type='detail' 
+                            reportType={initalReportStates.reportType}
+                            isSubmitted={isSubmitted}
+                            isPhoneNumberFilled={checkPhoneNumber( initalReportStates['relatedPersonPhoneNumber']) }
+                            isEmailCorrect = {validator.validate( initalReportStates['relatedPersonEmail']) }
+                    
+                    />
 
                     
 
@@ -404,13 +437,7 @@ const ReportDetail  = ({match,...rest })=>{
                </Form> 
                    
             </MainWrapper>   
-        }
-    </UpdateLoggedin>
-
-  else 
-
-     return   <NotFoundPage/>
-
+   
 }
 
 export default  ReportDetail;

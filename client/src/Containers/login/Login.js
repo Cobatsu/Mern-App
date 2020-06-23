@@ -4,8 +4,6 @@ import {Link,Redirect}  from 'react-router-dom'
 import {makeAuthenticationRequest,makeVerifyRequest}   from '../../request/requset'
 import App from '../../App';
 import {Context} from '../../Context/Context'
-import Circle from '../../UI/Circle'
-import {UpdateLoggedin} from '../isLoggedin/action'
 
 const Container = styled.div`
 width:100%;
@@ -121,6 +119,7 @@ class Login  extends React.Component {
         },
         warning:false,
         redirect:false,
+        isLoggedin:false,
     } 
     
     redirectTo=(type)=>{
@@ -130,40 +129,48 @@ class Login  extends React.Component {
     static contextType = Context;
 
     submitHandler=(e)=>{
+
             e.preventDefault();      
 
             const user = {name: this.state.user.name.trim(), password:this.state.user.password.trim()}; // we can prevenet fails by putting trim here
             
-           if(this.state.user.name && this.state.user.password)
-           {
-                makeAuthenticationRequest('post',user,this.redirectTo,this.context);
-           }
-           else
-           {
+           if( this.state.user.name && this.state.user.password ) {
+
+                makeAuthenticationRequest( 'post' ,user , this.redirectTo , this.context );
+
+           } else {
+
                return this.setState({warning:true})
+
            }
+
     }
     
 
-    changeHandlerFactory = (type)=>{
+    changeHandlerFactory = (type) => {
+
         return (e)=>{
+
             this.setState({user:{...this.state.user,[type]:e.target.value},warning:false})
+
         }
+
     }
 
     render() {
-        
-  
-        return (  
-        <UpdateLoggedin page='LOGİN' isLoggedin={this.state.isLoggedin} {...this.props}>
-            {
-                ({Loading})=> <Container>     
 
+        const { isLoggedin } = this.state ; 
+
+        if( isLoggedin ) {
+
+            return <Redirect to='/home'/>
+
+        }  
+          
+        return ( <Container>     
 
                         <Fields onSubmit={this.submitHandler}>
-                        
-                            <Circle Load={Loading} top={10} position='static'/>
-                        
+                                
                             <ImageWrapper>
                                 <img style={{width:'100%'}} alt="ercan" src='canada.png' ></img>
                             </ImageWrapper>
@@ -198,12 +205,9 @@ class Login  extends React.Component {
                             </SubButtons> 
     
                         </Fields>
-
    
                </Container>
-                
-            }  
-        </UpdateLoggedin>    
+                  
         );
     }
 }

@@ -16,16 +16,18 @@ module.exports.Update = async (req,res,next)=>{
          
             bcyrpt.compare(oldPassword,findUser.password , async (err,result)=>{
                
-                if(result)
-                {
+                if(result) {
+
                     bcyrpt.hash(newPassword,10,async (err,hash)=>{
                         const updated = await User.updateOne({_id:id},{$set:{password:hash}}) //User can not update his FirstName and LastName
                         res.json({message:updated})
                     })
+
                 }
-                else
-                {
+                else {
+
                        res.json({notMatched:true})
+                       
                 }
 
             })
@@ -197,8 +199,6 @@ module.exports.reportSearch = async (req,res,next)=>{
              
         var sortedData = await  Reports.find ( searchData ).sort({meetingDate:'descending'}).skip(10*pageNumber).limit(10).populate('owner');
         
-        console.log(sortedData)
-        
         let copyReport = [...sortedData ];
 
         copyReport.forEach((mainItem,index)=>{
@@ -227,10 +227,15 @@ module.exports.getSpecificReport =async (req,res,next)=>{
     const {id} = req.params;
 
     try {
-        const specificReport = await Reports.findOne({_id:id}).populate('owner').select(' -__v -_id ');
+
+        const specificReport = await Reports.findOne({_id:id}).populate('owner').select(' -__v -_id');
+
         res.json({specificReport});
+
     } catch (error) {
+
         res.json({error});
+
     }
 
 }
@@ -241,39 +246,48 @@ module.exports.updateReport = async ( req,res,next)=>{
     
     try {
 
-        if(body.meetingDetails) {
+        if( body.meetingDetails && Object.values(body['owner']).length ===  0  ) {
 
             body['isContacted'] = true ; 
             body['owner'] = user._id ; 
 
             if( user.role !== 'Bayi' ) {
 
-                body['allowedToSee'] = [user._id.toString()];
+                body['allowedToSee'] = [ user._id ];
 
             } 
 
+        } 
+
+        await Reports.updateOne({_id:id},{$set:{...body }});
+
+        if ( Object.values(body['owner']).length > 0  ) { 
+
+            var updatedData = await  Reports.findOne({_id:id}).populate('owner').select('-__v -_id');
+
         } else {
 
-            body['isContacted'] = false ; 
+            var updatedData = await  Reports.findOne({_id:id}).select('-__v -_id');
 
         }
-
-        await Reports.updateOne({_id:id},{$set:{...body }})
-        const updatedData = await  Reports.findOne({_id:id}).populate('owner').select('-__v -_id');
+            
 
         res.json({updatedData});
 
     } catch (error) {
+
         res.json({error});
+
     }
 
 }
 
 module.exports.deleteReport = async (req,res,next)=>{
-    const {params:{id},user} = req;
+
+    const { params:{id} } = req;
 
         try {
-            await Reports.remove({_id:id});
+            await Reports.deleteOne({_id:id});
             res.json({removed:true})
         } catch (error) {
             res.json({error});
