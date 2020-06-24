@@ -128,7 +128,7 @@ export const reportListHelperPackage = (id) => {
         console.log(item);
     
         return [
-          restrictWord( item.reportType === 'schoolReport' ? item.schoolName : item.relatedPersonName , 16 ) , 
+          restrictWord( item.reportType === 'schoolReport' ? item.schoolName : item.relatedPersonName , 17 ) , 
           item.relatedPersonPhoneNumber,
           item.reportType === 'schoolReport' ? 'Okul Görüşmesi' : 'Öğrenci Görüşmesi'  ,
           item.meetingDate,

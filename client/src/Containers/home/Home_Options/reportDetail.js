@@ -150,7 +150,7 @@ const determineStep = (initalReportStates) => {
 
 }
 
-  
+const steps = ['İletişime Geçildi' , 'Öğrenci Formu Gönderildi' , 'Öğrenci Formu Dolduruldu']
 
 const ReportDetail  = ({match,...rest })=>{
      
@@ -176,9 +176,7 @@ const ReportDetail  = ({match,...rest })=>{
 
     const activeStep = useMemo( determineStep(initalReportStates) ,[initalReportStates.owner])
 
-    const steps = ['İletişime Geçildi' , 'Öğrenci Formu Gönderildi' , 'Öğrenci Formu Dolduruldu']
-    
-    console.log(initalReportStates)
+
 
     useEffect(()=>{
         const {id} = match.params;
@@ -373,7 +371,9 @@ const ReportDetail  = ({match,...rest })=>{
                                 initalReportStates.owner && initalReportStates.isContacted && initalReportStates.owner._id != user._id  ?  <Icon style={{background:'#63b7af',padding:0}}>
 
                                         <Link to={'/home/personel_listesi/raporlar/' + initalReportStates.owner._id + '?pageNumber=1'} style={{width:'100%',height:'100%',textTransform:'capitalize',textDecoration:'none',color:'white',display:'block',padding:'5px 10px'}}>
+
                                             Görüşen Kişi :  { restrictWord( initalReportStates.owner.firstName + ' ' +  initalReportStates.owner.lastName , 16)}   <i class="fas fa-user"></i> 
+
                                         </Link>
                                         
                                 </Icon> : null 
