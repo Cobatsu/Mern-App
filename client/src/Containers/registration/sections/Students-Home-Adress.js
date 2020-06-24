@@ -9,7 +9,7 @@ const studentsHomeAdress=({street,apartmentAndNumber,town,city,postalCode,warnin
      {
          street  ? null  :warning 
      } 
-     <input type='text' id='6' className={street ? null : warning_text }  onChange={changeHandler('street')} />
+     <input value={street} type='text' id='6' className={street ? null : warning_text }  onChange={changeHandler('street')} />
    </div>
 
    <div>
@@ -17,7 +17,7 @@ const studentsHomeAdress=({street,apartmentAndNumber,town,city,postalCode,warnin
      {
         apartmentAndNumber  ? null  : warning
      }   
-     <input type='text'  className={apartmentAndNumber ? null : warning_text }   onChange={changeHandler('apartment_and_number')}/>
+     <input value={apartmentAndNumber} type='text'  className={apartmentAndNumber ? null : warning_text }   onChange={changeHandler('apartment_and_number')}/>
    </div>
 
    <div>
@@ -25,7 +25,7 @@ const studentsHomeAdress=({street,apartmentAndNumber,town,city,postalCode,warnin
      {
          town  ? null  :warning 
      }   
-     <input type='text' className={town ? null : warning_text } onChange={changeHandler('town')}/>
+     <input value={town} type='text' className={town ? null : warning_text } onChange={changeHandler('town')}/>
    </div>
 
    <div>
@@ -33,7 +33,7 @@ const studentsHomeAdress=({street,apartmentAndNumber,town,city,postalCode,warnin
      {
          city  ? null  : warning 
      }  
-     <input type='text' className={city ? null : warning_text } onChange={changeHandler('city')}/>
+     <input value={city} type='text' className={city ? null : warning_text } onChange={changeHandler('city')}/>
    </div>
    
    <div style={{width:'98%'}}>
@@ -41,7 +41,7 @@ const studentsHomeAdress=({street,apartmentAndNumber,town,city,postalCode,warnin
      {
          postalCode  ? null  :warning
      } 
-     <input type='text' className={postalCode ? null : warning_text}  onChange={changeHandler('postal_code')}/>
+     <input value={postalCode} type='text' className={postalCode ? null : warning_text}  onChange={changeHandler('postal_code')}/>
    </div>
 
 </div>

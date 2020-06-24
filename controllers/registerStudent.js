@@ -8,79 +8,20 @@ const mongoose = require('mongoose')
 module.exports.add = async (req,res,next)=>{
     try {
           
-      const { token } = req.body ; 
+      const { token , ...studentInformations } = req.body ; 
       const tokenData  = await jwt.verify( token , process.env.SECRET_KEY ) ; 
 
-       const newStudent=new Student({StudentInfo:{
-         information:{
-             name:req.body.name,
-             surname:req.body.surname,
-             dateofbirth:req.body.date_of_birth,
-             countryofbirth:req.body.country_of_birth,
-             countryofcitizenship:req.body.country_of_citizenship,
-             firstdateofgrade:req.body.first_date_of_grade_9,
-             nativelanguge:req.body.native_language,
-             gender:req.body.gender,
-             adress:{
-                 street:req.body.street,
-                 apartmentandnumber:req.body.apartment_and_number,
-                 town:req.body.town,
-                 city:req.body.city,
-                 postalcode:req.body.postal_code
-             },
-             telno:req.body.phone_number,
-             emailadress:req.body.e_mail,
-         },
-         parentinformation:{
-             parentname:req.body.parent_guardian_first_name,
-             parentsurname:req.body.parent_guardian_last_name,
-             relationshiptostudent:req.body.relationship_to_student,
-             emailadress:req.body.parent_guardian_e_mail_address,
-             telno:req.body.parent_guardian_mobile_phone_number
-         },
-         Images:[],
-         schoolinformation:{
-             currentlyhighschoolstate:req.body.currently_attending_a_high_school,
-             currentorlastschoolname:req.body. currentor_last_attended_school_name,
-             englishlanguageproficiency:req.body.english_language_proficiency,
-             gradelevel:req.body.look_forward_to_study_at_rosedale,
-             desireduniversitystudie:req.body.desired_university_studie,
-         },
-         registerState:{
-             onkayit:{note:''  , docState:false },
-             kayitliogrenci:{
-                 
-                 note:'', 
-                 state:false,
-                 edcStatus:{
+       const newStudent=new Student({
 
-                    attendanceStatus:false,
- 
-                 },
-                
-            },
-         },
-         odeme:{
-             kayitfiyati:'',
-             taksitplan:{
-                 taksitsayisi:2,
-                 firsttaksittarihi:{
-                     taksitmiktari:'',
-                     tahsilatmiktari:'',
-                     tahsiltarihi:'',
- 
-                 },
-                 secondtaksittarihi:{
-                     taksitmiktari:'',
-                     tahsilatmiktari:'',
-                     tahsiltarihi:'',
-                 }
-             },
-         },
-         registerdate:new Date(),
+       StudentInfo:{
+
+        ...studentInformations,
+        Images:[],
+
        },
-       owner:tokenData.owner, 
-       allowedToSee:tokenData.allowedToSee , 
+ 
+       owner:tokenData.owner,
+       allowedToSee:tokenData.allowedToSee, 
            
      });
  
@@ -170,22 +111,22 @@ module.exports.uploadDocuments = async (req,res) =>{
 
         const checkedStudent = await Student.findOne({_id:tokenData.studentID})
 
-        const copyStudent = {...checkedStudent.StudentInfo} ; 
+        const copyStudent = {...checkedStudent} ; 
 
-        if( checkedStudent && !checkedStudent.StudentInfo.registerState.onkayit.docState ) {
+        if( checkedStudent && !checkedStudent.registerState.docState ) {
 
                   
                 if( tokenData.owner == checkedStudent.owner ) {
 
-                    copyStudent.registerState.onkayit.docState = true ;
+                    copyStudent.registerState.docState = true ;
                     
                     req.files.forEach( (file,index)=> {
                          
-                        copyStudent.Images[index] = file.filename;
+                        copyStudent.StudentInfo.Images[index] = file.filename;
 
                     });
 
-                    await Student.updateOne({_id:tokenData.studentID},{StudentInfo:copyStudent});
+                    await Student.updateOne({_id:tokenData.studentID},{copyStudent});
 
                     return res.json({  result:'Success' });
 
@@ -278,19 +219,19 @@ module.exports.studentSearch = async (req,res,next)=>{
 
         var documentCount = await Student.countDocuments(finalSearchQuery);    
              
-        var sortedData = await  Student.find(finalSearchQuery).populate('owner').sort({ 'StudentInfo.registerdate' : 'descending' }).skip(10*pageNumber).limit(10);
+        var sortedData = await  Student.find(finalSearchQuery).populate('owner').sort({ registerdate : 'descending' }).skip(10*pageNumber).limit(10);
 
         let copyReport = [...sortedData ];
 
         copyReport.forEach((mainItem,index)=>{
             
              let copyReportObj = {...mainItem._doc};
-             let format = mainItem.StudentInfo.registerdate;
+             let format = mainItem.registerDate;
              let lastDate = format.getDate() + '/'  + (format.getMonth()+1) + '/' + format.getFullYear();
              let dateArray = lastDate.split('/');
              let updatedArray = dateArray.map((item)=>item.length === 1 ? '0' + item  : item);
 
-             copyReportObj.StudentInfo.registerdate = updatedArray.join('/'); 
+             copyReportObj.registerDate = updatedArray.join('/'); 
              copyReport[index] = copyReportObj;
         })
 
@@ -306,22 +247,26 @@ module.exports.studentSearch = async (req,res,next)=>{
 module.exports.getOneStudent = async (req,res,next)=>{
 
     const {id} = req.params;
+
+    console.log('Hİİİ');
   
     try 
     {
         const specificStudent = await Student.findOne({_id:id});
-        if(specificStudent)
-        {
+
+        if(specificStudent) {
+
             res.json({specificStudent});
-        }  
-        else 
-        {
-            res.json({message:'Server Error',error});
+
+        } else  {
+
+            res.json( { error:'Error' } );
+
         }
                        
     } catch (error) 
     {
-        res.json({error})  
+        res.json( { error } )  
     } 
 
 }

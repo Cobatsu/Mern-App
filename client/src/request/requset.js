@@ -9,23 +9,22 @@ export const makeRequest = (Type,Body,activeCircle,backStage,setResult) => {
 
       const { result } = data.data ; 
     
-         
-      setResult(result);
 
-      backStage(true);
+      ReactDOM.unstable_batchedUpdates(()=>{
 
-      activeCircle(false);
+        setResult(result);
+  
+        backStage(true);
+  
+        activeCircle(false);
+           
+      })
          
     })
     .catch((err)=>{ console.log(err) })    
 }
 
-export const makeFileRequest = (Type,FormData,activeCircle,backStage)=>{
-  axios[Type]('/api/register', FormData).then((res)=>{
-   
-      
-  })
-}
+
 
 export const makePersonelRequest = (type,setPersonels,setLoading)=>{
   
@@ -69,20 +68,25 @@ export const makeAddUserRequest = (Type,Body,alreadyInUse,setModal,setLoggedin)=
 }
 
 
-export const makeSpecificUserRequest = (Type,id,setLoading,setStudent)=>{
- axios[Type]('/api/register/'+id).then((res)=>{
-     const {specificStudent,error} = res.data;   
-     
-   if(error)
-   {
-      console.log(error); 
-   }
-   else
-   {
+export const makeSpecificStudentRequest = ( Type , id ,  setLoading , setStudent ) => {
 
-      setStudent(specificStudent);
+ axios[Type]('/api/register/get_student/'+ id).then( (res) => {
+
+     const { specificStudent , error } = res.data;   
+     
+   if(error) {
+
+      console.log(error);
+
+   } else {
+
+      var { StudentInfo  , owner } = specificStudent ; 
+
+      setStudent(StudentInfo);
       setLoading(false);
+
    }
+
   })
   .catch((err)=>{
     
@@ -461,25 +465,19 @@ export const makePersonSearchRequest = (Type,searchData,setLoggedin , setReport 
      
     const {sortedData,documentCount} = res.data;
 
-    if(res.data.error && !res.data.isLoggedin)
-    {
+    if(res.data.error && !res.data.isLoggedin) {
 
       return setLoggedin(false);
       
-    }
-
-    else if (sortedData.length > 0)
-    {
+    } else if (sortedData.length > 0) {
       
       setCount(documentCount);
       close();
       setReport(sortedData);
       setNotFound(null)
-
       
-    }
-    else
-    {
+    } else {
+
       setCount(0);    
       setNotFound(true)
       close();
@@ -505,7 +503,7 @@ export const makeSubBranchRequest = (Type,id,setSubBranches)=>{
     const {subBranches} = res.data;
     
   })
-  .catch((err)=>{
+  .catch((err) => {
 
   })
   
@@ -521,12 +519,16 @@ export const makeRelatedAgencyRequest = (Type,id,setLoading,setRelatedAgency,set
      
       const { relatedAgency } = res.data;
 
-      if(res.data.error && !res.data.isLoggedin){
+      if(res.data.error && !res.data.isLoggedin) {
+
         setLoggedin(false);
+
       }
-      else{
+      else {
+
         setRelatedAgency(relatedAgency)
         setLoading(false);
+
       }
 
  })
@@ -545,12 +547,11 @@ export const makeStudentSearchRequest = (Type,searchData,setLoggedin , setReport
   })
   .then((res)=>{
 
-    console.log(res);
      
-    const {sortedData,documentCount} = res.data;
+    const { sortedData , documentCount } = res.data;
 
-    if(res.data.error && !res.data.isLoggedin)
-    {
+    if(res.data.error && !res.data.isLoggedin) {
+
 
       return setLoggedin(false);
       
@@ -607,3 +608,10 @@ export const makeSendFormRequest = ( Type , data , setSentForm , setFormSent )=>
   })
 
 }
+
+
+export const makeUpdateStudentRequest = (Type,Body,activeCircle,backStage,setResult) => {
+
+
+  
+} 

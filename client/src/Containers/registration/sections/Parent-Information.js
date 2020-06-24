@@ -1,6 +1,6 @@
 import React from 'react';
 
-const parentInformation =({parentFirstName,parentLastName,parenEmailAdress,parentPhoneNumber,warning,warning_text,changeHandler,relationship_to_student_ref})=><div className='Item'>
+const parentInformation =({parentFirstName,parentLastName,parenEmailAdress,parentPhoneNumber,warning,warning_text,changeHandler})=><div className='Item'>
 <h1>4.PARENT INFORMATION</h1>
 <div className='Fields'>
 
@@ -9,20 +9,20 @@ const parentInformation =({parentFirstName,parentLastName,parenEmailAdress,paren
      {
          parentFirstName  ? null  :warning  
      } 
-     <input type='text' id='6' className={parentFirstName  ? null : warning_text}  onChange={changeHandler('parent_guardian_first_name')}/>
+     <input value={parentFirstName} type='text' id='6' className={parentFirstName  ? null : warning_text}  onChange={changeHandler('parent_guardian_first_name')}/>
    </div>
 
    <div>
      <label>Parent/Guardian Last Name </label> 
      {
-         parentLastName  ? null  :warning  
+         parentLastName  ? null  : warning  
      }   
-     <input type='text' className={ parentLastName ? null : warning_text} onChange={changeHandler('parent_guardian_last_name')}/>
+     <input value={parentLastName} type='text' className={ parentLastName ? null : warning_text} onChange={changeHandler('parent_guardian_last_name')}/>
    </div>
 
    <div>
      <label>Relationship to Student</label>
-     <select onClick={changeHandler('relationship_to_student')} ref={relationship_to_student_ref}>
+     <select onClick={changeHandler('relationship_to_student')}>
           <option>Father</option>
           <option>Mother</option>
           <option>Other</option>
@@ -34,7 +34,7 @@ const parentInformation =({parentFirstName,parentLastName,parenEmailAdress,paren
      {
          parenEmailAdress  ? null  :warning  
      } 
-     <input type='text' className={parenEmailAdress ? null : warning_text}  onChange={changeHandler('parent_guardian_e_mail_address')}/>
+     <input value={parenEmailAdress} type='text' className={parenEmailAdress ? null : warning_text}  onChange={changeHandler('parent_guardian_e_mail_address')}/>
    </div>
    
    <div style={{width:'98%'}}>
@@ -42,7 +42,7 @@ const parentInformation =({parentFirstName,parentLastName,parenEmailAdress,paren
      {
          parentPhoneNumber  ? null  :warning  
      }
-     <input type='text' className={parentPhoneNumber ? null : warning_text}  onChange={changeHandler('parent_guardian_mobile_phone_number')}/>
+     <input value={parentPhoneNumber} type='text' className={parentPhoneNumber ? null : warning_text}  onChange={changeHandler('parent_guardian_mobile_phone_number')}/>
    </div>
 
 </div>

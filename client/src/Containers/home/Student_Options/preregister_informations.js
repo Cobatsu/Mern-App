@@ -1,129 +1,88 @@
 import React,{useEffect,useState} from 'react';
 import {UpdateLoggedin}  from '../../isLoggedin/action'
-import {makeSpecificUserRequest}  from '../../../request/requset'
+import {makeSpecificStudentRequest}  from '../../../request/requset'
 import styled from 'styled-components';
 import Circle from '../../../UI/Circle';
-import {IconPermission} from '../../../UI/Permissions/permissionIcon';
+import { IconEdit , IconRemove , IconSendConfirmation } from '../../../UI/IconButtons/IconButton';
+import RegisterForm from '../../registration/registerForm'
 
-const InformationWrapper = styled.div`
+const MainWrapper = styled.form`
 display:flex;
 background:white;
-width:88%;
+width:70%;
 margin:0 auto;
 align-items:center;
 justify-content:center;
 padding:0;
 margin-top:2%;
-padding:30px;
+margin-bottom:30px;
 @media (max-width: 1030px) {
   padding:10px;
 }
 border-radius:3px;
 flex-flow:column;
 `
+
 const InnerItems = styled.div`
 display:flex;
 justify-content:flex-end;
-min-width:80%;
+width:95%;
 margin-bottom:20px;
-paddin:10px;
+color:#30475e;
+@media (max-width: 1030px) {
+    justify-content:center !important;
+}
 `
 
-//-----------------------------------
-const InformationFields = styled.div`
-width:80%;
-text-align:center;
-`
+const Title = styled.div `
 
-const UpdateInput = styled.input`
-
-`
-
-const FieldWrapper = styled.div`
-width:100%;
-display:flex;
-flex-wrap:wrap;
-justify-content:space-between;
-`
-
-const Title = styled.h1`
-padding:10px  0px 30px 0px;
-color:#a4c5c6;
-`
-
-const Field  =  styled.div`
-width:48%;
-display:flex;
-justify-content:center;
-align-items:center;
-margin-bottom:20px;
-`
-const ValueSpan = styled.span`
-text-align:left;
-flex:1;
-background-color:#eeeeee;
-padding:3px  0 3px 10px ;
+font-size: 22 ; 
+font-weight:bolder ; 
+margin:20px 0 ; 
+color:#61c0bf ;
 
 `
-const DescriptionSpan = styled.span`
-text-align:center;
-flex:0.2;
-
-`
-//-----------------------------------
 
 
-
-const GeneralInformations  = ({match,...rest})=>{
+const StudentInformations  = ( { match , ...rest } )=>{
      
     const [loading , setLoading ]  = useState(true);
-    const [student , setStudent ]  = useState({StudentInfo:{}});
+    const [student , setStudent ]  = useState({});
     
-
     useEffect(()=>{
-        const id = match.params.id;
-        makeSpecificUserRequest('get',id,setLoading , setStudent)
+
+        const { id }= match.params;
+
+        makeSpecificStudentRequest('get' , id , setLoading , setStudent ) ;
+
     },[]);
 
-   
+    return  loading 
 
-    return  <UpdateLoggedin page='GENERAL_INFORMATİONS'  {...rest}>
-      {
-             (Loading,user)=>Loading ? null : loading 
              ?
+
              <Circle position='static' marginTop={30} Load={loading}/>
+
              :
-              <InformationWrapper> 
-                        <Circle top={11} left={50} Load={loading}/>
-                        <React.Fragment>
-                           <h1>ÖN KAYIT BİLGİLERİ</h1>
-                           <InnerItems>{IconPermission({permissions:[4,1,2,3]})}</InnerItems> 
-                          
-                           <InformationFields>
-                             
-                                <Title>Öğrenci Bilgileri</Title>
-                                <FieldWrapper>                                  
-                                    
-                                    <Field>
-                                        <DescriptionSpan>İsim</DescriptionSpan>
-                                        <ValueSpan>Ercan</ValueSpan>
-                                    </Field>
 
-                                      
-                                    <Field>
-                                        <DescriptionSpan>Soy İsim</DescriptionSpan>
-                                        <ValueSpan>Özer</ValueSpan>
-                                    </Field>
+             <MainWrapper>
+                            
+                            <Title> <i style={{marginRight:8}} class="fas fa-file-alt"></i> Ön Kayıt Bilgileri  </Title>
 
-                                </FieldWrapper>
+                            <InnerItems> 
 
-                           </InformationFields>
-                        </React.Fragment>
-              </InformationWrapper>
-      }
-         </UpdateLoggedin>   
-    
+                                  <IconEdit />
+
+                                  <IconSendConfirmation />
+
+                            </InnerItems>
+
+                           <RegisterForm student = {student} {...rest} />                 
+
+             </MainWrapper>
+          
+
 }
 
 
-export default GeneralInformations;
+export default StudentInformations;
