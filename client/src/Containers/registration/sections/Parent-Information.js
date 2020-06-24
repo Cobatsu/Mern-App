@@ -15,7 +15,7 @@ const parentInformation =({parentFirstName,parentLastName,parenEmailAdress,paren
    <div>
      <label>Parent/Guardian Last Name </label> 
      {
-         parentLastName  ? null  :warning  
+         parentLastName  ? null  : warning  
      }   
      <input value={parentLastName} type='text' className={ parentLastName ? null : warning_text} onChange={changeHandler('parent_guardian_last_name')}/>
    </div>

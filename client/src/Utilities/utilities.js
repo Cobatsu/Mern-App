@@ -65,21 +65,20 @@ export const studentListHelperPackage = ( id )=>{
     
         var fullName = item.owner.firstName + ' ' + item.owner.lastName ; 
     
-        var docState = item.StudentInfo.registerState.onkayit.docState ; 
+        var docState = item.registerState.docState ; 
     
         return [
     
-          restrictWord( item.StudentInfo.information.name , 16) , 
-          restrictWord( item.StudentInfo.information.surname , 16) ,
+          restrictWord( item.StudentInfo.name , 16) , 
+          restrictWord( item.StudentInfo.surname , 16) ,
           <Capsule  style={ {...studentStatusColor(docState).style}} >  { studentStatusColor(docState).text } </Capsule>,
           item.owner._id === id  ?  <Capsule>{restrictWord(fullName,16)}</Capsule> : restrictWord(fullName,16) ,
-          item.StudentInfo.registerdate 
+          item.registerDate 
         
         ]
-    
+  
       } 
     
-
       return {
 
         filterIconOptions,

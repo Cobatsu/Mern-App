@@ -68,10 +68,11 @@ export const makeAddUserRequest = (Type,Body,alreadyInUse,setModal,setLoggedin)=
 }
 
 
-export const makeSpecificStudentRequest = (Type,id,setLoading,setStudent)=>{
+export const makeSpecificStudentRequest = ( Type , id ,  setLoading , setStudent ) => {
+
  axios[Type]('/api/register/get_student/'+ id).then( (res) => {
 
-     const {specificStudent,error} = res.data;   
+     const { specificStudent , error } = res.data;   
      
    if(error) {
 
@@ -79,26 +80,13 @@ export const makeSpecificStudentRequest = (Type,id,setLoading,setStudent)=>{
 
    } else {
 
+      var { StudentInfo  , owner } = specificStudent ; 
 
-      var lastStudent = Object.keys ( specificStudent.StudentInfo ) .reduce((init,curr)=>{
-
-           if( typeof specificStudent.StudentInfo[curr] === 'object' ) {
-
-                return {...init,...specificStudent.StudentInfo[curr]};
-                  
-           } else {
-
-                return {...init , [curr] : specificStudent.StudentInfo[curr] }
-
-           }
-
-      },{})
-
-      console.log(lastStudent)
-
-      setStudent(lastStudent);
+      setStudent(StudentInfo);
       setLoading(false);
+
    }
+
   })
   .catch((err)=>{
     
@@ -620,3 +608,10 @@ export const makeSendFormRequest = ( Type , data , setSentForm , setFormSent )=>
   })
 
 }
+
+
+export const makeUpdateStudentRequest = (Type,Body,activeCircle,backStage,setResult) => {
+
+
+  
+} 

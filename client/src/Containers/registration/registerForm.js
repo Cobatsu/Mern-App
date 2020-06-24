@@ -1,6 +1,6 @@
 import React from 'react';
 import './register.css'
-import {makeRequest} from '../../request/requset'
+import { makeRequest , makeUpdateStudentRequest } from '../../request/requset'
 import StudentInformations  from './sections/Student-Information';
 import StudentsHomeAdress from './sections/Students-Home-Adress';
 import AboutRegisteringStudent from './sections/About-registering-Student';
@@ -10,7 +10,44 @@ import Submit from './sections/Submit';
 import Header from './sections/Header';
 import styled from 'styled-components';
 
+const initialState = {
+  name:'',
+  surname:'',
+  phone_number:'',
+  e_mail:'',
+  date_of_birth:new Date(),
+  gender:'Male',
+  street:'',
+  apartment_and_number:'',
+  town:'',
+  city:'',
+  postal_code:'',
+  country_of_birth:'',
+  country_of_citizenship:'',
+  first_date_of_grade_9:new Date(),
+  native_language:'',
+  parent_guardian_first_name:'',
+  parent_guardian_last_name:'',
+  relationship_to_student:'Father',
+  parent_guardian_e_mail_address:'',
+  parent_guardian_mobile_phone_number:'',
+  currently_attending_a_high_school:'Yes',
+  currentor_last_attended_school_name:'',
+  english_language_proficiency:'TOEFL',
+  look_forward_to_study_at_rosedale:'Grade 10',
+  desired_university_studies:'Engineering &  Physics',
+}
 
+const additionState = {
+  warning:null,
+  disabled:false, 
+  warning_text:null,
+  circle:false,
+  backStage:false,
+  warningModal:false,
+  tokenCheck:true , 
+  result:''
+}
 
 const ErrorCapsule = styled.div`
 
@@ -24,49 +61,16 @@ color:white;
 `
 
 class RegisterForm extends React.Component{
+
+    constructor(props) {
+
+      super(props);
+
+      this.state = { studentInformations:props.student || initialState , ...additionState , origin:props.student ? 'DETAİL' : 'REGİSTER' } 
+      this.token =  new URLSearchParams(this.props.location.search).get('token') ; 
+
+    }
    
-   state = {
-
-        studentInformations:{
-          name:'',
-          surname:'',
-          phone_number:'',
-          e_mail:'',
-          date_of_birth:new Date(),
-          gender:'Male',
-          street:'',
-          apartment_and_number:'',
-          town:'',
-          city:'',
-          postal_code:'',
-          country_of_birth:'',
-          country_of_citizenship:'',
-          first_date_of_grade_9:new Date(),
-          native_language:'',
-          parent_guardian_first_name:'',
-          parent_guardian_last_name:'',
-          relationship_to_student:'Father',
-          parent_guardian_e_mail_address:'',
-          parent_guardian_mobile_phone_number:'',
-          currently_attending_a_high_school:'Yes',
-          currentor_last_attended_school_name:'',
-          english_language_proficiency:'TOEFL',
-          look_forward_to_study_at_rosedale:'Grade 10',
-          desired_university_studies:'Engineering &  Physics',
-        },
-
-        warning:null,
-        warning_text:null,
-        circle:false,
-        backStage:false,
-        warningModal:false,
-        result:'',
-        users:[],
-
-   }
-
-   token = new URLSearchParams(this.props.location.search).get('token'); 
-
    
    activeCircle=(value) => {
      this.setState({circle:value});
@@ -81,22 +85,6 @@ class RegisterForm extends React.Component{
    }
 
 
-   static getDerivedStateFromProps( props , state ) {
-
-      const { student } = props ; 
-     
-      if(student) {
-
-        return { ...state , studentInformations:student }
-
-      } else {
-
-        return state ; 
-
-      }
-
-   }
-
 
    SubmitHandler=(e)=> {
 
@@ -104,6 +92,8 @@ class RegisterForm extends React.Component{
 
        const registeredStudent = {...this.state.studentInformations};
       
+       const { origin } = this.state; 
+
        var scroll = 0 ;
 
         for (const key in registeredStudent) {
@@ -125,7 +115,17 @@ class RegisterForm extends React.Component{
 
        }  
 
-        makeRequest('post', { token:this.token , ...this.state.studentInformations  } ,this.activeCircle,this.backStage,this.setResult);
+        if( origin === 'REGİSTER' ) {
+
+                return  makeRequest( 'post', { token:this.token , ...this.state.studentInformations  } ,this.activeCircle,this.backStage,this.setResult);
+
+        } else {
+                
+                return makeUpdateStudentRequest( 'post' ,  this.state.studentInformations , this.activeCircle,this.backStage,this.setResult  ) ;
+
+        }
+
+       
    }
 
    changeHandlerFactory=(type)=> {
@@ -150,42 +150,51 @@ class RegisterForm extends React.Component{
    
    render() {
 
-        console.log(this.state.studentInformations)
+       const { origin } = this.state ; 
 
-  
-      // if(!this.token) {
+       if( this.token && origin === 'DETAİL') {
 
-      //   return <div style={{display:'flex' , justifyContent:'center',alignItems:'center' , width:'100%' , height:'100%'}}>
+         return <div style={{display:'flex' , justifyContent:'center',alignItems:'center' , width:'100%' , height:'100%'}}>
             
-      //   <ErrorCapsule > 
+          <ErrorCapsule > 
 
-      //       Hatalı Token ,
+              Hatalı Token ,
 
-      //       Bu Bağlantıyı Yalnızca Bir Kez Kullanabilirsiniz !  
-            
-      //   </ErrorCapsule>
+              Bu Bağlantıyı Yalnızca Bir Kez Kullanabilirsiniz !  
+              
+          </ErrorCapsule>
 
-      //  </div>
+        </div>
 
-      // }
+       }
     
+ 
       return (
         
          <div className='Container'>
-             
-               <Header backStage={this.state.backStage} result={this.state.result} warning={this.state.warningModal}/>
-               
-               <form onSubmit={this.SubmitHandler} className='Inner-Register'>             
+
+              
+
+                {
+                  origin === 'REGİSTER' &&  <Header origin={this.state.origin} backStage={this.state.backStage} result={this.state.result} warning={this.state.warningModal}/>
+                }
+                
+              
+               <form onSubmit={this.SubmitHandler} style={{ width : origin === 'REGİSTER' ? '55%' : '80%' }} className='Inner-Register'>             
                             
-               <StudentInformations changeHandler={this.changeHandlerFactory}  name={this.state.studentInformations.name} warning={this.state.warning} warningText={this.state.warning_text} surname={this.state.studentInformations.surname} phoneNumber={this.state.studentInformations.phone_number} eMail={this.state.studentInformations.e_mail} />
+               <StudentInformations birthDate={this.state.studentInformations.date_of_birth} changeHandler={this.changeHandlerFactory}  name={this.state.studentInformations.name} warning={this.state.warning} warningText={this.state.warning_text} surname={this.state.studentInformations.surname} phoneNumber={this.state.studentInformations.phone_number} eMail={this.state.studentInformations.e_mail} />
                <StudentsHomeAdress changeHandler={this.changeHandlerFactory} street={this.state.studentInformations.street} apartmentAndNumber={this.state.studentInformations.apartment_and_number} warning={this.state.warning}  warning_text={this.state.warning_text} town={this.state.studentInformations.town} city={this.state.studentInformations.city} postalCode={this.state.studentInformations.postal_code} />
-               <AboutRegisteringStudent country_of_birth={this.state.studentInformations.country_of_birth} country_of_citizenship={this.state.studentInformations.country_of_citizenship} native_language={this.state.studentInformations.native_language}  changeHandler={this.changeHandlerFactory} warning={this.state.warning} warning_text={this.state.warning_text}/>
+               <AboutRegisteringStudent first9Date={this.state.studentInformations.first_date_of_grade_9} country_of_birth={this.state.studentInformations.country_of_birth} country_of_citizenship={this.state.studentInformations.country_of_citizenship} native_language={this.state.studentInformations.native_language}  changeHandler={this.changeHandlerFactory} warning={this.state.warning} warning_text={this.state.warning_text}/>
                <ParentInformation   parentFirstName={this.state.studentInformations.parent_guardian_first_name} parentLastName={this.state.studentInformations.parent_guardian_last_name} parenEmailAdress={this.state.studentInformations.parent_guardian_e_mail_address} parentPhoneNumber={this.state.studentInformations.parent_guardian_mobile_phone_number} warning={this.state.warning} warning_text={this.state.warning_text} changeHandler={this.changeHandlerFactory}/>
                <PrevSchoolInfo   currentorlastAttendedSchool={this.state.studentInformations.currentor_last_attended_school_name} warning={this.state.warning}  warning_text={this.state.warning_text} changeHandler={this.changeHandlerFactory} />
-               <Submit circle={this.state.circle}/>  
+
+
+               
+               <Submit circle={this.state.circle}/> 
+               
+          
 
                </form>
-
 
          </div>
      )
