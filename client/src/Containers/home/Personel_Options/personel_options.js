@@ -2,7 +2,6 @@ import React, {useEffect,useState,useContext,useCallback,useRef,createRef,useMem
 import {makeSpecificPersonRequest,makeUpdateUserRequest,makeRemoveUserRequest,makeReportSearchRequest,makeRelatedAgencyRequest,makePersonSearchRequest,makeStudentSearchRequest}  from '../../../request/requset'
 import styled from 'styled-components';
 import Circle from '../../../UI/Circle';
-import {IconPermission} from '../../../UI/Permissions/permissionIcon';
 import {UserInputs,ChecBoxes,PermissionsTabs} from '../Home_Options/addPerson'
 import {MuiPickersUtilsProvider,KeyboardDatePicker } from '@material-ui/pickers'
 import {Context} from '../../../Context/Context'
@@ -12,8 +11,7 @@ import {Regions}  from '../../../Regions/regions'
 import {Link,NavLink,Route,Switch,useLocation} from 'react-router-dom';
 import Modal from '../../../UI/sentModal'
 import Stage from '../../../UI/backStage'
-import {Redirect}  from 'react-router-dom'
-import {ReportList} from '../Home_Options/myReports'
+import { IconEdit , IconRemove } from '../../../UI/IconButtons/IconButton'
 import {Admin,Temsilci,Bayi} from './statusArrays/statusArray'
 import {_PersonelList} from  './personelList'
 import UserMenu from '../../../Components/Usermenu'
@@ -120,33 +118,6 @@ const ButtonWrapper = styled.div`
 display:flex;
 justify-content:flex-end;
 width:100%;
-`
-
-
-const Icon = styled.div`
-border-radius:5px;
-padding:5px 10px;
-color:white;
-background:#0779e4;
-font-size:15px;
-margin-right:10px;
-&:hover{
-    cursor:pointer;
-}
-`
-
-
-
-const Capsule = styled.div`
-display:flex;
-align-items:center;
-justify-content:center;
-border-radius:4px;
-background:rgba(245, 123, 81, .1);
-color:#f57b51;
-border:1px solid #f57b51;
-font-size:11.6px;
-padding:6px;
 `
 
 
@@ -454,11 +425,19 @@ const General_User_Info = ({match,...rest})=>{
 
               
                {
-                  user.permissions.Personel_Bilgileri.includes(PermissionsNumbers.UPDATE) &&  <Icon onClick={()=>{setDisable(false)}}>Düzenle <i className="fas fa-edit"/></Icon>     
+                  user.permissions.Personel_Bilgileri.includes(PermissionsNumbers.UPDATE) &&  
+                  
+                  <IconEdit handler = {()=>{setDisable(false)}} />
+
                } 
                        
+                       
                {
-                  user.permissions.Personel_Bilgileri.includes(PermissionsNumbers.REMOVE) &&   <Icon style={{background:'#c70039'}} onClick={openModal}> Kullanıcıyı Sil <i className="fas fa-trash-alt"></i></Icon>
+
+                  user.permissions.Personel_Bilgileri.includes(PermissionsNumbers.REMOVE) &&   
+                  
+                  <IconRemove  handler={openModal} deletedText = 'Personeli Sil'/>
+
                }
              
             </InnerItems>
