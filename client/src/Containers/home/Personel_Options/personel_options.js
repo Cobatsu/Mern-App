@@ -17,7 +17,7 @@ import {_PersonelList} from  './personelList'
 import UserMenu from '../../../Components/Usermenu'
 import {useViewport} from '../../home/navs/customHooks/viewPortHook'
 import GeneralList from '../../../Components/GeneralList'
-import {restrictWord , statusColors , studentStatusColor , personelListHelperPackage , studentListHelperPackage , reportListHelperPackage} from '../../../Utilities/utilities'
+import {restrictWord , statusColors , studentStatusColor , personelListHelperPackage , studentListHelperPackage , reportListHelperPackage , PermissionsNumbers} from '../../../Utilities/utilities'
 import queryString from 'querystring'
 import Student from '../Home_Options/students'
 
@@ -160,14 +160,6 @@ const setUserMenuItems = (userInformations,user)=>{
 
   }
 
-}
-
-
-export const PermissionsNumbers = {
-  REMOVE: 1,
-  UPDATE: 2,
-  ADD: 3,
-  READ: 4,
 }
 
 
@@ -402,7 +394,7 @@ const General_User_Info = ({match,...rest})=>{
            <Modal backStage={modalShow} closeModal={closeModal_1} type='UPDATE_PERSONEL'/>
            <Modal backStage={alreadyInUse} closeModal={closeModal_2} type='NOT_UNİQUE'/>
            <Modal backStage={warning} closeModal={closeModal_3} type='EMPTY_FİELD'/>
-           <Modal backStage={deletePopUp} closeModal={closeModal_4}  deleteUser={removeUser}  type='DELETE_USER'/>
+           <Modal backStage={deletePopUp} closeModal={closeModal_4}  handler={removeUser}  type='DELETE_USER'/>
            <Modal backStage={isDeleted} closeModal={closeModal_5} type='DELETED'/>
 
                     
@@ -431,12 +423,11 @@ const General_User_Info = ({match,...rest})=>{
 
                } 
                        
-                       
                {
 
                   user.permissions.Personel_Bilgileri.includes(PermissionsNumbers.REMOVE) &&   
                   
-                  <IconRemove  handler={openModal} deletedText = 'Personeli Sil'/>
+                  <IconRemove  handler={openModal} deletedText = 'Personeli Sil' />
 
                }
              

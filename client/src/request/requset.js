@@ -68,31 +68,7 @@ export const makeAddUserRequest = (Type,Body,alreadyInUse,setModal,setLoggedin)=
 }
 
 
-export const makeSpecificStudentRequest = ( Type , id ,  setLoading , setStudent ) => {
 
- axios[Type]('/api/register/get_student/'+ id).then( (res) => {
-
-     const { specificStudent , error } = res.data;   
-     
-   if(error) {
-
-      console.log(error);
-
-   } else {
-
-      var { StudentInfo  , owner } = specificStudent ; 
-
-      setStudent(StudentInfo);
-      setLoading(false);
-
-   }
-
-  })
-  .catch((err)=>{
-    
-      console.log(err);
-  });
-}
 
 export const makeLogoutRequest = (Type,Body,setLoggedin,setLoading)=>{
   axios[Type]('/api/logout',Body,  {
@@ -610,8 +586,58 @@ export const makeSendFormRequest = ( Type , data , setSentForm , setFormSent )=>
 }
 
 
-export const makeUpdateStudentRequest = (Type,Body,activeCircle,backStage,setResult) => {
+export const makeUpdateStudentRequest = ( Type , data , id , setUpdatedStudent , setBackStageLoading , setModalType ) => {
 
+  axios[Type]('/api/register/student/'+ id ,data , { headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}})
+  
+  .then((response)=>{
 
+    const { updatedStudent:{ StudentInfo } } = response.data ; 
+
+    console.log(StudentInfo)
+
+    ReactDOM.unstable_batchedUpdates(()=>{
+
+      setBackStageLoading(false);
+      setUpdatedStudent(StudentInfo);
+      setModalType('STUDENT_UPDATED');
+
+    })
+ 
+  })
+  .catch((err)=>{
+
+  })
   
 } 
+
+
+export const makeSendForConfirmationRequest = ( Type , data , id , setUpdatedStudent , setBackStageLoading , setModalType  ) => {
+
+
+
+}
+
+export const makeSpecificStudentRequest = ( Type , id ,  setLoading , setStudent ) => {
+
+  axios[Type]('/api/register/student/'+ id ,  { headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}}).then( (res) => {
+ 
+      const { specificStudent , error } = res.data;   
+      
+    if(error) {
+ 
+       console.log(error);
+ 
+    } else {
+ 
+       setStudent(specificStudent);
+       setLoading(false);
+ 
+    }
+ 
+   })
+   .catch((err)=>{
+     
+       console.log(err);
+   });
+ }

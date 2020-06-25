@@ -56,7 +56,6 @@ color:white;
 width:86%;
 border-radius:3px;
 text-align:center;
-box-shadow:0 0 5px  rgb(112, 112, 112);
 border:none;
 margin-top:10px;
 out-line:none;
@@ -64,8 +63,10 @@ padding:5px;
 display:flex;
 align-items: center;
 justify-content: center;
+
 &:hover{
     cursor:pointer;
+    box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 3), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
 }
 
 &:focus{
@@ -85,7 +86,6 @@ padding:0;
 width:83%;
 margin-top:3px;
 out-line:none;
-box-shadow:0 0 5px  rgb(112, 112, 112);
 border:none;
 color:white;
 border-radius:3px;
@@ -93,6 +93,7 @@ background-color:#1eb2a6;
 font-weight:400;
 &:hover{
     cursor:pointer;
+    box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 3), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
 }
 `
 const PopUp =styled.div`

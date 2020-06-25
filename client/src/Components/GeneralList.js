@@ -130,6 +130,7 @@ padding:8px;
 border-radius:6px;
 &:hover{
   cursor:pointer;
+  box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 3), 0 2px 4px -1px rgba(0, 0, 0, 0.03) ;
 }
 `
 
@@ -233,12 +234,9 @@ const GeneralList = (
               if(i !== refs.current.indexOf(ref) && refs.current[i].current){  //close all other list items ; 
                 refs.current[i].current.style.transform=`translateX(0)`
               }
-
         }
-
     }
     
-
   
     return   <HiddenWrapper>
   

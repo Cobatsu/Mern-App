@@ -37,7 +37,7 @@ const Circle = React.memo(({Load,left,top,position,marginTop,width,height})=>{
                        return 0;
                     }
                     else{
-                       return prevState+15
+                       return prevState+13
                     }    
                  });
             

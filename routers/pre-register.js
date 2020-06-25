@@ -12,7 +12,12 @@ router.route('/sendForm').post(auth,registerStudent.sendForm);
 
 router.route('/get_students').post(auth,registerStudent.studentSearch);
 
-router.get('/get_student/:id',registerStudent.getOneStudent);
+router.
+route('/student/:id')
+.all(auth)
+.get(registerStudent.getOneStudent)
+.patch(registerStudent.updateStudent)
+.delete(registerStudent.deleteStudent)
 
 module.exports = router;
 

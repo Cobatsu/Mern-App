@@ -1,12 +1,12 @@
 import React from 'react';
 
-const prevSchoolInfo = ({currentorlastAttendedSchool,warning,warning_text,changeHandler})=> <div className='Item'>
+const prevSchoolInfo = ({currentorlastAttendedSchool,warning,warning_text,changeHandler,disabled})=> <div className='Item'>
 <h1>5.PREVIOUS SCHOOL INFORMATION</h1>
 <div className='Fields'>
 
    <div>
      <label htmlFor='6' >Are you currently attending a high school?</label>   
-     <select onClick={changeHandler('currently_attending_a_high_school')} >
+     <select onClick={changeHandler('currently_attending_a_high_school')} disabled={disabled} >
          <option>Yes</option>
          <option>No</option>
      </select>
@@ -17,12 +17,12 @@ const prevSchoolInfo = ({currentorlastAttendedSchool,warning,warning_text,change
      {
         currentorlastAttendedSchool  ? null  :warning 
      }   
-     <input type='text'  value={currentorlastAttendedSchool} className={currentorlastAttendedSchool ? null :warning_text} onChange={changeHandler('currentor_last_attended_school_name')}/>
+     <input type='text'  value={currentorlastAttendedSchool} disabled={disabled} className={currentorlastAttendedSchool ? null :warning_text} onChange={changeHandler('currentor_last_attended_school_name')}/>
    </div>
 
    <div>
      <label>English Language Proficiency</label>
-     <select onClick={changeHandler('english_language_proficiency')} >
+     <select onClick={changeHandler('english_language_proficiency')}  disabled={disabled} >
           <option>TOEFL</option>
           <option>IELTS</option>
           <option>TOEIC</option>
@@ -32,7 +32,7 @@ const prevSchoolInfo = ({currentorlastAttendedSchool,warning,warning_text,change
 
    <div>
      <label>I look forward to study at rosedale academy</label>
-     <select onClick={changeHandler('look_forward_to_study_at_rosedale')} >
+     <select onClick={changeHandler('look_forward_to_study_at_rosedale')} disabled={disabled}  >
           <option>Grade 10</option>
           <option>Grade 11</option>
           <option>Grade 12</option>
@@ -41,7 +41,7 @@ const prevSchoolInfo = ({currentorlastAttendedSchool,warning,warning_text,change
    
    <div style={{width:'98%'}}>
      <label>Desired University Studies</label>
-     <select onClick={changeHandler('desired_university_studies')}>
+     <select onClick={changeHandler('desired_university_studies')} disabled={disabled} >
           <option>Engineering &  Physics</option>
           <option>Health &  Environment</option>
           <option>Accounting &  Mathematics</option>

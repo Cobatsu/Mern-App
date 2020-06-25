@@ -75,31 +75,47 @@ module.exports.add = async (req,res,next)=>{
          }
     
 
-    // else {
-
-    //     try { 
-
-    //     const all  =  await  Student.find();
-    //     const id = all[all.length-1]._id;
-    //     const lastItem = all[all.length-1];
-    //     const update = await Student.updateOne({_id:id},{StudentInfo:{...lastItem.StudentInfo, Images:{
-    //         govermentIssuedPhoto:req.files[0].filename,
-    //         rosedaleEnglishProficiencyTest:req.files[1].filename,
-    //         englishProficiencyTestResult:req.files[2].filename,
-    //         AcopyOfTranslated:req.files[3].filename,
-    //         }
-    //     }})
- 
-    //      res.status(201).send(update);
-    //  }
-    //  catch (error) 
-    //  {
-    //      res.status(406).send(error);
-    //  }
- 
-    // }
 }
 
+module.exports.updateStudent = async (req,res) => {
+
+    const { params:{id} , body }  = req ; 
+
+    try {
+
+        await Student.updateOne({_id:id} , {$set:{StudentInfo:body}});
+        
+        const updatedStudent = await Student.findOne({_id:id});
+        
+        res.json({updatedStudent});
+        
+    } catch (error) {
+
+        res,json({error});
+        
+    }
+
+}
+
+
+module.exports.deleteStudent = async (req,res) => { 
+
+    const { params:{id} }  = req ; 
+
+    try {
+
+        const updatedStudent = await Student.deleteOne({_id:id});
+         
+        res.json({updatedStudent});
+        
+    } catch (error) {
+
+        res.json({error});
+        
+    }
+
+
+}
 
 module.exports.uploadDocuments = async (req,res) =>{
 
@@ -143,6 +159,8 @@ module.exports.uploadDocuments = async (req,res) =>{
     }
 
 }
+
+
 
 
 const Query =  (body)=>{

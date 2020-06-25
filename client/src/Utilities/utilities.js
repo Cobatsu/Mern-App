@@ -15,6 +15,13 @@ font-size:11.6px;
 padding:6px;
 `
 
+export const PermissionsNumbers = {
+  REMOVE: 1,
+  UPDATE: 2,
+  ADD: 3,
+  READ: 4,
+}
+
 export const restrictWord = (word,limit)=>{
   
     var finalText = word.toLowerCase() ; 
@@ -123,8 +130,7 @@ export const reportListHelperPackage = (id) => {
           var fullName = item.owner.firstName + ' ' + item.owner.lastName ; 
         }
 
-        console.log(item);
-    
+      
         return [
           restrictWord( item.reportType === 'schoolReport' ? item.schoolName : item.relatedPersonName , 17 ) , 
           item.relatedPersonPhoneNumber,

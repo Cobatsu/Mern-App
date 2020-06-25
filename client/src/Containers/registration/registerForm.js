@@ -66,12 +66,14 @@ class RegisterForm extends React.Component{
 
       super(props);
 
-      this.state = { studentInformations:props.student || initialState , ...additionState , origin:props.student ? 'DETAİL' : 'REGİSTER' } 
+      this.state = { studentInformations:props.student || initialState , ...additionState , origin:props.student ? 'DETAIL' : 'REGİSTER' }
+
       this.token =  new URLSearchParams(this.props.location.search).get('token') ; 
 
     }
    
-   
+  
+
    activeCircle=(value) => {
      this.setState({circle:value});
    }
@@ -115,13 +117,21 @@ class RegisterForm extends React.Component{
 
        }  
 
+       const setUpdatedStudent = (student)=>{
+           
+        this.setState({studentInformations:student})
+
+       }
+
         if( origin === 'REGİSTER' ) {
 
-                return  makeRequest( 'post', { token:this.token , ...this.state.studentInformations  } ,this.activeCircle,this.backStage,this.setResult);
+                return  makeRequest( 'post' , { token:this.token , ...this.state.studentInformations  } ,this.activeCircle,this.backStage,this.setResult);
 
         } else {
                 
-                return makeUpdateStudentRequest( 'post' ,  this.state.studentInformations , this.activeCircle,this.backStage,this.setResult  ) ;
+                this.props.setBackStageLoading(true);
+
+                return makeUpdateStudentRequest( 'patch' ,  this.state.studentInformations , this.props.id  , setUpdatedStudent , this.props.setBackStageLoading , this.props.setModalType) ;
 
         }
 
@@ -152,7 +162,11 @@ class RegisterForm extends React.Component{
 
        const { origin } = this.state ; 
 
-       if( this.token && origin === 'DETAİL') {
+       const { disabled } = this.props ; 
+
+       console.log(disabled)
+
+       if( this.token && origin === 'DETAIL') {
 
          return <div style={{display:'flex' , justifyContent:'center',alignItems:'center' , width:'100%' , height:'100%'}}>
             
@@ -167,6 +181,14 @@ class RegisterForm extends React.Component{
         </div>
 
        }
+
+       const reStoreStudent = ()=>{
+
+         this.props.setDisabled(true);
+
+         this.setState({studentInformations:this.props.student});
+
+       }
     
  
       return (
@@ -176,21 +198,21 @@ class RegisterForm extends React.Component{
               
 
                 {
-                  origin === 'REGİSTER' &&  <Header origin={this.state.origin} backStage={this.state.backStage} result={this.state.result} warning={this.state.warningModal}/>
+                  origin === 'REGİSTER' &&  <Header origin={origin} backStage={this.state.backStage} result={this.state.result} warning={this.state.warningModal}/>
                 }
                 
               
-               <form onSubmit={this.SubmitHandler} style={{ width : origin === 'REGİSTER' ? '55%' : '80%' }} className='Inner-Register'>             
+               <form onSubmit={this.SubmitHandler} style={{ width : origin === 'REGİSTER' ? '55%' : '90%' }} className='Inner-Register'>             
                             
-               <StudentInformations birthDate={this.state.studentInformations.date_of_birth} changeHandler={this.changeHandlerFactory}  name={this.state.studentInformations.name} warning={this.state.warning} warningText={this.state.warning_text} surname={this.state.studentInformations.surname} phoneNumber={this.state.studentInformations.phone_number} eMail={this.state.studentInformations.e_mail} />
-               <StudentsHomeAdress changeHandler={this.changeHandlerFactory} street={this.state.studentInformations.street} apartmentAndNumber={this.state.studentInformations.apartment_and_number} warning={this.state.warning}  warning_text={this.state.warning_text} town={this.state.studentInformations.town} city={this.state.studentInformations.city} postalCode={this.state.studentInformations.postal_code} />
-               <AboutRegisteringStudent first9Date={this.state.studentInformations.first_date_of_grade_9} country_of_birth={this.state.studentInformations.country_of_birth} country_of_citizenship={this.state.studentInformations.country_of_citizenship} native_language={this.state.studentInformations.native_language}  changeHandler={this.changeHandlerFactory} warning={this.state.warning} warning_text={this.state.warning_text}/>
-               <ParentInformation   parentFirstName={this.state.studentInformations.parent_guardian_first_name} parentLastName={this.state.studentInformations.parent_guardian_last_name} parenEmailAdress={this.state.studentInformations.parent_guardian_e_mail_address} parentPhoneNumber={this.state.studentInformations.parent_guardian_mobile_phone_number} warning={this.state.warning} warning_text={this.state.warning_text} changeHandler={this.changeHandlerFactory}/>
-               <PrevSchoolInfo   currentorlastAttendedSchool={this.state.studentInformations.currentor_last_attended_school_name} warning={this.state.warning}  warning_text={this.state.warning_text} changeHandler={this.changeHandlerFactory} />
+                  <StudentInformations disabled={disabled} birthDate={this.state.studentInformations.date_of_birth} changeHandler={this.changeHandlerFactory}  name={this.state.studentInformations.name} warning={this.state.warning} warningText={this.state.warning_text} surname={this.state.studentInformations.surname} phoneNumber={this.state.studentInformations.phone_number} eMail={this.state.studentInformations.e_mail} />
+                  <StudentsHomeAdress disabled={disabled} changeHandler={this.changeHandlerFactory} street={this.state.studentInformations.street} apartmentAndNumber={this.state.studentInformations.apartment_and_number} warning={this.state.warning}  warning_text={this.state.warning_text} town={this.state.studentInformations.town} city={this.state.studentInformations.city} postalCode={this.state.studentInformations.postal_code} />
+                  <AboutRegisteringStudent disabled={disabled} first9Date={this.state.studentInformations.first_date_of_grade_9} country_of_birth={this.state.studentInformations.country_of_birth} country_of_citizenship={this.state.studentInformations.country_of_citizenship} native_language={this.state.studentInformations.native_language}  changeHandler={this.changeHandlerFactory} warning={this.state.warning} warning_text={this.state.warning_text}/>
+                  <ParentInformation   disabled={disabled}  parentFirstName={this.state.studentInformations.parent_guardian_first_name} parentLastName={this.state.studentInformations.parent_guardian_last_name} parenEmailAdress={this.state.studentInformations.parent_guardian_e_mail_address} parentPhoneNumber={this.state.studentInformations.parent_guardian_mobile_phone_number} warning={this.state.warning} warning_text={this.state.warning_text} changeHandler={this.changeHandlerFactory}/>
+                  <PrevSchoolInfo  disabled={disabled}  currentorlastAttendedSchool={this.state.studentInformations.currentor_last_attended_school_name} warning={this.state.warning}  warning_text={this.state.warning_text} changeHandler={this.changeHandlerFactory} />
 
 
                
-               <Submit circle={this.state.circle}/> 
+                  <Submit disabled={ disabled } setDisabled={reStoreStudent} origin={origin} circle={this.state.circle}/> 
                
           
 

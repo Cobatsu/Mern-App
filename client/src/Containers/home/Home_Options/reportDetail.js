@@ -15,7 +15,7 @@ import {Checkbox,TextField,Tab,Tabs,Paper,InputLabel,MenuItem,Stepper,StepLabel,
 import {makeUpdateReportRequest,makeDeleteReportRequest,makeSpecificReportRequest , makeSendFormRequest}  from '../../../request/requset'
 import {Report} from './addReport';
 import NotFoundPage from '../../../Components/NotFoundPage'
-import {restrictWord , checkPhoneNumber} from '../../../Utilities/utilities'
+import {restrictWord , checkPhoneNumber ,PermissionsNumbers} from '../../../Utilities/utilities'
 import validator from 'email-validator'
 
 
@@ -66,6 +66,7 @@ color:white;
 padding:10px 20px ;
 &:hover{
     cursor:pointer;
+    box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
 }
 `
 
@@ -76,12 +77,6 @@ flex-flow:column;
 align-items:center;
 `
 
-export const PermissionsNumbers = {
-    REMOVE: 1,
-    UPDATE: 2,
-    ADD: 3,
-    READ: 4,
-}
 
 
 const initialGeneralReportState={
@@ -334,7 +329,7 @@ const ReportDetail  = ({match,...rest })=>{
 
                 <Modal backStage={emptyWarning}  closeModal={closeModal_1} type='EMPTY_FİELD'/>
                 <Modal backStage={uptadedModal}  closeModal={closeModal_2} type='UPDATED_REPORT'/>
-                <Modal backStage={deleteModal}   closeModal={closeModal_3} deleteUser={deleteReport}  type='DELETE_REPORT'/>
+                <Modal backStage={deleteModal}   closeModal={closeModal_3} handler={deleteReport}  type='DELETE_REPORT'/>
                 <Modal backStage={deleted}       closeModal={closeModal_4} type='DELETED_REPORT'/>
                 <Modal backStage={sendForm}  formSent={formSent}     closeModal={closeModal_5} type='SEND_STUDENT_FORM' sendForm = {sendFormHandler}  />
                 

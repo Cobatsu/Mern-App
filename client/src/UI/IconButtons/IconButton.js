@@ -11,6 +11,7 @@ font-size:15px;
 margin-right:10px;
 &:hover{
     cursor:pointer;
+    box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 3), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
 }
 `
 
@@ -64,7 +65,7 @@ export const IconSendForm  = ( { handler } ) =>(
 export  const IconSendConfirmation = ( { handler } ) => (
 
     <Icon 
-            style={{background:'#b5076b'}} 
+            style={{background:'#ff6464'}} 
             onClick = {handler} > Onaya Gönder  
             <i style={{marginLeft:6}} class="fas fa-search"></i>  
     </Icon>
