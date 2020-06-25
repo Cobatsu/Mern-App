@@ -594,8 +594,6 @@ export const makeUpdateStudentRequest = ( Type , data , id , setUpdatedStudent ,
 
     const { updatedStudent:{ StudentInfo } } = response.data ; 
 
-    console.log(StudentInfo)
-
     ReactDOM.unstable_batchedUpdates(()=>{
 
       setBackStageLoading(false);
@@ -611,10 +609,81 @@ export const makeUpdateStudentRequest = ( Type , data , id , setUpdatedStudent ,
   
 } 
 
+export const makeDeleteStudentRequest = ( Type , data , id , setUpdatedStudent , setBackStageLoading , setModalType )=>{
+   
+  axios[Type]('/api/register/student/'+ id , 
+  { headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}}).then((response)=>{
 
-export const makeSendForConfirmationRequest = ( Type , data , id , setUpdatedStudent , setBackStageLoading , setModalType  ) => {
+  
+
+  }).catch(()=>{
 
 
+  })
+
+}
+
+
+export const makeSendForConfirmationRequest = ( Type  , id , setUpdatedStudent , setBackStageLoading , setModalType  ) => {
+
+
+  axios[Type]('/api/register/send_confirmation/'+ id , {},
+  { headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}}).then((response)=>{
+      
+    const  { updatedStudent , error } = response.data ; 
+    
+
+    if( error ) {
+          
+        return console.log(error) ; 
+
+    }
+
+    ReactDOM.unstable_batchedUpdates(()=>{
+
+      setUpdatedStudent(updatedStudent);
+      setBackStageLoading(false);
+      setModalType('CONFİRMATİON_SENT');
+
+    })
+  
+
+  }).catch(()=>{
+
+
+  })
+
+
+}
+
+export const makeConfirmStudentRequest = ( Type  , id , setUpdatedStudent , setBackStageLoading , setModalType  ) =>{
+
+ 
+        axios[Type]('/api/register/confirm_student/'+ id , {},
+        { headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}}).then((response)=>{
+            
+          const  { updatedStudent , error } = response.data ; 
+          
+
+          if( error ) {
+                
+              return console.log(error) ; 
+
+          }
+
+          ReactDOM.unstable_batchedUpdates(()=>{
+
+            setUpdatedStudent(updatedStudent);
+            setBackStageLoading(false);
+            setModalType('CONFİRMED_STUDENT');
+
+          })
+        
+
+        }).catch(()=>{
+
+
+        })
 
 }
 

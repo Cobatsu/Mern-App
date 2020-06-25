@@ -12,6 +12,10 @@ router.route('/sendForm').post(auth,registerStudent.sendForm);
 
 router.route('/get_students').post(auth,registerStudent.studentSearch);
 
+router.route('/send_confirmation/:id').patch(auth,registerStudent.sendConfirmation);
+
+router.route('/confirm_student/:id').patch(auth,registerStudent.confirmStudent)
+
 router.
 route('/student/:id')
 .all(auth)

@@ -98,24 +98,6 @@ module.exports.updateStudent = async (req,res) => {
 }
 
 
-module.exports.deleteStudent = async (req,res) => { 
-
-    const { params:{id} }  = req ; 
-
-    try {
-
-        const updatedStudent = await Student.deleteOne({_id:id});
-         
-        res.json({updatedStudent});
-        
-    } catch (error) {
-
-        res.json({error});
-        
-    }
-
-
-}
 
 module.exports.uploadDocuments = async (req,res) =>{
 
@@ -127,22 +109,23 @@ module.exports.uploadDocuments = async (req,res) =>{
 
         const checkedStudent = await Student.findOne({_id:tokenData.studentID})
 
-        const copyStudent = {...checkedStudent} ; 
 
         if( checkedStudent && !checkedStudent.registerState.docState ) {
 
                   
                 if( tokenData.owner == checkedStudent.owner ) {
 
-                    copyStudent.registerState.docState = true ;
                     
+                    var images = [] ; 
+
                     req.files.forEach( (file,index)=> {
                          
-                        copyStudent.StudentInfo.Images[index] = file.filename;
+                        images[index] = file.filename;
 
                     });
 
-                    await Student.updateOne({_id:tokenData.studentID},{copyStudent});
+
+                    await Student.updateOne({_id:tokenData.studentID},{$set:{'StudentInfo.Images':images , 'registerState.docState':true}});
 
                     return res.json({  result:'Success' });
 
@@ -214,10 +197,10 @@ module.exports.studentSearch = async (req,res,next)=>{
 
         var finalSearchQuery = {
 
-            'StudentInfo.information.name' : searchData.name , 
-            'StudentInfo.information.surname' : searchData.surname , 
-            'StudentInfo.registerdate' : searchData.registerdate , 
-            'StudentInfo.registerState.onkayit.docState' : searchData.docState,
+            'StudentInfo.name' : searchData.name , 
+            'StudentInfo.surname' : searchData.surname , 
+            'registerdate' : searchData.registerdate , 
+            'registerState.docState' : searchData.docState,
              allowedToSee:searchData.allowedToSee
 
         }
@@ -265,8 +248,6 @@ module.exports.studentSearch = async (req,res,next)=>{
 module.exports.getOneStudent = async (req,res,next)=>{
 
     const {id} = req.params;
-
-    console.log('Hİİİ');
   
     try 
     {
@@ -286,6 +267,67 @@ module.exports.getOneStudent = async (req,res,next)=>{
     {
         res.json( { error } )  
     } 
+
+}
+
+module.exports.confirmStudent = async ( req ,res ) =>{
+
+    const { params:{id} }  = req ; 
+
+    try {
+
+        await Student.updateOne( {_id:id} , {$set:{'registerState.result.result':true , 'registerState.pendingResult':false }} );
+        
+        const updatedStudent = await Student.findOne({_id:id});
+
+        res.json({updatedStudent});
+        
+    } catch (error) {
+
+        res.json({error});
+        
+    }
+
+
+}
+
+module.exports.sendConfirmation = async ( req , res) =>{
+
+    const { params:{id} }  = req ; 
+
+    try {
+
+        await Student.updateOne( {_id:id} , {$set:{'registerState.pendingResult':true}} );
+        
+        const updatedStudent = await Student.findOne({_id:id});
+
+        res.json({updatedStudent});
+        
+    } catch (error) {
+
+        res.json({error});
+        
+    }
+
+}
+
+
+module.exports.deleteStudent = async (req,res) => { 
+
+    const { params:{id} }  = req ; 
+
+    try {
+
+        const updatedStudent = await Student.deleteOne({_id:id});
+         
+        res.json({updatedStudent});
+        
+    } catch (error) {
+
+        res.json({error});
+        
+    }
+
 
 }
 

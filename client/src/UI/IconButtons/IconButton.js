@@ -3,6 +3,8 @@ import styled from 'styled-components' ;
 import { Link } from 'react-router-dom'
 
 const Icon = styled.div`
+display:flex;
+align-items:center;
 border-radius:5px;
 padding:5px 10px;
 color:white;
@@ -71,3 +73,13 @@ export  const IconSendConfirmation = ( { handler } ) => (
     </Icon>
 
 )
+
+export const confirmStudent = ( { handler } ) => ( 
+
+    <Icon 
+        style={{background:'#ff6464'}} 
+        onClick = {handler} > Öğrenciyi Onayla 
+        <i style={{marginLeft:6}} class="fas fa-user-check"></i>  
+    </Icon>
+
+) 

@@ -81,7 +81,10 @@ DELETED : 'Personel Başarıyla Silinmiştir.',
 DELETED_REPORT:'Raporunuz Başarıyla Silinmiştir.',
 UPDATE_PERSONEL:'Personel Başarıyla Güncellenmiştir!.',
 ADD_PERSONEL:'Yeni Personel Başarıyla Eklenmiştir.',
-STUDENT_UPDATED:'Öğrenci Başarıyla Güncellenmiştir'
+STUDENT_UPDATED:'Öğrenci Başarıyla Güncellenmiştir',
+CONFİRMATİON_SENT:'Öğrenci Başarıyla Onaya Gönderilmiştir',
+CONFİRMED_STUDENT:'Öğrenci Başarıyla Onaylanmıştır'
+
 }
 
 const deletedModalTexts = {
@@ -92,6 +95,16 @@ const deletedModalTexts = {
     color: '#f73859'
 
   }} className="fas fa-exclamation"></i> ,
+
+   color:'#f73859' } ,
+
+
+   DELETE_STUDENT:{ text:'Bu Öğrenciyi Silmek İstediğinizden Emin misiniz ?' , accept: 'SİL' , Icon:<i style={{
+
+    fontSize: 50,
+    color: '#f73859'
+
+   }} className="fas fa-exclamation"></i> ,
 
    color:'#f73859' } ,
 
@@ -112,7 +125,16 @@ const deletedModalTexts = {
 
   className="fas fa-search"></i> , 
   
-  color:'#ff6464' }
+  color:'#ff6464' } , 
+
+  CONFİRM_STUDENT:{ text:'Bu Öğrenciyi Onaylamak İstediğinizden Emin misiniz ?' , accept: 'ONAYLA' , Icon:
+  <i  style={{
+    fontSize: 50,
+    color: '#ff6464'
+  }} class="far fa-check-circle"></i>, 
+  
+  color:'#ff6464' } , 
+
 }
 
 
@@ -254,7 +276,7 @@ const SentModal = React.memo(({backStage, type, closeModal, handler , formSent ,
 
                     <span style={{ background:'#58b4ae' , color:'white' , display:'block' , textAlign:'center',  padding:10 , fontSize:14 , borderRadius:5 , boxShadow:'0 1px 6px -1px rgba(0, 0, 0,0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.05)' }}> 
                     
-                      Ön Kayıt Formu Başarıyla Gönderildi . 
+                              Ön Kayıt Formu Başarıyla Gönderildi . 
 
                     </span>
 
