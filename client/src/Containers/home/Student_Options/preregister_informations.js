@@ -109,7 +109,7 @@ const StudentInformations  = ( { match , ...rest } )=>{
                             <InnerItems> 
                                   
                                   {
-                                       user.role === 'Temsilci' &&
+                                       user.role === 'Temsilci' ?
 
                                        student.registerState.pendingResult ? 
 
@@ -119,7 +119,7 @@ const StudentInformations  = ( { match , ...rest } )=>{
                                             
                                        </InfoCapsule>  :
                                        
-                                       <IconSendConfirmation handler={ ()=>setModalType( 'SEND_CONFIRMATION' ) } />
+                                       <IconSendConfirmation handler={ ()=>setModalType( 'SEND_CONFIRMATION' ) } /> : null 
                                   }
 
                                   {                                  

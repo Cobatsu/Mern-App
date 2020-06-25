@@ -104,7 +104,7 @@ const deletedModalTexts = {
    color:'#f73859' } ,
 
 
-  SEND_CONFIRMATION:{ text:'Bu Öğrenciyi İncelenmesi İçin  Göndermek İstediğinizden Emin misiniz ?' , accept: 'GÖNDER' , Icon:
+  SEND_CONFIRMATION:{ text:'Bu Öğrenciyi Onay İçin  Göndermek İstediğinizden Emin misiniz ?' , accept: 'GÖNDER' , Icon:
   <i style={{
     fontSize: 50,
     color: '#ff6464'

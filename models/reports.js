@@ -1,13 +1,15 @@
 const mongoose = require('mongoose');
 
 
-const Reports = mongoose.Schema({        
+const Reports = mongoose.Schema({
+
     schoolName :{
         type:String,
         required:false,
         trim:true , 
         lowerCase:true,
     },
+    
     relatedPersonName :{
         type:String,
         required:true,
@@ -60,7 +62,7 @@ const Reports = mongoose.Schema({
         type:String,
         required:true,
     },
-    
+
     isFormSent:{
         type:Boolean,
         default:false,

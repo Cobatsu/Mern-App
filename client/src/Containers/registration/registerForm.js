@@ -164,7 +164,6 @@ class RegisterForm extends React.Component{
 
        const { disabled } = this.props ; 
 
-       console.log(disabled)
 
        if( this.token && origin === 'DETAIL') {
 
