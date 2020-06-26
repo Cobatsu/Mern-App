@@ -1,4 +1,4 @@
-import React,{useEffect,useState,useContext} from 'react';
+import React, { useEffect , useState , useContext , useRef } from 'react';
 import {Context} from '../../../Context/Context'
 import { makeSpecificStudentRequest , makeSendForConfirmationRequest , makeDeleteStudentRequest , makeConfirmStudentRequest }  from '../../../request/requset'
 import styled from 'styled-components';
@@ -17,7 +17,7 @@ width:76%;
 margin:0 auto;
 align-items:center;
 justify-content:center;
-padding:0;
+padding: 0 60px;
 margin-top:2%;
 margin-bottom:20px;
 @media (max-width: 1030px) {
@@ -29,6 +29,7 @@ flex-flow:column;
 `
 
 const InfoCapsule = styled.div`
+margin-bottom:5px;
 opacity:0.7;
 border-radius:5px;
 padding:5px 10px;
@@ -51,8 +52,57 @@ margin-top:30px;
 color:#30475e;
 
 @media (max-width: 1030px) {
-    justify-content:center !important;
+
+    flex-flow:column;
+    align-items:flex-start !important;
+    justify-content:space-evenly;
+    
+
 }
+
+`
+
+const LoadFile = styled.button `
+
+font-size:15px;
+border-radius:15px 0 15px 0  ; 
+min-height:40px;
+min-width:130px;
+background:#00909e ; 
+position:absolute ; 
+right:0;
+bottom:0;
+outline:none;
+border:none;
+color:white;
+&:hover{
+    cursor:pointer;
+}
+
+`
+
+const FileList = styled.ul `
+
+display:${({isActive})=> isActive ? 'block' : 'none'};
+position:relative;
+padding:50px 15px 55px  15px;
+box-shadow: 0 1px 6px -1px rgba(0, 0, 0,0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+margin:30px 50px;
+border-radius:15px;
+width:90%;
+
+`
+
+const FileListElement = styled.li`
+
+&:hover{
+
+    box-shadow: 0 1px 6px -1px rgba(0, 0, 0,0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+}
+
+border-radius:7px;
+transition:50ms;
+
 `
 
 const Title = styled.div `
@@ -64,6 +114,18 @@ color:#61c0bf ;
 
 `
 
+const ImageFields = [
+
+    "Kimlik Belgesi" , 
+
+    "Rosedale İngilizce Yeterlilik Testi" ,
+
+    "İngilizce Yeterlilik Testi Sonuçları",
+
+    "Transkript Çevirisi",
+
+]
+
 
 const StudentInformations  = ( { match , ...rest } )=>{
      
@@ -72,6 +134,8 @@ const StudentInformations  = ( { match , ...rest } )=>{
     const [ student , setStudent ]  = useState({});
     const [ disabled , setDisabled ] = useState(true);
     const [ modalType , setModalType ] = useState(null);
+
+    const inputRef = useRef(); 
 
     const { user } = useContext( Context );
 
@@ -102,7 +166,12 @@ const StudentInformations  = ( { match , ...rest } )=>{
 
         }
      
- 
+    }
+
+    const loadFileHandler = ()=>{
+
+        inputRef.current.click();
+
     }
 
     const requestHandler = () => {
@@ -136,7 +205,6 @@ const StudentInformations  = ( { match , ...rest } )=>{
     }
     
     
-
     if( student.registerState ) {
      
         var getStatusUI = studentStatusColor(student.registerState) ; 
@@ -216,21 +284,41 @@ const StudentInformations  = ( { match , ...rest } )=>{
                             
                             </InnerItems>
 
-                            {
-                                     
-                                     student.StudentInfo.Images.map((fileName)=>{
+
+                          
+                            <FileList  isActive = {student.registerState.docState}>
+                                      
+                                    <FileListElement style={{background:'#00909e' , borderRadius :'7px 7px 0 0'   , width:'100%' , top:0 , left:0 , position:'absolute' , color:'white', textAlign:'center',padding:5}}>
+
+                                        Öğrencinin Belgeleri
+
+                                    </FileListElement>
+
+                                    {                                   
+                                            student.StudentInfo.Images.map((fileName,index)=>{
 
 
-                                       return <a href={'http://localhost:3001/api/' + fileName} target="_blank" >{fileName}</a>
+                                            return (
+                                                <FileListElement>
+                                                   <a className='responsiveLink' style={{width:'100%' , color:'#00909e'  , height:'100%' , display:'block' , padding:'5px 5px 5px 10px' , textDecoration:'none' ,  }} href={'http://localhost:3001/api/' + fileName} target="_blank" > {ImageFields[index]} </a> 
+                                                </FileListElement>
+                                            )
+
+                                        })
+                                    }   
 
 
-                                     })
+                                    <LoadFile type='button' onClick={loadFileHandler} >
+                                                 
+                                                 <input type="file" name="myfile" accept=".png, .jpg, .jpeg , .pdf" ref={inputRef}  style={{display:'none'}}  />
 
-                            }
+                                                 Dosya Ekle <i style={{marginLeft:7}} className="fas fa-plus"></i>
 
-                           <a href={'http://localhost:3001/api/singlePage.pdf.png'} target="_blank" >PDF</a>
+                                    </LoadFile>
 
-                           <RegisterForm student = {student.StudentInfo} {...rest} disabled={disabled} setDisabled={setDisabled} id={id} setBackStageLoading={setBackStageLoading} setModalType={setModalType} />                 
+                            </FileList>     
+
+                           <RegisterForm student = {student.StudentInfo} {...rest} disabled={disabled} setDisabled={setDisabled} id={id} setBackStageLoading={setBackStageLoading} setModalType={setModalType} />                                  
 
              </MainWrapper>
            

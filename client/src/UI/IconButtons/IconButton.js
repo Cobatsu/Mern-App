@@ -9,6 +9,7 @@ border-radius:5px;
 padding:5px 10px;
 color:white;
 background:#00a8cc;
+margin-bottom:5px;
 font-size:15px;
 margin-right:10px;
 &:hover{
