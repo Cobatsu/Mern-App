@@ -609,13 +609,18 @@ export const makeUpdateStudentRequest = ( Type , data , id , setUpdatedStudent ,
   
 } 
 
-export const makeDeleteStudentRequest = ( Type , data , id , setUpdatedStudent , setBackStageLoading , setModalType )=>{
+export const makeDeleteStudentRequest = ( Type , id , setBackStageLoading , setModalType )=>{
    
   axios[Type]('/api/register/student/'+ id , 
   { headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}}).then((response)=>{
 
-  
+    
+    ReactDOM.unstable_batchedUpdates(()=>{
 
+      setBackStageLoading(false);
+      setModalType('STUDENT_DELETED');
+
+    })
   }).catch(()=>{
 
 

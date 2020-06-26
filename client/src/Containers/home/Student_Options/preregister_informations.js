@@ -8,6 +8,7 @@ import RegisterForm from '../../registration/registerForm'
 import { PermissionsNumbers , studentStatusColor  } from '../../../Utilities/utilities'
 import Modal from '../../../UI/sentModal'
 import BackStage from '../../../UI/backStage'
+import { Link } from 'react-router-dom'
 
 const MainWrapper = styled.form`
 display:flex;
@@ -89,7 +90,20 @@ const StudentInformations  = ( { match , ...rest } )=>{
 
    
 
-    const closeModal = ()=>{ setModalType(null) }
+    const closeModal = ()=>{ 
+       
+        if(modalType === 'STUDENT_DELETED') {
+
+            rest.history.goBack();
+
+        } else {
+
+            setModalType(null) ;
+
+        }
+     
+ 
+    }
 
     const requestHandler = () => {
 
@@ -121,6 +135,8 @@ const StudentInformations  = ( { match , ...rest } )=>{
 
     }
     
+    
+
     if( student.registerState ) {
      
         var getStatusUI = studentStatusColor(student.registerState) ; 
@@ -199,6 +215,20 @@ const StudentInformations  = ( { match , ...rest } )=>{
                                   }
                             
                             </InnerItems>
+
+                            {
+                                     
+                                     student.StudentInfo.Images.map((fileName)=>{
+
+
+                                       return <a href={'http://localhost:3001/api/' + fileName} target="_blank" >{fileName}</a>
+
+
+                                     })
+
+                            }
+
+                           <a href={'http://localhost:3001/api/singlePage.pdf.png'} target="_blank" >PDF</a>
 
                            <RegisterForm student = {student.StudentInfo} {...rest} disabled={disabled} setDisabled={setDisabled} id={id} setBackStageLoading={setBackStageLoading} setModalType={setModalType} />                 
 

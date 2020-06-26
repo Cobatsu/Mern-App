@@ -78,6 +78,7 @@ UPDATED_REPORT:'Raporunuz Güncellenmiştir.',
 REPORT_ADDED :'Raporunuz Gönderilmiştir.',
 CHANGED_PASSWORD:'Şifreniz Değiştirilmiştir.',
 DELETED : 'Personel Başarıyla Silinmiştir.',
+STUDENT_DELETED:'Öğrenci Ön Kayıttan Silinmiştir.' ,
 DELETED_REPORT:'Raporunuz Başarıyla Silinmiştir.',
 UPDATE_PERSONEL:'Personel Başarıyla Güncellenmiştir!.',
 ADD_PERSONEL:'Yeni Personel Başarıyla Eklenmiştir.',
@@ -134,6 +135,8 @@ const deletedModalTexts = {
   }} class="far fa-check-circle"></i>, 
   
   color:'#ff6464' } , 
+
+
 
 }
 

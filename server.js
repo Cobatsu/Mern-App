@@ -12,7 +12,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const _Url = process.env.DATABASE_URL;
-console.log(PORT);
+
 
 app.use(express.json({
     inflate: true,
@@ -24,7 +24,7 @@ app.use(express.json({
 }))
 
 
-app.use(express.static('public/documents'))
+
 
 mongoose.connect(_Url,{ useUnifiedTopology: true,useNewUrlParser: true })
 .then(()=>console.log('connected to DB'))
