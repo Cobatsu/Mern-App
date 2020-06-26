@@ -110,7 +110,7 @@ const RequiredDocs = ()=>{
 
         for (const key in images) { 
 
-            formData.append("imageName","multer-image-"+Date.now());    
+            formData.append("imageName","multer-image-"+ Date.now());    
             formData.append('imgCollection', images[key]);
 
         } 

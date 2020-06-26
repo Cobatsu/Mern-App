@@ -6,11 +6,11 @@ const Icon = styled.div`
 display:flex;
 align-items:center;
 border-radius:5px;
-padding:5px 10px;
+padding:5px 7px;
 color:white;
 background:#00a8cc;
 margin-bottom:5px;
-font-size:15px;
+font-size:13px;
 margin-right:10px;
 &:hover{
     cursor:pointer;
@@ -50,7 +50,7 @@ export const IconRemove = ( { handler , deletedText  } ) => (
         onClick = {handler} > 
         
         { deletedText } 
-        <i style={{marginLeft:6}} className="fas fa-trash-alt"></i>
+        <i style={{marginLeft:6}} className="far fa-trash-alt"></i>
          
     </Icon>  
     

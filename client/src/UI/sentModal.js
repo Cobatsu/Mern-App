@@ -84,8 +84,8 @@ UPDATE_PERSONEL:'Personel Başarıyla Güncellenmiştir!.',
 ADD_PERSONEL:'Yeni Personel Başarıyla Eklenmiştir.',
 STUDENT_UPDATED:'Öğrenci Başarıyla Güncellenmiştir',
 CONFİRMATİON_SENT:'Öğrenci Başarıyla Onaya Gönderilmiştir',
-CONFİRMED_STUDENT:'Öğrenci Başarıyla Onaylanmıştır'
-
+CONFİRMED_STUDENT:'Öğrenci Başarıyla Onaylanmıştır' , 
+FILE_UPLOADED:'Dosyanız Başarıyla Eklenmiştir.'
 }
 
 const deletedModalTexts = {

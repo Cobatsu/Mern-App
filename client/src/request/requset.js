@@ -692,7 +692,64 @@ export const makeConfirmStudentRequest = ( Type  , id , setUpdatedStudent , setB
 
 }
 
-export const makeSpecificStudentRequest = ( Type , id ,  setLoading , setStudent ) => {
+export const makeDeleteFileRequest = ( Type  , id ,  fileWillBeDeleted  , setUpdatedStudent ) => {
+
+  axios[Type]('/api/register/delete_file/'+ id  , { fileWillBeDeleted } , 
+ { headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}}).then((response)=>{
+     
+   const  { updatedStudent , error } = response.data ; 
+   
+
+   if( error ) {
+         
+       return console.log(error) ; 
+
+   }
+
+   ReactDOM.unstable_batchedUpdates(()=>{
+
+     setUpdatedStudent(updatedStudent);
+
+   })
+ 
+
+ }).catch(()=>{
+
+
+ })
+
+}
+
+export const makeUploadFileRequest = ( Type  , id , file  , setUpdatedStudent , setUploadFileLoading ) => {
+
+         axios[Type]('/api/register/upload_file/'+ id , file ,
+        { headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}}).then((response)=>{
+            
+          const  { updatedStudent , error } = response.data ; 
+          
+
+          if( error ) {
+                
+              return console.log(error) ; 
+
+          }
+
+          ReactDOM.unstable_batchedUpdates(()=>{
+
+            setUpdatedStudent(updatedStudent);
+            setUploadFileLoading(false);
+
+          })
+        
+
+        }).catch(()=>{
+
+
+        })
+
+}
+
+export const makeSpecificStudentRequest = ( Type , id ,  setLoading , setStudent ) =>{
 
   axios[Type]('/api/register/student/'+ id ,  { headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}}).then( (res) => {
  
