@@ -134,7 +134,6 @@ const ResponsiveNav = ({ user,subMenu,match,logOutHandler })=>{
                 <SideBar logOutHandler={logOutHandler} sideBarStatus={sideBarStatus} subMenu={subMenu} setSideBarStatus={setSideBarStatus} match={match} /> 
             
            
-
     </React.Fragment> 
    
 }
@@ -151,7 +150,7 @@ const SideBar  = ({sideBarStatus,subMenu,match,setSideBarStatus,logOutHandler})=
         setSubLinks((prevState)=>prevState.filter((item)=>item !== index)) 
         :
         setSubLinks((prevState)=>prevState.concat(index));
-        
+
      } 
 
      useEffect(()=>{

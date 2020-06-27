@@ -11,8 +11,9 @@ import  AddReport  from './Home_Options/addReport';
 import MyReports from './Home_Options/myReports';
 import ReportDetail from './Home_Options/reportDetail';
 import NotFoundPage from '../../Components/NotFoundPage'
-
 import ErrorBoundary from "../ErrorWrapper/ErrorBoundary";
+import StudentInformation from "../home/Student_Options/preregister_informations"
+
 class  Home extends React.Component {
 
   
@@ -27,16 +28,33 @@ class  Home extends React.Component {
               </ErrorBoundary>
             
              <Switch>
+
               
-              {/* <Route 
+             <Route 
                 path = {'/home/ön_kayıt'}  
                 exact  
-                render = { (props)=> 
+                render = { (props)=> (
+
                      <ErrorBoundary {...props}> 
                         <Student {...props}/>
-                     </ErrorBoundary> }
+                     </ErrorBoundary> 
+
+                ) }
               
-              /> */}
+              /> 
+
+             <Route
+                path = {'/home/ön_kayıt/:id'}
+                exact
+                render = { (props)=> (
+
+                  <ErrorBoundary {...props}> 
+                      <StudentInformation {...props}/>
+                  </ErrorBoundary> 
+
+                ) } 
+
+              />
 
               <Route 
                 path={'/home'}  
@@ -124,10 +142,9 @@ class  Home extends React.Component {
                 render={(props)=>
                 
                   <ErrorBoundary {...props}>  
-
                     < AddReport {...props} />
-
                   </ErrorBoundary>
+
 
                 }  />
 
@@ -152,6 +169,8 @@ class  Home extends React.Component {
                   </ErrorBoundary>
 
                 } />  
+
+
 
               <Route path='*' render ={(props)=><NotFoundPage path='home'/>} />  
 

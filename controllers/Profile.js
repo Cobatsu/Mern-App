@@ -242,35 +242,48 @@ module.exports.getSpecificReport =async (req,res,next)=>{
 
 module.exports.updateReport = async ( req,res,next)=>{
 
-    const { params: { id } , body , user } = req;
+    var { params: { id } , body , user } = req;
     
+  
+    body['owner'] = body['owner'] || {} ; 
+
+  
     try {
 
-        if( body.meetingDetails && Object.values(body['owner']).length ===  0  ) {
+        if( body.meetingDetails &&  !body['owner']._id && user.role !== 'Admin' ) {
 
             body['isContacted'] = true ; 
             body['owner'] = user._id ; 
 
-            if( user.role !== 'Bayi' ) {
+            if( user.role === 'Temsilci' ) {
 
                 body['allowedToSee'] = [ user._id ];
 
             } 
 
         } 
+        
+        if( !body.meetingDetails && user.role !== 'Admin' ) {
+
+            body['owner'] = null ;  
+            body['isContacted'] = false ; 
+
+        }
+
+    
+        if( typeof body['owner'] === 'object' &&  body['owner'] !== null ) {
+
+            var { owner , ...actualBody }  = body ;
+
+            body = actualBody ;  
+
+        } 
 
         await Reports.updateOne({_id:id},{$set:{...body }});
 
-        if ( Object.values(body['owner']).length > 0  ) { 
+        
+        var updatedData = await  Reports.findOne({_id:id}).populate('owner').select('-__v -_id');
 
-            var updatedData = await  Reports.findOne({_id:id}).populate('owner').select('-__v -_id');
-
-        } else {
-
-            var updatedData = await  Reports.findOne({_id:id}).select('-__v -_id');
-
-        }
-            
 
         res.json({updatedData});
 

@@ -45,7 +45,7 @@ module.exports = async (req,res,next)=>{
 
                        var  newPermissionKey =  Object.keys(rest[type])[i] ; 
 
-                       updatedPermissions[newPermissionKey] = new Array() ;
+                       updatedPermissions[newPermissionKey] = rest[type][newPermissionKey] ;
                     }
 
                 }

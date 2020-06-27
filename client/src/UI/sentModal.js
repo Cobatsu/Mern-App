@@ -42,12 +42,12 @@ border:none;
 padding:5px;
 font-size:12px;
 background:#d63447;
-box-shadow: 0 1px 6px -1px rgba(0, 0, 0,0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
 color:white;
 border-radius:6px;
 text-align:center;
 &:hover{
   cursor:pointer;
+  box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 3), 0 2px 4px -1px rgba(0, 0, 0, 0.03) !important;
 }
 `
 
@@ -78,18 +78,70 @@ UPDATED_REPORT:'Raporunuz Güncellenmiştir.',
 REPORT_ADDED :'Raporunuz Gönderilmiştir.',
 CHANGED_PASSWORD:'Şifreniz Değiştirilmiştir.',
 DELETED : 'Personel Başarıyla Silinmiştir.',
+STUDENT_DELETED:'Öğrenci Ön Kayıttan Silinmiştir.' ,
 DELETED_REPORT:'Raporunuz Başarıyla Silinmiştir.',
 UPDATE_PERSONEL:'Personel Başarıyla Güncellenmiştir!.',
 ADD_PERSONEL:'Yeni Personel Başarıyla Eklenmiştir.',
+STUDENT_UPDATED:'Öğrenci Başarıyla Güncellenmiştir',
+CONFİRMATİON_SENT:'Öğrenci Başarıyla Onaya Gönderilmiştir',
+CONFİRMED_STUDENT:'Öğrenci Başarıyla Onaylanmıştır' , 
+FILE_UPLOADED:'Dosyanız Başarıyla Eklenmiştir.'
 }
 
 const deletedModalTexts = {
-  DELETE_REPORT:'Bu Raporu Silmek İstediğinizden Emin misiniz',
-  DELETE_USER:'Bu Kullanıcıyı Silmek İstediğinizden Emin misiniz ?',
+
+  DELETE_REPORT:{ text:'Bu Raporu Silmek İstediğinizden Emin misiniz' , accept: 'SİL' , Icon:<i style={{
+
+    fontSize: 50,
+    color: '#f73859'
+
+  }} className="fas fa-exclamation"></i> ,
+
+   color:'#f73859' } ,
+
+
+   DELETE_STUDENT:{ text:'Bu Öğrenciyi Silmek İstediğinizden Emin misiniz ?' , accept: 'SİL' , Icon:<i style={{
+
+    fontSize: 50,
+    color: '#f73859'
+
+   }} className="fas fa-exclamation"></i> ,
+
+   color:'#f73859' } ,
+
+
+  DELETE_USER:{ text:'Bu Kullanıcıyı Silmek İstediğinizden Emin misiniz ?' , accept: 'SİL' ,  Icon:<i style={{
+    fontSize: 50,
+    color: '#f73859'
+  }} className="fas fa-exclamation"></i> , 
+
+   color:'#f73859' } ,
+
+
+  SEND_CONFIRMATION:{ text:'Bu Öğrenciyi Onay İçin  Göndermek İstediğinizden Emin misiniz ?' , accept: 'GÖNDER' , Icon:
+  <i style={{
+    fontSize: 50,
+    color: '#ff6464'
+  }}
+
+  className="fas fa-search"></i> , 
+  
+  color:'#ff6464' } , 
+
+  CONFİRM_STUDENT:{ text:'Bu Öğrenciyi Onaylamak İstediğinizden Emin misiniz ?' , accept: 'ONAYLA' , Icon:
+  <i  style={{
+    fontSize: 50,
+    color: '#ff6464'
+  }} class="far fa-check-circle"></i>, 
+  
+  color:'#ff6464' } , 
+
+
+
 }
 
 
-const SentModal = React.memo(({backStage, type, closeModal, deleteUser , formSent , sendForm , result}) => {
+const SentModal = React.memo(({backStage, type, closeModal, handler , formSent , sendForm , result}) => {
 
   let modalY = {
     display: 'none'
@@ -117,28 +169,15 @@ const SentModal = React.memo(({backStage, type, closeModal, deleteUser , formSen
 
   } else if(Object.keys(deletedModalTexts).includes(type)) {
     
-    return <Modal display={modalY.display}><i style={{
-      fontSize: 50,
-      color: '#f73859'
-    }} className="fas fa-exclamation"></i>
-       <h2 style={{
-      textAlign: 'center',
-      fontSize: 15,
-      color: '#f73859',
-      fontWeight: 'bolder'
-     }}>{deletedModalTexts[type]}  </h2>
-       <div style={{
-      display: 'flex',
-      width: '90%',
-      justifyContent: 'space-around'
-    }}><CloseButton style={{
-      flex: 1,
-      marginRight: 20
-    }}  onClick={closeModal}>VAZGEÇ</CloseButton> <CloseButton style={{
-      flex: 1
-    }} onClick={deleteUser}>SİL</CloseButton></div>
+    return <Modal display={modalY.display}>
 
-  </Modal>
+        {deletedModalTexts[type].Icon}
+
+       <h2 style={{ textAlign: 'center', fontSize: 15, color: deletedModalTexts[type].color, fontWeight: 'bolder'}}>{deletedModalTexts[type].text}  </h2>
+
+       <div style={{ display: 'flex',width: '90%', justifyContent: 'space-around'}}><CloseButton style={{ flex: 1, marginRight: 20 , background:deletedModalTexts[type].color }}  onClick={closeModal}>VAZGEÇ</CloseButton> <CloseButton style={{flex: 1 , background:deletedModalTexts[type].color}} onClick={handler}>{deletedModalTexts[type].accept}</CloseButton></div>
+
+    </Modal>
 
   } else if( type === 'SEND_STUDENT_FORM' ) {
 
@@ -240,7 +279,7 @@ const SentModal = React.memo(({backStage, type, closeModal, deleteUser , formSen
 
                     <span style={{ background:'#58b4ae' , color:'white' , display:'block' , textAlign:'center',  padding:10 , fontSize:14 , borderRadius:5 , boxShadow:'0 1px 6px -1px rgba(0, 0, 0,0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.05)' }}> 
                     
-                      Ön Kayıt Formu Başarıyla Gönderildi . 
+                              Ön Kayıt Formu Başarıyla Gönderildi . 
 
                     </span>
 

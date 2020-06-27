@@ -15,6 +15,13 @@ font-size:11.6px;
 padding:6px;
 `
 
+export const PermissionsNumbers = {
+  REMOVE: 1,
+  UPDATE: 2,
+  ADD: 3,
+  READ: 4,
+}
+
 export const restrictWord = (word,limit)=>{
   
     var finalText = word.toLowerCase() ; 
@@ -26,7 +33,6 @@ export const restrictWord = (word,limit)=>{
 }
 
 export const checkPhoneNumber = (input)=>{
-
 
     return input.split('').filter((item) => parseInt(item) || item === '0' ).length < 10 ; 
 
@@ -66,21 +72,20 @@ export const studentListHelperPackage = ( id )=>{
     
         var fullName = item.owner.firstName + ' ' + item.owner.lastName ; 
     
-        var docState = item.StudentInfo.registerState.onkayit.docState ; 
+        var registerState = item.registerState ; 
     
         return [
     
-          restrictWord( item.StudentInfo.information.name , 13) , 
-          restrictWord( item.StudentInfo.information.surname , 13) ,
-          <Capsule  style={ {...studentStatusColor(docState).style}} >  { studentStatusColor(docState).text } </Capsule>,
-          item.owner._id === id  ?  <Capsule>{restrictWord(fullName,13)}</Capsule> : restrictWord(fullName,13) ,
-          item.StudentInfo.registerdate 
+          restrictWord( item.StudentInfo.name , 16) , 
+          restrictWord( item.StudentInfo.surname , 16) ,
+          <Capsule  style={ {...studentStatusColor(registerState).style}} >  { studentStatusColor(registerState).text } </Capsule>,
+          item.owner._id === id  ?  <Capsule>{restrictWord(fullName,16)}</Capsule> : restrictWord(fullName,16) ,
+          item.registerDate 
         
         ]
-    
+  
       } 
     
-
       return {
 
         filterIconOptions,
@@ -125,10 +130,9 @@ export const reportListHelperPackage = (id) => {
           var fullName = item.owner.firstName + ' ' + item.owner.lastName ; 
         }
 
-        console.log(item);
-    
+      
         return [
-          restrictWord( item.reportType === 'schoolReport' ? item.schoolName : item.relatedPersonName , 16 ) , 
+          restrictWord( item.reportType === 'schoolReport' ? item.schoolName : item.relatedPersonName , 17 ) , 
           item.relatedPersonPhoneNumber,
           item.reportType === 'schoolReport' ? 'Okul Görüşmesi' : 'Öğrenci Görüşmesi'  ,
           item.meetingDate,
@@ -256,8 +260,8 @@ export const statusColors = (report) => {
 
              text: 'Görüşme Yapıldı' , 
              style:{
-                backgroundColor: 'rgba(121, 215, 15, .1)' , 
-                color:'#0c9463',
+              backgroundColor:'rgba(0, 189, 170, .06)' , 
+              color:'#00bdaa',
              }
 
         }
@@ -291,11 +295,14 @@ export const statusColors = (report) => {
 }
 
 
-export const studentStatusColor = ( docState )=>{
+export const studentStatusColor = ( registerState )=>{
 
-  
-  if( docState ) { 
+   const  { docState , result:{ result } , pendingResult } = registerState ; 
+   
 
+
+
+  if( docState && !result && !pendingResult) { 
 
       return {
 
@@ -303,21 +310,55 @@ export const studentStatusColor = ( docState )=>{
           style:{
               backgroundColor: 'rgba(121, 215, 15, .1)' , 
               color:'#0c9463',
-           }
+           } ,
+           icon: <i style={{marginLeft:8}} class="fas fa-clipboard-check"></i>
 
      }
 
-  } else {
-
+  } else if ( docState && !result && pendingResult ) {
+   
       return {
 
-          text: 'Belgeler Eksik' , 
+          text: 'Onay Bekleniyor' , 
           style:{
-             backgroundColor:'rgba(226, 151, 156, 0.1)' , 
-             color:'#e7305b',
-          }
+             backgroundColor:'rgba(95, 108, 175, .1)' , 
+             color:'#5f6caf',
+          } , 
+          icon: <img style={{marginLeft:7}} width='25' height='25' src='/animation_500_kbv6hrft.gif' />
+          // icon: <i style={{marginLeft:8}}  class="fas fa-hourglass-start"></i> 
 
      }
+
+
+  } else if ( docState && result && !pendingResult ) {
+
+    return {
+
+      text: 'Öğrenci Onaylandı' , 
+      style:{
+         backgroundColor:'rgba(0, 189, 170, .06)' , 
+         color:'#00bdaa',
+      }, 
+      icon: <i style={{marginLeft:8}} class="fas fa-thumbs-up"></i>
+
+
+    }
+    
+  } else {
+
+    return {
+
+      text: 'Belgeler Eksik' , 
+      style:{
+         backgroundColor:'rgba(226, 151, 156, 0.1)' , 
+         color:'#e7305b',
+      },
+      icon: <i style={{marginLeft:8}}  class="fas fa-ban"></i>
+      
+    }
+
   }
+
+  
 
 }

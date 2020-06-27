@@ -19,6 +19,7 @@ module.exports.verify  = async (req,res,next)=>{
 module.exports.auth =  async (req,res,next)=>{
 
     const token = req.header("Authorization").split(' ')[1];
+    
     try
     {
         const verify = await jwt.verify(token,process.env.SECRET_KEY);
