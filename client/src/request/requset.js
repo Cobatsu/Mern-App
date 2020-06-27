@@ -601,7 +601,6 @@ export const makeUpdateStudentRequest = ( Type , data , id , setUpdatedStudent ,
       setModalType('STUDENT_UPDATED');
 
     })
- 
   })
   .catch((err)=>{
 
