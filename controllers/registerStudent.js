@@ -312,6 +312,30 @@ module.exports.sendConfirmation = async ( req , res) =>{
 
 }
 
+
+module.exports.addPaymentSchedule = async ( req , res) => {
+
+    const { params:{ id } , body:{ paymentSchedule , paymentType } }  = req ; 
+
+    console.log(paymentSchedule)
+
+    try {
+
+        await Student.updateOne( { _id:id } , {  $set: { 'paymentSchedule': paymentSchedule  , 'paymentType':paymentType  } } );
+        
+        const updatedStudent = await Student.findOne({ _id:id });
+
+        res.json({updatedStudent});
+        
+    } catch (error) {
+
+        res.json({error});
+        
+    }
+
+
+}
+
 module.exports.deleteFile = async (req,res) => {
 
     const { params:{ id } , body:{ fileWillBeDeleted } }  = req ; 

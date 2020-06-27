@@ -18,7 +18,11 @@ router.route('/upload_file/:id').post( auth , uploadMulter.upload.array('imgColl
 
 router.route('/delete_file/:id').post( auth , registerStudent.deleteFile);
 
-router.route('/confirm_student/:id').patch(auth,registerStudent.confirmStudent);
+router.route('/confirm_student/:id').patch( auth , registerStudent.confirmStudent);
+
+router.route('/add_paymentschedule/:id').post( auth , registerStudent.addPaymentSchedule)
+
+
 
 router.route('/student/:id')
 .all(auth)
