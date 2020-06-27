@@ -10,12 +10,14 @@ import {Regions}  from '../../../Regions/regions'
 import Circle from '../../../UI/Circle';
 import Modal from '../../../UI/sentModal';
 import Stage from '../../../UI/backStage';
+import { IconEdit , IconRemove , IconSendForm , IconForTextLink} from '../../../UI/IconButtons/IconButton';
 import {Checkbox,TextField,Tab,Tabs,Paper,InputLabel,MenuItem,Stepper,StepLabel,Step,Check,StepConnector,withStyles,makeStyles} from '@material-ui/core'
 import {makeUpdateReportRequest,makeDeleteReportRequest,makeSpecificReportRequest , makeSendFormRequest}  from '../../../request/requset'
 import {Report} from './addReport';
 import NotFoundPage from '../../../Components/NotFoundPage'
-import {restrictWord , checkPhoneNumber} from '../../../Utilities/utilities'
+import {restrictWord , checkPhoneNumber ,PermissionsNumbers} from '../../../Utilities/utilities'
 import validator from 'email-validator'
+
 
 const MainWrapper = styled.form`
 display:flex;
@@ -35,17 +37,7 @@ padding:30px;
 border-radius:3px;
 flex-flow:column;
 `
-const Icon = styled.div`
-border-radius:5px;
-padding:5px 10px;
-color:white;
-background:#00a8cc;
-font-size:15px;
-margin-right:10px;
-&:hover{
-    cursor:pointer;
-}
-`
+
 const ButtonWrapper = styled.div`
 display:flex;
 justify-content:flex-end;
@@ -74,6 +66,7 @@ color:white;
 padding:10px 20px ;
 &:hover{
     cursor:pointer;
+    box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
 }
 `
 
@@ -84,12 +77,6 @@ flex-flow:column;
 align-items:center;
 `
 
-export const PermissionsNumbers = {
-    REMOVE: 1,
-    UPDATE: 2,
-    ADD: 3,
-    READ: 4,
-}
 
 
 const initialGeneralReportState={
@@ -150,7 +137,7 @@ const determineStep = (initalReportStates) => {
 
 }
 
-  
+const steps = ['İletişime Geçildi' , 'Öğrenci Formu Gönderildi' , 'Öğrenci Formu Dolduruldu']
 
 const ReportDetail  = ({match,...rest })=>{
      
@@ -176,9 +163,7 @@ const ReportDetail  = ({match,...rest })=>{
 
     const activeStep = useMemo( determineStep(initalReportStates) ,[initalReportStates.owner])
 
-    const steps = ['İletişime Geçildi' , 'Öğrenci Formu Gönderildi' , 'Öğrenci Formu Dolduruldu']
-    
-    console.log(initalReportStates)
+
 
     useEffect(()=>{
         const {id} = match.params;
@@ -344,7 +329,7 @@ const ReportDetail  = ({match,...rest })=>{
 
                 <Modal backStage={emptyWarning}  closeModal={closeModal_1} type='EMPTY_FİELD'/>
                 <Modal backStage={uptadedModal}  closeModal={closeModal_2} type='UPDATED_REPORT'/>
-                <Modal backStage={deleteModal}   closeModal={closeModal_3} deleteUser={deleteReport}  type='DELETE_REPORT'/>
+                <Modal backStage={deleteModal}   closeModal={closeModal_3} handler={deleteReport}  type='DELETE_REPORT'/>
                 <Modal backStage={deleted}       closeModal={closeModal_4} type='DELETED_REPORT'/>
                 <Modal backStage={sendForm}  formSent={formSent}     closeModal={closeModal_5} type='SEND_STUDENT_FORM' sendForm = {sendFormHandler}  />
                 
@@ -370,13 +355,18 @@ const ReportDetail  = ({match,...rest })=>{
                        ( user.role === 'Admin' || user.role === 'Temsilci')  &&  <InnerItems style={{justifyContent:'flex-start',padding:10,marginBottom:5,marginTop:40}}>  
 
                             {
-                                initalReportStates.owner && initalReportStates.isContacted && initalReportStates.owner._id != user._id  ?  <Icon style={{background:'#63b7af',padding:0}}>
+                                initalReportStates.owner && initalReportStates.isContacted && initalReportStates.owner._id != user._id  && 
+                                
+                                <IconForTextLink content = {
 
-                                        <Link to={'/home/personel_listesi/raporlar/' + initalReportStates.owner._id + '?pageNumber=1'} style={{width:'100%',height:'100%',textTransform:'capitalize',textDecoration:'none',color:'white',display:'block',padding:'5px 10px'}}>
-                                            Görüşen Kişi :  { restrictWord( initalReportStates.owner.firstName + ' ' +  initalReportStates.owner.lastName , 16)}   <i class="fas fa-user"></i> 
-                                        </Link>
-                                        
-                                </Icon> : null 
+                                    `Görüşen Kişi :  ${restrictWord( initalReportStates.owner.firstName + ' ' +  initalReportStates.owner.lastName , 16)}` 
+
+                                } 
+
+                                id={initalReportStates.owner._id} 
+                                
+                                />
+ 
                             }
                             
                         </InnerItems>
@@ -386,15 +376,26 @@ const ReportDetail  = ({match,...rest })=>{
                          
 
                         {
-                           initalReportStates.isContacted &&  initalReportStates.reportType === 'studentReport' && !initalReportStates.isFormSent &&  ( initalReportStates.owner._id === user._id ) ?  <Icon style={{background:'#e16262'}} onClick= {()=>{ setSendForm(true); setbackStageOpen(true) }}> Ön Kayıt Formu Gönder <i class="fas fa-file-signature"></i> </Icon> : null
+                           initalReportStates.isContacted &&  initalReportStates.reportType === 'studentReport' && !initalReportStates.isFormSent &&  ( initalReportStates.owner._id === user._id ) 
+                           
+                            ?  
+                            
+                            <IconSendForm  handler= {()=>{ setSendForm(true); setbackStageOpen(true) }} /> 
+                            
+                            : null
                         }
 
                         {
-                           user.permissions.Rapor_Bilgileri.includes(PermissionsNumbers.UPDATE) ?  <Icon onClick= { ()=>setDisable(false)}>Düzenle <i className="fas fa-edit"/></Icon> : null
+                           user.permissions.Rapor_Bilgileri.includes(PermissionsNumbers.UPDATE)   &&  
+                            
+                            <IconEdit handler = { ()=> setDisable(false) } />
+
                         }
                         
                         {
-                           user.permissions.Rapor_Bilgileri.includes(PermissionsNumbers.REMOVE)  ?    <Icon style={{background:'#d9455f'}} onClick={()=>{setDeleteModal(true); setbackStageOpen(true)}} > Raporu  Sil <i className="fas fa-trash-alt"></i></Icon> : null
+                           user.permissions.Rapor_Bilgileri.includes(PermissionsNumbers.REMOVE)   &&  
+                           
+                            <IconRemove handler = {()=>{setDeleteModal(true); setbackStageOpen(true)}}  deletedText = {'Raporu Sil'} />
                         }
 
                    </InnerItems>

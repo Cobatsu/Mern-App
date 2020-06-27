@@ -46,19 +46,10 @@ export const Nav = ()=>{
     const logoutHandler = ()=>{
         
         const token = localStorage.getItem('auth_token');
-        const tokenObj = {token};
-        if(token)
-        {
-            makeLogoutRequest('post',tokenObj,isLoggedinf,setLoadingf);
-        }
-        else
-        {
-            isLoggedinf(false);
-            setLoadingf(false);
-        }
+
+        isLoggedinf(false);
 
     }
-
 
 
     return  Loading ? null :

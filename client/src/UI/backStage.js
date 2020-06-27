@@ -16,20 +16,21 @@ z-index:3;
 const BackStage  = React.memo(({backStage,close,loading})=>{
   
     //it is so important to determine top and left for fixed objects
-    if(backStage && !loading)
-    {
+    if(backStage && !loading) {
+
        var BackStage = <Stage onClick={close}/>
-    }
-    else if(backStage && loading)
-    {
+
+    } else if(backStage && loading) {
+
        var BackStage = <React.Fragment>
         <Stage/>
         <Circle top={40} Load={loading} position='fixed' />
       </React.Fragment>
-    }
-    else
-    {
+
+    } else {
+
        var BackStage=null;
+
     }
 
     return BackStage;

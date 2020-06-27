@@ -1,6 +1,6 @@
 import React from 'react';
 
-const studentsHomeAdress=({street,apartmentAndNumber,town,city,postalCode,warning,warning_text,changeHandler})=><div className='Item'>
+const studentsHomeAdress=({street,apartmentAndNumber,town,city,postalCode,warning,warning_text,changeHandler,disabled})=><div className='Item'>
 <h1>2. STUDENT'S  HOME ADRESS</h1>
 <div className='Fields'>
 
@@ -9,7 +9,7 @@ const studentsHomeAdress=({street,apartmentAndNumber,town,city,postalCode,warnin
      {
          street  ? null  :warning 
      } 
-     <input type='text' id='6' className={street ? null : warning_text }  onChange={changeHandler('street')} />
+     <input disabled={disabled} value={street} type='text' id='6' className={street ? null : warning_text }  onChange={changeHandler('street')} />
    </div>
 
    <div>
@@ -17,7 +17,7 @@ const studentsHomeAdress=({street,apartmentAndNumber,town,city,postalCode,warnin
      {
         apartmentAndNumber  ? null  : warning
      }   
-     <input type='text'  className={apartmentAndNumber ? null : warning_text }   onChange={changeHandler('apartment_and_number')}/>
+     <input disabled={disabled}  value={apartmentAndNumber} type='text'  className={apartmentAndNumber ? null : warning_text }   onChange={changeHandler('apartment_and_number')}/>
    </div>
 
    <div>
@@ -25,7 +25,7 @@ const studentsHomeAdress=({street,apartmentAndNumber,town,city,postalCode,warnin
      {
          town  ? null  :warning 
      }   
-     <input type='text' className={town ? null : warning_text } onChange={changeHandler('town')}/>
+     <input disabled={disabled}  value={town} type='text' className={town ? null : warning_text } onChange={changeHandler('town')}/>
    </div>
 
    <div>
@@ -33,7 +33,7 @@ const studentsHomeAdress=({street,apartmentAndNumber,town,city,postalCode,warnin
      {
          city  ? null  : warning 
      }  
-     <input type='text' className={city ? null : warning_text } onChange={changeHandler('city')}/>
+     <input disabled={disabled} value={city} type='text' className={city ? null : warning_text } onChange={changeHandler('city')}/>
    </div>
    
    <div style={{width:'98%'}}>
@@ -41,7 +41,7 @@ const studentsHomeAdress=({street,apartmentAndNumber,town,city,postalCode,warnin
      {
          postalCode  ? null  :warning
      } 
-     <input type='text' className={postalCode ? null : warning_text}  onChange={changeHandler('postal_code')}/>
+     <input  disabled={disabled} value={postalCode} type='text' className={postalCode ? null : warning_text}  onChange={changeHandler('postal_code')}/>
    </div>
 
 </div>

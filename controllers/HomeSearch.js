@@ -50,22 +50,40 @@ module.exports = async (req,res,next)=>{
                     var lastArray = [] ;
 
                     var subBranches =  SubBranches.filter( ( person,index )=>{
-                              return person.relatedAgencyID == agenta._id
+                              return person.relatedAgencyID.toString() == agenta._id.toString()
                     } ) 
                        
                          
                     lastArray = lastArray.concat( Report.filter(( report , index )=>{
 
-                        return  report.owner ==  agenta._id  ;
+                        if(report.owner) {
+
+                            return   report.owner.toString() ===  agenta._id.toString()
+
+                        } else {
+
+                            return false ; 
+
+                        }
+                    
 
                     }))
 
-                    console.log(lastArray);
 
                     subBranches.forEach ( ( person , index )=>{
 
                         lastArray = lastArray.concat( Report.filter((report,index)=>{
-                            return  report.owner ===  person._id ;  
+
+                            if(report.owner) {
+
+                                return report.owner.toString() ==  person._id.toString() ;
+
+                            } else {
+
+                                 return false ; 
+
+                            }
+                            
                         }))
                         
                     })
@@ -112,7 +130,8 @@ module.exports = async (req,res,next)=>{
 
       else if ( user.role  === 'Temsilci' ){
           
-         const subBranchesOfAgency  = await User.find( { relatedAgencyID : user._id} );
+         const subBranchesOfAgency  = await User.find( { relatedAgencyID : user._id } );
+
 
          const Report = await Reports.find({ meetingDate:{ $gte:today }});
      
@@ -121,7 +140,18 @@ module.exports = async (req,res,next)=>{
          subBranchesOfAgency.forEach(( branch,index )=>{
  
             var matchedReports  = Report.filter((report,index)=>{
-                     return report.owner === branch._id  ;
+                    
+                if(report.owner) { 
+
+                    return report.owner.toString() === branch._id.toString()  
+
+                } else {
+                   
+                    return false ; 
+
+                }
+                     
+
             })    
 
         
@@ -139,6 +169,8 @@ module.exports = async (req,res,next)=>{
             regionReportInfo[branch.region] = [ ... ( regionReportInfo[branch.region] || [] )  , { region:branch.region + ' Bayisi', fullName:branch.firstName + ' ' + branch.lastName , reportInfo } ]
 
         }) 
+
+      
         
         return res.json({regionReportInfo});
 
@@ -149,6 +181,8 @@ module.exports = async (req,res,next)=>{
       }
        
     } catch (error) {
+
+        console.log(error);
 
         res.json({error});
         

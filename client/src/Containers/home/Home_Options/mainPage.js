@@ -109,6 +109,7 @@ const MainPage = (props)=>{
         axios.get('/api/homeSearch',{ headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}}).then((response)=>{
 
           const  { regionReportInfo } = response.data;
+             
 
             let sumDailyReports = 0 ;
      

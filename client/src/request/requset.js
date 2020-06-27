@@ -9,23 +9,22 @@ export const makeRequest = (Type,Body,activeCircle,backStage,setResult) => {
 
       const { result } = data.data ; 
     
-         
-      setResult(result);
 
-      backStage(true);
+      ReactDOM.unstable_batchedUpdates(()=>{
 
-      activeCircle(false);
+        setResult(result);
+  
+        backStage(true);
+  
+        activeCircle(false);
+           
+      })
          
     })
     .catch((err)=>{ console.log(err) })    
 }
 
-export const makeFileRequest = (Type,FormData,activeCircle,backStage)=>{
-  axios[Type]('/api/register', FormData).then((res)=>{
-   
-      
-  })
-}
+
 
 export const makePersonelRequest = (type,setPersonels,setLoading)=>{
   
@@ -69,26 +68,7 @@ export const makeAddUserRequest = (Type,Body,alreadyInUse,setModal,setLoggedin)=
 }
 
 
-export const makeSpecificUserRequest = (Type,id,setLoading,setStudent)=>{
- axios[Type]('/api/register/'+id).then((res)=>{
-     const {specificStudent,error} = res.data;   
-     
-   if(error)
-   {
-      console.log(error); 
-   }
-   else
-   {
 
-      setStudent(specificStudent);
-      setLoading(false);
-   }
-  })
-  .catch((err)=>{
-    
-      console.log(err);
-  });
-}
 
 export const makeLogoutRequest = (Type,Body,setLoggedin,setLoading)=>{
   axios[Type]('/api/logout',Body,  {
@@ -461,25 +441,19 @@ export const makePersonSearchRequest = (Type,searchData,setLoggedin , setReport 
      
     const {sortedData,documentCount} = res.data;
 
-    if(res.data.error && !res.data.isLoggedin)
-    {
+    if(res.data.error && !res.data.isLoggedin) {
 
       return setLoggedin(false);
       
-    }
-
-    else if (sortedData.length > 0)
-    {
+    } else if (sortedData.length > 0) {
       
       setCount(documentCount);
       close();
       setReport(sortedData);
       setNotFound(null)
-
       
-    }
-    else
-    {
+    } else {
+
       setCount(0);    
       setNotFound(true)
       close();
@@ -505,7 +479,7 @@ export const makeSubBranchRequest = (Type,id,setSubBranches)=>{
     const {subBranches} = res.data;
     
   })
-  .catch((err)=>{
+  .catch((err) => {
 
   })
   
@@ -521,12 +495,16 @@ export const makeRelatedAgencyRequest = (Type,id,setLoading,setRelatedAgency,set
      
       const { relatedAgency } = res.data;
 
-      if(res.data.error && !res.data.isLoggedin){
+      if(res.data.error && !res.data.isLoggedin) {
+
         setLoggedin(false);
+
       }
-      else{
+      else {
+
         setRelatedAgency(relatedAgency)
         setLoading(false);
+
       }
 
  })
@@ -545,12 +523,11 @@ export const makeStudentSearchRequest = (Type,searchData,setLoggedin , setReport
   })
   .then((res)=>{
 
-    console.log(res);
      
-    const {sortedData,documentCount} = res.data;
+    const { sortedData , documentCount } = res.data;
 
-    if(res.data.error && !res.data.isLoggedin)
-    {
+    if(res.data.error && !res.data.isLoggedin) {
+
 
       return setLoggedin(false);
       
@@ -607,3 +584,192 @@ export const makeSendFormRequest = ( Type , data , setSentForm , setFormSent )=>
   })
 
 }
+
+
+export const makeUpdateStudentRequest = ( Type , data , id , setUpdatedStudent , setBackStageLoading , setModalType ) => {
+
+  axios[Type]('/api/register/student/'+ id ,data , { headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}})
+  
+  .then((response)=>{
+
+    const { updatedStudent:{ StudentInfo } } = response.data ; 
+
+    ReactDOM.unstable_batchedUpdates(()=>{
+
+      setBackStageLoading(false);
+      setUpdatedStudent(StudentInfo);
+      setModalType('STUDENT_UPDATED');
+
+    })
+ 
+  })
+  .catch((err)=>{
+
+  })
+  
+} 
+
+export const makeDeleteStudentRequest = ( Type , id , setBackStageLoading , setModalType )=>{
+   
+  axios[Type]('/api/register/student/'+ id , 
+  { headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}}).then((response)=>{
+
+    
+    ReactDOM.unstable_batchedUpdates(()=>{
+
+      setBackStageLoading(false);
+      setModalType('STUDENT_DELETED');
+
+    })
+  }).catch(()=>{
+
+
+  })
+
+}
+
+
+export const makeSendForConfirmationRequest = ( Type  , id , setUpdatedStudent , setBackStageLoading , setModalType  ) => {
+
+
+  axios[Type]('/api/register/send_confirmation/'+ id , {},
+  { headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}}).then((response)=>{
+      
+    const  { updatedStudent , error } = response.data ; 
+    
+
+    if( error ) {
+          
+        return console.log(error) ; 
+
+    }
+
+    ReactDOM.unstable_batchedUpdates(()=>{
+
+      setUpdatedStudent(updatedStudent);
+      setBackStageLoading(false);
+      setModalType('CONFİRMATİON_SENT');
+
+    })
+  
+
+  }).catch(()=>{
+
+
+  })
+
+
+}
+
+export const makeConfirmStudentRequest = ( Type  , id , setUpdatedStudent , setBackStageLoading , setModalType  ) =>{
+
+ 
+        axios[Type]('/api/register/confirm_student/'+ id , {},
+        { headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}}).then((response)=>{
+            
+          const  { updatedStudent , error } = response.data ; 
+          
+
+          if( error ) {
+                
+              return console.log(error) ; 
+
+          }
+
+          ReactDOM.unstable_batchedUpdates(()=>{
+
+            setUpdatedStudent(updatedStudent);
+            setBackStageLoading(false);
+            setModalType('CONFİRMED_STUDENT');
+
+          })
+        
+
+        }).catch(()=>{
+
+
+        })
+
+}
+
+export const makeDeleteFileRequest = ( Type  , id ,  fileWillBeDeleted  , setUpdatedStudent , setDeletedFile ) => {
+
+  axios[Type]('/api/register/delete_file/'+ id  , { fileWillBeDeleted } , 
+ { headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}}).then((response)=>{
+     
+   const  { updatedStudent , error } = response.data ; 
+   
+
+   if( error ) {
+         
+       return console.log(error) ; 
+
+   }
+
+   ReactDOM.unstable_batchedUpdates(()=>{
+
+    setUpdatedStudent(updatedStudent)
+     setDeletedFile(null);
+
+   })
+ 
+
+ }).catch(()=>{
+
+
+ })
+
+}
+
+export const makeUploadFileRequest = ( Type  , id , file  , setUpdatedStudent , setUploadFileLoading ) => {
+
+         axios[Type]('/api/register/upload_file/'+ id , file ,
+        { headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}}).then((response)=>{
+            
+          const  { updatedStudent , error } = response.data ; 
+          
+
+          if( error ) {
+                
+              return console.log(error) ; 
+
+          }
+
+          ReactDOM.unstable_batchedUpdates(()=>{
+
+            setUpdatedStudent(updatedStudent);
+            setUploadFileLoading(false);
+
+          })
+        
+
+        }).catch(()=>{
+
+
+        })
+
+}
+
+export const makeSpecificStudentRequest = ( Type , id ,  setLoading , setStudent ) =>{
+
+  axios[Type]('/api/register/student/'+ id ,  { headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}}).then( (res) => {
+ 
+      const { specificStudent , error } = res.data;   
+      
+    if(error) {
+ 
+       console.log(error);
+ 
+    } else {
+ 
+       setStudent(specificStudent);
+       setLoading(false);
+ 
+    }
+ 
+   })
+   .catch((err)=>{
+     
+       console.log(err);
+   });
+ }

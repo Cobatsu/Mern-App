@@ -6,18 +6,24 @@ const User = mongoose.Schema({
     userName:{
         type:String,
         required:true,
+        trim:true,
         unique:true
     },
     firstName:{
          type:String,
+         lowerCase:true,
+         trim:true,
          required:true,
     },
     lastName:{
          type:String,
+         lowerCase:true,
+         trim:true,
          required:true,
     },
     password:{
          type:String,
+         trim:true,
          requireds:true,
     },
     gender:{
@@ -28,6 +34,7 @@ const User = mongoose.Schema({
     {
          type:String,
          required:true,
+         trim:true,
     },
     role:{
          type:String,
@@ -61,10 +68,7 @@ const User = mongoose.Schema({
      type:Array,
      required:false,
     },
-    referenceCode :{
-         type:String , 
-         default:shortid.generate(),
-    }
+
 })
 
 User.plugin(uniqueValidtor)

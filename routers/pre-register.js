@@ -11,6 +11,20 @@ router.post('/uploadDocuments' , uploadMulter.upload.array('imgCollection',4), r
 router.route('/sendForm').post(auth,registerStudent.sendForm);
 
 router.route('/get_students').post(auth,registerStudent.studentSearch);
-router.post('/get_students/:id',registerStudent.getOneStudent);
+
+router.route('/send_confirmation/:id').patch(auth,registerStudent.sendConfirmation);
+
+router.route('/upload_file/:id').post( auth , uploadMulter.upload.array('imgCollection',1) , registerStudent.uploadFile);
+
+router.route('/delete_file/:id').post( auth , registerStudent.deleteFile);
+
+router.route('/confirm_student/:id').patch(auth,registerStudent.confirmStudent);
+
+router.route('/student/:id')
+.all(auth)
+.get(registerStudent.getOneStudent)
+.patch(registerStudent.updateStudent)
+.delete(registerStudent.deleteStudent)
+
 module.exports = router;
 
