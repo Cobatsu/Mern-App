@@ -396,7 +396,7 @@ const StudentInformations  = ( { match , ...rest } )=>{
       
         for (let i = 0; i < count ; i++) {
 
-            copyPayment.push( paymentSchedule[i] || student.paymentSchedule[i] ) ;
+            copyPayment.push( paymentSchedule[i] ||  ( student.paymentSchedule[i] || { amount:null , date:null } ) ) ;
             
         }
 
