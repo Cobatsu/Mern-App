@@ -17,6 +17,7 @@ import BackStage from '../../../UI/backStage'
 import {TextField,MenuItem} from '@material-ui/core'
 import { KeyboardDatePicker , MuiPickersUtilsProvider} from '@material-ui/pickers'
 import DateFnsUtils from '@date-io/date-fns';
+import {useViewport} from '../navs/customHooks/viewPortHook'
 
 const MainWrapper = styled.form`
 display:flex;
@@ -186,6 +187,7 @@ const ImageFields = [
 
 const StudentInformations  = ( { match , ...rest } )=>{
      
+    const { width } = useViewport();
     const [ loading , setLoading ]  = useState(true);
 
     const [ backStageLoading , setBackStageLoading ] = useState(false);
@@ -196,6 +198,7 @@ const StudentInformations  = ( { match , ...rest } )=>{
     const [ uploadFileLoading , setUploadFileLoading ] = useState(false) ; 
 
     const [ deletedFile , setDeletedFile ] = useState(null) ;
+    const [ isAllFilled , setIsAllFilled ] = useState(true);
     
     const [ paymentType , setPaymentType ] = useState();
     const [ paymentSchedule , setPaymentSchedule ] = useState([])
@@ -206,6 +209,8 @@ const StudentInformations  = ( { match , ...rest } )=>{
     const { user } = useContext( Context );
 
     const { id } = match.params;
+
+    
    
     const setDate = ( value , index )=>{
 
@@ -391,7 +396,7 @@ const StudentInformations  = ( { match , ...rest } )=>{
       
         for (let i = 0; i < count ; i++) {
 
-            copyPayment.push( { amount:null , date:null } ) ;
+            copyPayment.push( paymentSchedule[i] || student.paymentSchedule[i] ) ;
             
         }
 
@@ -400,6 +405,24 @@ const StudentInformations  = ( { match , ...rest } )=>{
 
 
     const paymentScheduleRequest=()=>{
+
+        var result = paymentSchedule.every((item)=>{
+
+            if( item.date && item.amount ) {
+
+                return true ; 
+                
+            } else {
+
+                return false ; 
+
+            }            
+
+        })
+
+        setIsAllFilled(result)
+
+        if ( !result ) { return ;   }
 
         setPaymentRequest(true);
 
@@ -430,7 +453,9 @@ const StudentInformations  = ( { match , ...rest } )=>{
                     
                         <FileListElement key={index} style={{boxShadow:'none', padding:10 , margin:' 18px 0 22px 0 ' , justifyContent:'center' , alignItems:'flex-end'}} >
                                
-                                <span style={{boxShadow: '0 1px 6px -1px rgba(0, 0, 0,0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.02)' ,  position:'absolute', background:'#ff6464', borderRadius:7, padding:6 , fontSize:12 , color:'white' , left:'5%' , top:'30%' , }}> {index+1}. Taksit </span>
+                               {
+                                   width < 1030 ? null : <span style={{boxShadow: '0 1px 6px -1px rgba(0, 0, 0,0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.02)' ,  position:'absolute', background:'#ff6464', borderRadius:7, padding:6 , fontSize:12 , color:'white' , left:'5%' , top:'30%' , }}> {index+1}. Taksit </span>
+                               }
 
                                 <KeyboardDatePicker 
                                 
@@ -440,14 +465,19 @@ const StudentInformations  = ( { match , ...rest } )=>{
                                     format="dd/MM/yyyy"
                                     margin="normal"
                                     id="date-picker-inline"
-                                    label="Ödeme Tarihi"   
+                                    label="Ödeme Tarihi"  
+                                    error={ !item.date && !isAllFilled }  
                                     value={item.date} 
                                     onChange={(value)=>setDate( value , index )} 
-                                    style={{margin:'0 40px 0 0'}}
+                                    style={{margin:'0 35px 0 0'}}
                                 
                                 />
 
-                                <TextField value={ '$ ' +  ( item.amount || '' )  } onChange={(e)=> setMount( e.target.value , index ) }  label='Ödenecek Miktar'/> 
+                                <TextField
+                                  error={ !item.amount && !isAllFilled } 
+                                  value={ '$ ' +  ( item.amount || '' )  } 
+                                  onChange={(e)=> setMount( e.target.value , index ) }  
+                                  label='Ödenecek Miktar'/> 
                 
                         </FileListElement> 
 
@@ -525,7 +555,7 @@ const StudentInformations  = ( { match , ...rest } )=>{
                             
                             </InnerItems>
 
-                            <FileList style={{padding:'55px 15px 40px  15px'}}  isActive = { getStatusUI.text === 'Öğrenci Onaylandı' && user.role === 'Temsilci' } >
+                            <FileList style={{padding:'55px 15px 40px  15px'}}  isActive = { getStatusUI.text === 'Öğrenci Onaylandı' } >
 
                                     <FileListElement style={{background:'#00909e' , borderRadius :'7px 7px 0 0' , justifyContent:'center' , alignItems:'center'   , width:'100%' , top:0 , left:0 , position:'absolute' , color:'white', textAlign:'center',padding:7}}>
 
@@ -563,7 +593,7 @@ const StudentInformations  = ( { match , ...rest } )=>{
                                     </MuiPickersUtilsProvider>
 
 
-                                         <Submit uploadFileLoading={paymentRequest}  type='button' onClick={paymentScheduleRequest} >
+                                           <Submit uploadFileLoading={paymentRequest}  type='button' onClick={paymentScheduleRequest} >
 
                                                 {
                                                     paymentRequest ? <Circle Load  height={25} width={25} position='static' marginTop={2} marginBot={2} />   : 
@@ -610,6 +640,7 @@ const StudentInformations  = ( { match , ...rest } )=>{
                                                             <IconCapsule isDeleted = { deletedFile === index }  onClick = { deleteFile( fileName , index ) } > 
                                                               
                                                               {
+
                                                                   deletedFile === index  ?  
                                                                   
                                                                   ( <Circle Load  height={22} width={22} position='static' marginTop={2} marginBot={2} />  ) :
