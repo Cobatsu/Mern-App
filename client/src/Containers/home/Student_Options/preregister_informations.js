@@ -5,7 +5,8 @@ import { makeSpecificStudentRequest
 , makeDeleteStudentRequest 
 , makeConfirmStudentRequest 
 , makeUploadFileRequest 
-, makeDeleteFileRequest }  from '../../../request/requset'
+, makeDeleteFileRequest 
+, makePaymentScheduleRequest}  from '../../../request/requset'
 import styled from 'styled-components';
 import Circle from '../../../UI/Circle';
 import { IconEdit , IconRemove , IconSendConfirmation , confirmStudent as ConfirmStudent ,   IconsendToRosedale } from '../../../UI/IconButtons/IconButton';
@@ -14,6 +15,9 @@ import { PermissionsNumbers , studentStatusColor  } from '../../../Utilities/uti
 import Modal from '../../../UI/sentModal'
 import BackStage from '../../../UI/backStage'
 import {TextField,MenuItem} from '@material-ui/core'
+import { KeyboardDatePicker , MuiPickersUtilsProvider} from '@material-ui/pickers'
+import DateFnsUtils from '@date-io/date-fns';
+import {useViewport} from '../navs/customHooks/viewPortHook'
 
 const MainWrapper = styled.form`
 display:flex;
@@ -42,7 +46,7 @@ box-shadow: 0 1px 6px -1px rgba(0, 0, 0,0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.02)
 display:flex;
 align-items:center;
 text-align:center;
-background:#00796b;
+background:#30475e;
 color:white;
 font-size:13px;
 margin-right:10px;
@@ -68,7 +72,7 @@ color:#30475e;
 
 `
 
-const LoadFile = styled.button `
+const Submit = styled.button `
 
 font-size:15px;
 border-radius:15px 0 15px 0  ; 
@@ -149,10 +153,11 @@ const FileListElement = styled.li`
  
 }
 
+position:relative;
 box-shadow:${({isDeleted})=> isDeleted ? '0 1px 6px -1px rgba(0, 0, 0,0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.02)' : '0' };
 display:flex;
 justify-content:space-between;
-align-items:center;
+
 border-radius:7px;
 transition:50ms;
 
@@ -182,6 +187,7 @@ const ImageFields = [
 
 const StudentInformations  = ( { match , ...rest } )=>{
      
+    const { width } = useViewport();
     const [ loading , setLoading ]  = useState(true);
 
     const [ backStageLoading , setBackStageLoading ] = useState(false);
@@ -192,16 +198,62 @@ const StudentInformations  = ( { match , ...rest } )=>{
     const [ uploadFileLoading , setUploadFileLoading ] = useState(false) ; 
 
     const [ deletedFile , setDeletedFile ] = useState(null) ;
+    const [ isAllFilled , setIsAllFilled ] = useState(true);
     
-    const [ installmentCount , setInstallmentCount ] = useState(); 
     const [ paymentType , setPaymentType ] = useState();
+    const [ paymentSchedule , setPaymentSchedule ] = useState([])
+    const [ paymentRequest ,  setPaymentRequest  ] = useState(false);
 
     const inputRef = useRef(); 
 
     const { user } = useContext( Context );
 
     const { id } = match.params;
+
+    
    
+    const setDate = ( value , index )=>{
+
+        var copyPayment = [...paymentSchedule];
+
+        var copyObject =  {...copyPayment[index]};
+
+        copyObject.date = value ; 
+
+        copyPayment[index] = copyObject;
+
+        setPaymentSchedule(copyPayment);
+
+    }
+
+    const setMount = ( value , index  )=>{
+
+        var copyPayment = [...paymentSchedule];
+
+        var copyObject =  {...copyPayment[index]};
+
+        copyObject.amount = value.slice(2) ; 
+
+        copyObject.amount = copyObject.amount.split(',').join('');
+
+        var commaCount = Math.floor( copyObject.amount.length/3 );
+
+        var finalText = copyObject.amount.split('');
+
+        for (let i = 0; i < commaCount; i++) {
+
+            finalText[ (copyObject.amount.length-1 ) -  (i+1)*3 ] += ','
+            
+        }
+
+
+        copyObject.amount = finalText.join('');
+
+        copyPayment[index] = copyObject;
+
+        setPaymentSchedule(copyPayment);
+
+    }
 
     if( user.role === 'Admin' ) {
    
@@ -307,11 +359,135 @@ const StudentInformations  = ( { match , ...rest } )=>{
 
     }
    
+
     useEffect(()=>{
 
             makeSpecificStudentRequest('get' , id , setLoading , setStudent ) ;
 
     },[]);
+
+    useEffect(()=>{ 
+
+            if(student._id) {
+
+                setPaymentSchedule(student.paymentSchedule);
+                setPaymentType(student.paymentType);
+
+            }
+             
+
+    },student._id)
+
+    const reduceInstallmentCount =(e)=>{
+        
+        var count = e.target.value ; 
+
+        var copyPayment = [];
+
+        if( count.length > 1 ) {
+
+            count = count[1] ;
+            
+            if( count > 3) { count = paymentSchedule.length  } 
+            
+        } 
+
+        if( count > 3) { count = paymentSchedule.length }
+      
+        for (let i = 0; i < count ; i++) {
+
+            copyPayment.push( paymentSchedule[i] ||  ( student.paymentSchedule[i] || { amount:null , date:null } ) ) ;
+            
+        }
+
+        setPaymentSchedule(copyPayment);
+    }
+
+
+    const paymentScheduleRequest=()=>{
+
+        var result = paymentSchedule.every((item)=>{
+
+            if( item.date && item.amount ) {
+
+                return true ; 
+                
+            } else {
+
+                return false ; 
+
+            }            
+
+        })
+
+        setIsAllFilled(result)
+
+        if ( !result ) { return ;   }
+
+        setPaymentRequest(true);
+
+        makePaymentScheduleRequest( 'post' , id , { paymentSchedule , paymentType }  , setStudent  ,  setPaymentRequest  )
+
+    }
+ 
+   
+    if( paymentType === 'Peşin' ) {
+
+            var paymentTable =  ( 
+            
+                <FileListElement style={{boxShadow:'none' , margin:' 15px 0 ' , justifyContent:'center'}} >
+
+                        <TextField style={{marginRight:40}} label='Ödeme Tarihi'/> 
+                        <TextField label='Ödenecek Miktar'/> 
+
+                </FileListElement> )
+
+    } else if ( paymentType === 'Taksit'  ) {
+
+     
+            var paymentTable = (
+
+                paymentSchedule.map((item,index)=>{
+
+                    return ( 
+                    
+                        <FileListElement key={index} style={{boxShadow:'none', padding:10 , margin:' 18px 0 22px 0 ' , justifyContent:'center' , alignItems:'flex-end'}} >
+                               
+                               {
+                                   width < 1030 ? null : <span style={{boxShadow: '0 1px 6px -1px rgba(0, 0, 0,0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.02)' ,  position:'absolute', background:'#ff6464', borderRadius:7, padding:6 , fontSize:12 , color:'white' , left:'5%' , top:'30%' , }}> {index+1}. Taksit </span>
+                               }
+
+                                <KeyboardDatePicker 
+                                
+                                    autoOk
+                                    disableToolbar
+                                    variant="inline"
+                                    format="dd/MM/yyyy"
+                                    margin="normal"
+                                    id="date-picker-inline"
+                                    label="Ödeme Tarihi"  
+                                    error={ !item.date && !isAllFilled }  
+                                    value={item.date} 
+                                    onChange={(value)=>setDate( value , index )} 
+                                    style={{margin:'0 35px 0 0'}}
+                                
+                                />
+
+                                <TextField
+                                  error={ !item.amount && !isAllFilled } 
+                                  value={ '$ ' +  ( item.amount || '' )  } 
+                                  onChange={(e)=> setMount( e.target.value , index ) }  
+                                  label='Ödenecek Miktar'/> 
+                
+                        </FileListElement> 
+
+                    )
+
+                } ) )
+
+    }
+   
+
 
     return  loading 
 
@@ -379,57 +555,67 @@ const StudentInformations  = ( { match , ...rest } )=>{
                             
                             </InnerItems>
 
-                            <FileList  isActive = { getStatusUI.text === 'Öğrenci Onaylandı' && user.role === 'Temsilci' } >
+                            <FileList style={{padding:'55px 15px 40px  15px'}}  isActive = { getStatusUI.text === 'Öğrenci Onaylandı' } >
 
-                                    <FileListElement style={{background:'#00909e' , borderRadius :'7px 7px 0 0' , justifyContent:'center'    , width:'100%' , top:0 , left:0 , position:'absolute' , color:'white', textAlign:'center',padding:7}}>
+                                    <FileListElement style={{background:'#00909e' , borderRadius :'7px 7px 0 0' , justifyContent:'center' , alignItems:'center'   , width:'100%' , top:0 , left:0 , position:'absolute' , color:'white', textAlign:'center',padding:7}}>
 
                                         Ödeme Planı  <i style={{marginLeft:10}} class="fas fa-dollar-sign"></i>
 
                                     </FileListElement>
 
 
-                                    <FileListElement style={{boxShadow:'none'}} >
+                                    <FileListElement style={{boxShadow:'none'  , justifyContent:'center' , alignItems:'center' , marginBottom:50}} >
                                                           
-                                                    <TextField  style={{width:'15%',padding:'10px 0' }}   onChange={ (e)=>setPaymentType(e.target.value) }  id="select" label="Ödeme Şekli" value={paymentType}  select >
+                                                    <TextField  style={{minWidth:'30%',padding:'10px 0' , marginRight:15}}   onChange={ (e)=>setPaymentType(e.target.value) }  id="select" label="Ödeme Şekli" value={paymentType}  select >
                                                         
                                                         <MenuItem value='Peşin' > Peşin </MenuItem>
                                                         <MenuItem value='Taksit' > Taksit </MenuItem>
 
                                                     </TextField> 
 
+                                                    {
+
+                                                        paymentType === 'Taksit' && <TextField type='number'   style={{minWidth:'30%'}}  label='Taksit Sayısı' value = { paymentSchedule.length.toString()  }    onChange={reduceInstallmentCount}/>
+                                                 
+                                                    }
+
                                     </FileListElement>
                                     
+                                     
+                                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                               
+                                               {
 
-                                     { 
-                                        
-                                        paymentType === 'Peşin' ? 
+                                                   paymentTable
 
-                                        <FileListElement style={{boxShadow:'none' , margin:' 15px 0 ' , justifyContent:'center'}} >
+                                               }
 
-                                                <TextField style={{marginRight:40}} label='Ödeme Tarihi'/> 
-                                                <TextField label='Ödenecek Miktar'/> 
-
-                                        </FileListElement> : 
-
-                                         [...new Array(installmentCount)].map(()=>{
-
-                                        
-                                            return  <FileListElement>
+                                    </MuiPickersUtilsProvider>
 
 
-                                            </FileListElement>
+                                           <Submit uploadFileLoading={paymentRequest}  type='button' onClick={paymentScheduleRequest} >
 
-                                        })
-                                        
-                                     }
+                                                {
+                                                    paymentRequest ? <Circle Load  height={25} width={25} position='static' marginTop={2} marginBot={2} />   : 
+                                                    
+                                                    <React.Fragment>
+
+                                                        <input type="file" name="myfile" accept=".png, .jpg, .jpeg , .pdf" ref={inputRef} onChange={uploadFileHandler}  style={{display:'none'}}  />
+        
+                                                         Planı Oluştur  <i style={{marginLeft:7}} className="far fa-calendar-alt"></i>
+
+                                                    </React.Fragment>    
+
+                                                }                                                 
+                                                
+
+                                           </Submit> 
 
                             </FileList>
 
-
-                          
                             <FileList isAllowed = {uploadFilePermission}  isActive = { student.registerState.docState }>
                                       
-                                    <FileListElement style={{background:'#00909e' , borderRadius :'7px 7px 0 0' , justifyContent:'center'   , width:'100%' , top:0 , left:0 , position:'absolute' , color:'white', textAlign:'center',padding:7}}>
+                                    <FileListElement style={{background:'#00909e', alignItems:'center'  , borderRadius :'7px 7px 0 0' , justifyContent:'center'   , width:'100%' , top:0 , left:0 , position:'absolute' , color:'white', textAlign:'center',padding:7}}>
 
                                          Belgeler <i style={{marginLeft:10}} class="fas fa-folder-open"></i>
 
@@ -441,7 +627,7 @@ const StudentInformations  = ( { match , ...rest } )=>{
 
                                             return (
 
-                                                <FileListElement isDeleted = {deletedFile === index}  >
+                                                <FileListElement key = {fileName} isDeleted = { deletedFile === index }  >
 
                                                     <InnerLink className='responsiveLink' style={{textDecoration:'none' , color:'#00909e' }}   href={'http://localhost:3001/api/' + fileName} target="_blank" > 
                                                     
@@ -451,9 +637,10 @@ const StudentInformations  = ( { match , ...rest } )=>{
 
                                                       {  user.role === 'Admin' && (
 
-                                                            <IconCapsule isDeleted = {deletedFile === index}  onClick = { deleteFile( fileName , index ) } > 
+                                                            <IconCapsule isDeleted = { deletedFile === index }  onClick = { deleteFile( fileName , index ) } > 
                                                               
                                                               {
+
                                                                   deletedFile === index  ?  
                                                                   
                                                                   ( <Circle Load  height={22} width={22} position='static' marginTop={2} marginBot={2} />  ) :
@@ -480,7 +667,7 @@ const StudentInformations  = ( { match , ...rest } )=>{
                                     {
                                            (  uploadFilePermission  )  && 
 
-                                           <LoadFile uploadFileLoading={uploadFileLoading}  type='button' onClick={loadFileHandler} >
+                                           <Submit uploadFileLoading={uploadFileLoading}  type='button' onClick={loadFileHandler} >
 
                                                 {
                                                     uploadFileLoading ? <Circle Load  height={25} width={25} position='static' marginTop={2} marginBot={2} />   : 
@@ -496,7 +683,7 @@ const StudentInformations  = ( { match , ...rest } )=>{
                                                 }                                                 
                                                 
 
-                                           </LoadFile> 
+                                           </Submit> 
 
                                     }
 
