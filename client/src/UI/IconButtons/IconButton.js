@@ -6,11 +6,11 @@ const Icon = styled.div`
 display:flex;
 align-items:center;
 border-radius:5px;
-padding:5px 10px;
+padding:5px 7px;
 color:white;
-background:#00a8cc;
+background:#1a73e8;
 margin-bottom:5px;
-font-size:15px;
+font-size:12.3px;
 margin-right:10px;
 &:hover{
     cursor:pointer;
@@ -46,11 +46,11 @@ export const IconEdit = ( { handler } )=> (
 export const IconRemove = ( { handler , deletedText  } ) => ( 
    
     <Icon 
+
         style={{background:'#d9455f'} } 
-        onClick = {handler} > 
-        
-        { deletedText } 
-        <i style={{marginLeft:6}} className="fas fa-trash-alt"></i>
+        onClick = {handler} >       
+          { deletedText } 
+        <i style={{marginLeft:6}} className="far fa-trash-alt"></i>
          
     </Icon>  
     
@@ -69,7 +69,7 @@ export  const IconSendConfirmation = ( { handler } ) => (
 
     <Icon 
             style={{background:'#ff6464'}} 
-            onClick = {handler} > Onaya Gönder  
+            onClick = { handler } > Onaya Gönder  
             <i style={{marginLeft:6}} class="fas fa-search"></i>  
     </Icon>
 
@@ -79,8 +79,18 @@ export const confirmStudent = ( { handler } ) => (
 
     <Icon 
         style={{background:'#ff6464'}} 
-        onClick = {handler} > Öğrenciyi Onayla 
+        onClick = { handler } > Öğrenciyi Onayla 
         <i style={{marginLeft:6}} class="fas fa-user-check"></i>  
     </Icon>
 
 ) 
+
+export const IconsendToRosedale = ( { handler } ) => (
+
+    <Icon 
+        style={{background:'#4f8a8b'}} 
+        onClick = { handler } > Rosedale Gönder
+        <i style={{marginLeft:6}} class="fas fa-school"></i>  
+    </Icon>
+
+)

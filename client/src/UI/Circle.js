@@ -15,7 +15,7 @@ position:${({position})=> position || 'absolute'};
 right:auto;
 left:auto;
 margin-top:${({marginTop})=>marginTop + 'px'};
-margin-bottom:30px;
+margin-bottom:${({marginBot})=> ( marginBot || 30 )  + 'px'};
 margin-left:auto;
 margin-right:auto;
 top:${({top})=>top + '%'};
@@ -24,7 +24,7 @@ z-index:4;
 
 `
 
-const Circle = React.memo(({Load,left,top,position,marginTop,width,height})=>{
+const Circle = React.memo(({Load,left,top,position,marginTop,width,height,marginBot})=>{
 
    const [a,b] =   useState(0);
 
@@ -49,7 +49,7 @@ const Circle = React.memo(({Load,left,top,position,marginTop,width,height})=>{
    },[a])
   
 
-   return Load ? <RotatingCircle position={position} marginTop={marginTop} degree={a} top={top} left={left} width={width} height={height} /> : null;
+   return Load ? <RotatingCircle position={position} marginTop={marginTop} degree={a} marginBot={marginBot} top={top} left={left} width={width} height={height} /> : null;
 
 })
 

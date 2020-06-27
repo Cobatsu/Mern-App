@@ -14,10 +14,13 @@ router.route('/get_students').post(auth,registerStudent.studentSearch);
 
 router.route('/send_confirmation/:id').patch(auth,registerStudent.sendConfirmation);
 
-router.route('/confirm_student/:id').patch(auth,registerStudent.confirmStudent)
+router.route('/upload_file/:id').post( auth , uploadMulter.upload.array('imgCollection',1) , registerStudent.uploadFile);
 
-router.
-route('/student/:id')
+router.route('/delete_file/:id').post( auth , registerStudent.deleteFile);
+
+router.route('/confirm_student/:id').patch(auth,registerStudent.confirmStudent);
+
+router.route('/student/:id')
 .all(auth)
 .get(registerStudent.getOneStudent)
 .patch(registerStudent.updateStudent)

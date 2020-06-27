@@ -130,6 +130,7 @@ module.exports.uploadDocuments = async (req,res) =>{
                     return res.json({  result:'Success' });
 
                 }
+
         }
         
         return res.json({   result:'Error'  });
@@ -298,6 +299,52 @@ module.exports.sendConfirmation = async ( req , res) =>{
     try {
 
         await Student.updateOne( {_id:id} , {$set:{'registerState.pendingResult':true}} );
+        
+        const updatedStudent = await Student.findOne({_id:id});
+
+        res.json({updatedStudent});
+        
+    } catch (error) {
+
+        res.json({error});
+        
+    }
+
+}
+
+module.exports.deleteFile = async (req,res) => {
+
+    const { params:{ id } , body:{ fileWillBeDeleted } }  = req ; 
+
+    console.log('HEYY')
+
+    try {
+
+        await Student.updateOne( { _id:id } , {  $pull: { 'StudentInfo.Images': fileWillBeDeleted  } } );
+        
+        const updatedStudent = await Student.findOne({ _id:id });
+
+        res.json({updatedStudent});
+        
+    } catch (error) {
+
+        res.json({error});
+        
+    }
+    
+}
+
+
+
+module.exports.uploadFile = async (req,res) => {
+
+    
+    const { params:{ id } }  = req ; 
+
+    try {
+
+
+        await Student.updateOne( {_id:id} , {$push:{'StudentInfo.Images':req.files[0].filename}} );
         
         const updatedStudent = await Student.findOne({_id:id});
 

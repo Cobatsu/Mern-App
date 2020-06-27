@@ -10,13 +10,15 @@ storage = multer.diskStorage({
         cb(null, DIR);
     },
     filename: (req, file, cb) => {
+           
+        const { id } = req.params ; 
 
         const token =  req.header("Authorization").split(' ')[1];
 
         const jwtData = jwt.verify(token, process.env.SECRET_KEY);
 
         const fileName = file.originalname.toLowerCase().split(' ').join('-');
-        cb(null, jwtData.studentID +  '_' + Date.now()+'_'+fileName)
+        cb(null,  ( jwtData.studentID || id )  +  '_' + Date.now()+'_'+fileName)
     }
 });
 
