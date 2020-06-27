@@ -297,12 +297,12 @@ export const statusColors = (report) => {
 
 export const studentStatusColor = ( registerState )=>{
 
-   const  { docState , result:{ result } , pendingResult } = registerState ; 
+   const  { docState , result:{ result } , pendingResult , isContracted } = registerState ; 
    
 
 
 
-  if( docState && !result && !pendingResult) { 
+  if( docState && !result && !pendingResult && !isContracted) { 
 
       return {
 
@@ -315,7 +315,7 @@ export const studentStatusColor = ( registerState )=>{
 
      }
 
-  } else if ( docState && !result && pendingResult ) {
+  } else if ( docState && !result && pendingResult && !isContracted) {
    
       return {
 
@@ -330,7 +330,7 @@ export const studentStatusColor = ( registerState )=>{
      }
 
 
-  } else if ( docState && result && !pendingResult ) {
+  } else if ( docState && result && !pendingResult && !isContracted ) {
 
     return {
 
@@ -344,6 +344,22 @@ export const studentStatusColor = ( registerState )=>{
 
     }
     
+  } else if ( docState && result && !pendingResult && isContracted  ) {
+
+
+    return {
+
+      text: 'Sözleşme Yapıldı' , 
+      style:{
+         backgroundColor:'rgba(0, 189, 170, .06)' , 
+         color:'#00bdaa',
+      }, 
+      icon: <i style={{marginLeft:8}} className="fas fa-file-signature"></i>
+
+
+    }
+
+
   } else {
 
     return {

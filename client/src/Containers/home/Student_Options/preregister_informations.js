@@ -242,7 +242,7 @@ const StudentInformations  = ( { match , ...rest } )=>{
 
         for (let i = 0; i < commaCount; i++) {
 
-            finalText[ (copyObject.amount.length-1 ) -  (i+1)*3 ] += ','
+            finalText[ (copyObject.amount.length-1 ) -  (i+1)*3 ] += ',' // when using += not just think about numbers , it is very useful everwhere
             
         }
 
@@ -325,7 +325,7 @@ const StudentInformations  = ( { match , ...rest } )=>{
 
         if(user.role === 'Admin') { 
 
-            var uploadFilePermission =  ( getStatusUI.text   === 'Onay Bekleniyor' || getStatusUI.text === 'Öğrenci Onaylandı' ) ;
+            var uploadFilePermission =  true ;
 
         } else {
 
@@ -525,7 +525,7 @@ const StudentInformations  = ( { match , ...rest } )=>{
 
 
                                   {
-                                         ( user.role === 'Admin'  ) ? 
+                                         ( user.role === 'Admin'  &&  getStatusUI.text === 'Onay Bekleniyor' ) ? 
 
                                           <IconsendToRosedale/> : null
                                   }
@@ -555,7 +555,7 @@ const StudentInformations  = ( { match , ...rest } )=>{
                             
                             </InnerItems>
 
-                            <FileList style={{padding:'55px 15px 40px  15px'}}  isActive = { getStatusUI.text === 'Öğrenci Onaylandı' } >
+                            <FileList style={{padding:'65px 15px 40px  15px'}}  isActive = { getStatusUI.text === 'Sözleşme Yapıldı' || getStatusUI.text === 'Öğrenci Onaylandı'  } >
 
                                     <FileListElement style={{background:'#00909e' , borderRadius :'7px 7px 0 0' , justifyContent:'center' , alignItems:'center'   , width:'100%' , top:0 , left:0 , position:'absolute' , color:'white', textAlign:'center',padding:7}}>
 
@@ -564,22 +564,29 @@ const StudentInformations  = ( { match , ...rest } )=>{
                                     </FileListElement>
 
 
-                                    <FileListElement style={{boxShadow:'none'  , justifyContent:'center' , alignItems:'center' , marginBottom:50}} >
-                                                          
-                                                    <TextField  style={{minWidth:'30%',padding:'10px 0' , marginRight:15}}   onChange={ (e)=>setPaymentType(e.target.value) }  id="select" label="Ödeme Şekli" value={paymentType}  select >
-                                                        
-                                                        <MenuItem value='Peşin' > Peşin </MenuItem>
-                                                        <MenuItem value='Taksit' > Taksit </MenuItem>
+                                    {
+                                        getStatusUI.text === 'Öğrenci Onaylandı' && 
 
-                                                    </TextField> 
+                                        <FileListElement style={{boxShadow:'none'  , justifyContent:'center' , alignItems:'center' , marginBottom:50}} >
+                                                            
+                                                        <TextField  style={{minWidth:'30%',padding:'10px 0' , marginRight:15}}   onChange={ (e)=>setPaymentType(e.target.value) }  id="select" label="Ödeme Şekli" value={paymentType}  select >
+                                                            
+                                                            <MenuItem value='Peşin' > Peşin </MenuItem>
+                                                            <MenuItem value='Taksit' > Taksit </MenuItem>
 
-                                                    {
+                                                        </TextField> 
 
-                                                        paymentType === 'Taksit' && <TextField type='number'   style={{minWidth:'30%'}}  label='Taksit Sayısı' value = { paymentSchedule.length.toString()  }    onChange={reduceInstallmentCount}/>
-                                                 
-                                                    }
+                                                        {
 
-                                    </FileListElement>
+                                                            paymentType === 'Taksit' && <TextField type='number'   style={{minWidth:'30%'}}  label='Taksit Sayısı' value = { paymentSchedule.length.toString()  }    onChange={reduceInstallmentCount}/>
+                                                    
+                                                        }
+
+                                        </FileListElement> 
+
+
+                                    }
+
                                     
                                      
                                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -591,25 +598,31 @@ const StudentInformations  = ( { match , ...rest } )=>{
                                                }
 
                                     </MuiPickersUtilsProvider>
+                                       
+                                        {
 
+                                            getStatusUI.text === 'Öğrenci Onaylandı' && 
 
-                                           <Submit uploadFileLoading={paymentRequest}  type='button' onClick={paymentScheduleRequest} >
+                                            <Submit style={{minWidth:250 , minHeight:45}} uploadFileLoading={paymentRequest}  type='button' onClick={paymentScheduleRequest} >
 
-                                                {
-                                                    paymentRequest ? <Circle Load  height={25} width={25} position='static' marginTop={2} marginBot={2} />   : 
+                                                    {
+                                                        paymentRequest ? <Circle Load  height={25} width={25} position='static' marginTop={2} marginBot={2} />   : 
+                                                        
+                                                        <React.Fragment>
+
+                                                            <input type="file" name="myfile" accept=".png, .jpg, .jpeg , .pdf" ref={inputRef} onChange={uploadFileHandler}  style={{display:'none'}}  />
+            
+                                                            Sözleşmeyi Tamamla  <i style={{marginLeft:7}} className="fas fa-file-signature"></i>
+
+                                                        </React.Fragment>    
+
+                                                    }                                                 
                                                     
-                                                    <React.Fragment>
 
-                                                        <input type="file" name="myfile" accept=".png, .jpg, .jpeg , .pdf" ref={inputRef} onChange={uploadFileHandler}  style={{display:'none'}}  />
-        
-                                                         Planı Oluştur  <i style={{marginLeft:7}} className="far fa-calendar-alt"></i>
+                                            </Submit> 
 
-                                                    </React.Fragment>    
+                                        }
 
-                                                }                                                 
-                                                
-
-                                           </Submit> 
 
                             </FileList>
 
