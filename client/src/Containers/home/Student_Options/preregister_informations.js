@@ -8,7 +8,7 @@ import { makeSpecificStudentRequest
 , makeDeleteFileRequest }  from '../../../request/requset'
 import styled from 'styled-components';
 import Circle from '../../../UI/Circle';
-import { IconEdit , IconRemove , IconSendConfirmation , confirmStudent as ConfirmStudent } from '../../../UI/IconButtons/IconButton';
+import { IconEdit , IconRemove , IconSendConfirmation , confirmStudent as ConfirmStudent ,   IconsendToRosedale } from '../../../UI/IconButtons/IconButton';
 import RegisterForm from '../../registration/registerForm'
 import { PermissionsNumbers , studentStatusColor  } from '../../../Utilities/utilities'
 import Modal from '../../../UI/sentModal'
@@ -42,7 +42,7 @@ box-shadow: 0 1px 6px -1px rgba(0, 0, 0,0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.02)
 display:flex;
 align-items:center;
 text-align:center;
-background:#10375c;
+background:#00796b;
 color:white;
 font-size:13px;
 margin-right:10px;
@@ -98,7 +98,6 @@ justify-content:space-between ;
 padding:5px 5px 5px 10px ; 
 text-decoration: none;
 
-
 `
 
 const FileList = styled.ul `
@@ -115,10 +114,11 @@ width:90%;
 
 const IconCapsule = styled.div`
 
+min-width:30px;
 color:white;
 font-size:13px;
 border-radius: 0 7px 7px 0 ;
-display:none;
+display:${({isDeleted})=> isDeleted ? 'flex' : 'none' };
 align-items:center;
 justify-content:space-evenly;
 background:rgb(217, 69, 95);
@@ -149,6 +149,7 @@ const FileListElement = styled.li`
  
 }
 
+box-shadow:${({isDeleted})=> isDeleted ? '0 1px 6px -1px rgba(0, 0, 0,0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.02)' : '0' };
 display:flex;
 justify-content:space-between;
 border-radius:7px;
@@ -167,13 +168,13 @@ color:#61c0bf ;
 
 const ImageFields = [
 
-    "Kimlik Belgesi" , 
+    "Kimlik Fotokopisi" , 
 
-    "Rosedale İngilizce Yeterlilik Testi" ,
+    "Rosedale İngilizce Yeterlilik Testi Sonuçları" ,
 
     "İngilizce Yeterlilik Testi Sonuçları",
 
-    "Transkript Çevirisi",
+    "Transkript",
 
 ]
 
@@ -181,11 +182,15 @@ const ImageFields = [
 const StudentInformations  = ( { match , ...rest } )=>{
      
     const [ loading , setLoading ]  = useState(true);
+
     const [ backStageLoading , setBackStageLoading ] = useState(false);
     const [ student , setStudent ]  = useState({});
     const [ disabled , setDisabled ] = useState(true);
     const [ modalType , setModalType ] = useState(null);
+
     const [ uploadFileLoading , setUploadFileLoading ] = useState(false) ; 
+
+    const [ deletedFile , setDeletedFile ] = useState(null) ; 
 
     const inputRef = useRef(); 
 
@@ -290,9 +295,12 @@ const StudentInformations  = ( { match , ...rest } )=>{
 
     }
 
-    const deleteFile = ( fileWillBeDeleted ) => (e) => {
+    const deleteFile = ( fileWillBeDeleted , deletedItem ) => (e) => {
+
+             
+            setDeletedFile(deletedItem)
    
-            makeDeleteFileRequest(  'post' , id , fileWillBeDeleted , setStudent  );
+            makeDeleteFileRequest(  'post' , id , fileWillBeDeleted , setStudent , setDeletedFile  );
 
     }
    
@@ -321,7 +329,6 @@ const StudentInformations  = ( { match , ...rest } )=>{
                             <InnerItems> 
                                   
                                   {
-
                                         <InfoCapsule>
 
                                             {getStatusUI.text}
@@ -329,25 +336,26 @@ const StudentInformations  = ( { match , ...rest } )=>{
                                             {getStatusUI.icon}
 
                                         </InfoCapsule> 
+                                  }
 
+                                  {                                
+                                         (  user.role === 'Admin' &&  getStatusUI.text === 'Onay Bekleniyor' ) ? 
+
+                                         <ConfirmStudent handler={ ()=>setModalType( 'CONFİRM_STUDENT' ) } /> : null                                        
                                   }
 
 
                                   {
-                                        
-                                         (  user.role === 'Admin' &&  getStatusUI.text === 'Onay Bekleniyor' ) ? 
+                                         ( user.role === 'Admin'  ) ? 
 
-                                         <ConfirmStudent handler={ ()=>setModalType( 'CONFİRM_STUDENT' ) } /> : null 
-                                           
+                                          <IconsendToRosedale/> : null
                                   }
-
+                                           
 
                                   {                                     
- 
                                           ( user.role === 'Temsilci' &&  getStatusUI.text === 'Belgeler Tamamlandı' ) ?
                                        
                                         <IconSendConfirmation handler={ ()=>setModalType( 'SEND_CONFIRMATION' ) } /> : null 
-
                                   }   
 
 
@@ -379,12 +387,12 @@ const StudentInformations  = ( { match , ...rest } )=>{
                                     </FileListElement>
 
                                     {                                   
-                                        student.StudentInfo.Images.map((fileName,index)=>{
+                                        student.StudentInfo.Images.map( ( fileName , index )=>{
 
 
                                             return (
 
-                                                <FileListElement>
+                                                <FileListElement isDeleted = {deletedFile === index}  >
 
                                                     <InnerLink className='responsiveLink' style={{textDecoration:'none' , color:'#00909e' }}   href={'http://localhost:3001/api/' + fileName} target="_blank" > 
                                                     
@@ -394,9 +402,18 @@ const StudentInformations  = ( { match , ...rest } )=>{
 
                                                       {  user.role === 'Admin' && (
 
-                                                            <IconCapsule onClick = { deleteFile(fileName) } > 
+                                                            <IconCapsule isDeleted = {deletedFile === index}  onClick = { deleteFile( fileName , index ) } > 
+                                                              
+                                                              {
+                                                                  deletedFile === index  ?  
+                                                                  
+                                                                  ( <Circle Load  height={22} width={22} position='static' marginTop={2} marginBot={2} />  ) :
+                                                                  
+                                                                  ( <TrashIcon className="far fa-trash-alt"/> ) 
+                                                                
 
-                                                                <TrashIcon className="far fa-trash-alt"/>
+                                                              }
+                                                                
 
                                                             </IconCapsule>  )  
                                                       

@@ -692,7 +692,7 @@ export const makeConfirmStudentRequest = ( Type  , id , setUpdatedStudent , setB
 
 }
 
-export const makeDeleteFileRequest = ( Type  , id ,  fileWillBeDeleted  , setUpdatedStudent ) => {
+export const makeDeleteFileRequest = ( Type  , id ,  fileWillBeDeleted  , setUpdatedStudent , setDeletedFile ) => {
 
   axios[Type]('/api/register/delete_file/'+ id  , { fileWillBeDeleted } , 
  { headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}}).then((response)=>{
@@ -708,7 +708,8 @@ export const makeDeleteFileRequest = ( Type  , id ,  fileWillBeDeleted  , setUpd
 
    ReactDOM.unstable_batchedUpdates(()=>{
 
-     setUpdatedStudent(updatedStudent);
+    setUpdatedStudent(updatedStudent)
+     setDeletedFile(null);
 
    })
  

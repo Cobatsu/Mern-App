@@ -18,7 +18,7 @@ storage = multer.diskStorage({
         const jwtData = jwt.verify(token, process.env.SECRET_KEY);
 
         const fileName = file.originalname.toLowerCase().split(' ').join('-');
-        cb(null, jwtData.studentID || id +  '_' + Date.now()+'_'+fileName)
+        cb(null,  ( jwtData.studentID || id )  +  '_' + Date.now()+'_'+fileName)
     }
 });
 
