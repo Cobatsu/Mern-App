@@ -13,7 +13,7 @@ import RegisterForm from '../../registration/registerForm'
 import { PermissionsNumbers , studentStatusColor  } from '../../../Utilities/utilities'
 import Modal from '../../../UI/sentModal'
 import BackStage from '../../../UI/backStage'
-import { Link } from 'react-router-dom'
+import {TextField,MenuItem} from '@material-ui/core'
 
 const MainWrapper = styled.form`
 display:flex;
@@ -152,6 +152,7 @@ const FileListElement = styled.li`
 box-shadow:${({isDeleted})=> isDeleted ? '0 1px 6px -1px rgba(0, 0, 0,0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.02)' : '0' };
 display:flex;
 justify-content:space-between;
+align-items:center;
 border-radius:7px;
 transition:50ms;
 
@@ -190,7 +191,10 @@ const StudentInformations  = ( { match , ...rest } )=>{
 
     const [ uploadFileLoading , setUploadFileLoading ] = useState(false) ; 
 
-    const [ deletedFile , setDeletedFile ] = useState(null) ; 
+    const [ deletedFile , setDeletedFile ] = useState(null) ;
+    
+    const [ installmentCount , setInstallmentCount ] = useState(); 
+    const [ paymentType , setPaymentType ] = useState();
 
     const inputRef = useRef(); 
 
@@ -224,8 +228,7 @@ const StudentInformations  = ( { match , ...rest } )=>{
         }
      
     }
-
-  
+    
 
     const loadFileHandler = ()=>{
 
@@ -331,9 +334,9 @@ const StudentInformations  = ( { match , ...rest } )=>{
                                   {
                                         <InfoCapsule>
 
-                                            {getStatusUI.text}
+                                            { getStatusUI.text }
 
-                                            {getStatusUI.icon}
+                                            { getStatusUI.icon  }
 
                                         </InfoCapsule> 
                                   }
@@ -376,13 +379,59 @@ const StudentInformations  = ( { match , ...rest } )=>{
                             
                             </InnerItems>
 
+                            <FileList  isActive = { getStatusUI.text === 'Öğrenci Onaylandı' && user.role === 'Temsilci' } >
+
+                                    <FileListElement style={{background:'#00909e' , borderRadius :'7px 7px 0 0' , justifyContent:'center'    , width:'100%' , top:0 , left:0 , position:'absolute' , color:'white', textAlign:'center',padding:7}}>
+
+                                        Ödeme Planı  <i style={{marginLeft:10}} class="fas fa-dollar-sign"></i>
+
+                                    </FileListElement>
+
+
+                                    <FileListElement style={{boxShadow:'none'}} >
+                                                          
+                                                    <TextField  style={{width:'15%',padding:'10px 0' }}   onChange={ (e)=>setPaymentType(e.target.value) }  id="select" label="Ödeme Şekli" value={paymentType}  select >
+                                                        
+                                                        <MenuItem value='Peşin' > Peşin </MenuItem>
+                                                        <MenuItem value='Taksit' > Taksit </MenuItem>
+
+                                                    </TextField> 
+
+                                    </FileListElement>
+                                    
+
+                                     { 
+                                        
+                                        paymentType === 'Peşin' ? 
+
+                                        <FileListElement style={{boxShadow:'none' , margin:' 15px 0 ' , justifyContent:'center'}} >
+
+                                                <TextField style={{marginRight:40}} label='Ödeme Tarihi'/> 
+                                                <TextField label='Ödenecek Miktar'/> 
+
+                                        </FileListElement> : 
+
+                                         [...new Array(installmentCount)].map(()=>{
+
+                                        
+                                            return  <FileListElement>
+
+
+                                            </FileListElement>
+
+                                        })
+                                        
+                                     }
+
+                            </FileList>
+
 
                           
-                            <FileList isAllowed = {uploadFilePermission}  isActive = {student.registerState.docState}>
+                            <FileList isAllowed = {uploadFilePermission}  isActive = { student.registerState.docState }>
                                       
                                     <FileListElement style={{background:'#00909e' , borderRadius :'7px 7px 0 0' , justifyContent:'center'   , width:'100%' , top:0 , left:0 , position:'absolute' , color:'white', textAlign:'center',padding:7}}>
 
-                                        Öğrencinin Belgeleri
+                                         Belgeler <i style={{marginLeft:10}} class="fas fa-folder-open"></i>
 
                                     </FileListElement>
 
