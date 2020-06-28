@@ -31,7 +31,7 @@ module.exports.add = async (req,res,next)=>{
 
                 if( updatedReport.owner._id != tokenData.owner ||  !updatedReport ||  updatedReport.isFormFilled) {
 
-                        console.log(error)
+                        console.log('heyy')
                         return res.json( { result:'Error' } ) ; 
 
                 }
@@ -59,8 +59,8 @@ module.exports.add = async (req,res,next)=>{
 
                     if (error) {
                          
-                        console.log(error)
-                        res.json({result:'Error'});
+                   
+                        res.json({result:'Error' , error});
 
                     } else {
               
@@ -73,8 +73,8 @@ module.exports.add = async (req,res,next)=>{
          }
          catch (error)  {
             
-                  console.log(error)
-                 res.json({result:'Error'});
+              
+                 res.json({result:'Error' , error});
          }
     
 
