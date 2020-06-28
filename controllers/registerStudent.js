@@ -51,7 +51,7 @@ module.exports.add = async (req,res,next)=>{
                     from: 'huze.ozr@gmail.com',
                     to: tokenData.e_mail,
                     subject: 'StudyOnlineInCanada Döküman Bilgilendirme',
-                    html: `<a href =${'https://study-online.herokuapp.com/upload?token=' + signedToken} > HELLO ERCÜMENT </a>`
+                    html: `<a href =${'https://study-online.herokuapp.com/upload?token=' + signedToken} > On Kayıt Formunuzu Doldurmak Icın Lutfen Tıklayın  </a>`
                   };
                   
                   transporter.sendMail(mailOptions, function(error, info){
