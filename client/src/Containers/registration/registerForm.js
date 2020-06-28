@@ -134,8 +134,7 @@ class RegisterForm extends React.Component{
                 return makeUpdateStudentRequest( 'patch' ,  this.state.studentInformations , this.props.id  , setUpdatedStudent , this.props.setBackStageLoading , this.props.setModalType) ;
 
         }
-
-       
+        
    }
 
    changeHandlerFactory=(type)=> {
