@@ -44,7 +44,7 @@ module.exports.add = async (req,res,next)=>{
                     service: 'gmail',
                     auth: {
                       user: 'huze.ozr@gmail.com',
-                      pass: 'Huzeyfe123..'
+                      pass: '22312231a'
                     }
                   });
                   
