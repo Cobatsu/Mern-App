@@ -37,10 +37,18 @@ const Student = mongoose.Schema({
 
             result:{type:Boolean , default:false } , 
  
-        }
+        } ,
+
+        isContracted:{
+
+            type:Boolean,
+            default:false,
+    
+        },
 
     },
 
+   
     paymentType:{
 
         type:String , 

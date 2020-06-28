@@ -321,7 +321,7 @@ module.exports.addPaymentSchedule = async ( req , res) => {
 
     try {
 
-        await Student.updateOne( { _id:id } , {  $set: { 'paymentSchedule': paymentSchedule  , 'paymentType':paymentType  } } );
+        await Student.updateOne( { _id:id } , {  $set: { 'paymentSchedule': paymentSchedule  , 'paymentType':paymentType , 'registerState.isContracted':true } } );
         
         const updatedStudent = await Student.findOne({ _id:id });
 
