@@ -707,7 +707,7 @@ export const makeDeleteFileRequest = ( Type  , id ,  fileWillBeDeleted  , setUpd
 
    ReactDOM.unstable_batchedUpdates(()=>{
 
-    setUpdatedStudent(updatedStudent)
+     setUpdatedStudent(updatedStudent)
      setDeletedFile(null);
 
    })
@@ -748,6 +748,37 @@ export const makeUploadFileRequest = ( Type  , id , file  , setUpdatedStudent , 
         })
 
 }
+
+export const makePaymentScheduleRequest = ( Type  , id , data  , setUpdatedStudent , setPaymentRequest ) =>{
+
+      axios[Type]('/api/register/add_paymentschedule/'+ id , data ,
+
+        { headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}}).then((response)=>{
+            
+          const  { updatedStudent , error } = response.data ; 
+          
+
+          if( error ) {
+                
+              return console.log(error) ; 
+
+          }
+
+          ReactDOM.unstable_batchedUpdates(()=>{
+
+            setUpdatedStudent(updatedStudent);
+            setPaymentRequest(false);
+
+          })
+        
+
+        }).catch(()=>{
+
+
+        })
+
+}
+
 
 export const makeSpecificStudentRequest = ( Type , id ,  setLoading , setStudent ) =>{
 

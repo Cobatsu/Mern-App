@@ -37,16 +37,28 @@ const Student = mongoose.Schema({
 
             result:{type:Boolean , default:false } , 
  
-        }
+        } ,
+
+        isContracted:{
+
+            type:Boolean,
+            default:false,
+    
+        },
 
     },
 
-    paymentSchedule:[ {
-     
-        
-        amount:String ,
-        paymentDate :Date,
+   
+    paymentType:{
 
+        type:String , 
+        default:'',
+        
+    } ,
+
+    paymentSchedule:[ {
+        amount:String ,
+        date :Date,
     } ], 
 
     allowedToSee:[ mongoose.Schema.Types.ObjectId ]

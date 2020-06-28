@@ -5,7 +5,7 @@ import {Link,Route} from 'react-router-dom'
 import {Context} from '../../../Context/Context';
 import  {UserInputs}  from './addPerson';
 import DateFnsUtils from '@date-io/date-fns';
-import {MuiPickersUtilsProvider,DatePicker } from '@material-ui/pickers'
+import { KeyboardDatePicker } from '@material-ui/pickers'
 import {Regions}  from '../../../Regions/regions'
 import Circle from '../../../UI/Circle';
 import Modal from '../../../UI/sentModal';

@@ -51,7 +51,7 @@ module.exports.add = async (req,res,next)=>{
                     from: 'huze.ozr@gmail.com',
                     to: tokenData.e_mail,
                     subject: 'StudyOnlineInCanada Döküman Bilgilendirme',
-                    html: `<a href =${'http://localhost:3000/upload?token=' + signedToken} > HELLO ERCÜMENT </a>`
+                    html: `<a href =${'https://study-online.herokuapp.com/upload?token=' + signedToken} > HELLO ERCÜMENT </a>`
                   };
                   
                   transporter.sendMail(mailOptions, function(error, info){
@@ -312,6 +312,30 @@ module.exports.sendConfirmation = async ( req , res) =>{
 
 }
 
+
+module.exports.addPaymentSchedule = async ( req , res) => {
+
+    const { params:{ id } , body:{ paymentSchedule , paymentType } }  = req ; 
+
+    console.log(paymentSchedule)
+
+    try {
+
+        await Student.updateOne( { _id:id } , {  $set: { 'paymentSchedule': paymentSchedule  , 'paymentType':paymentType , 'registerState.isContracted':true } } );
+        
+        const updatedStudent = await Student.findOne({ _id:id });
+
+        res.json({updatedStudent});
+        
+    } catch (error) {
+
+        res.json({error});
+        
+    }
+
+
+}
+
 module.exports.deleteFile = async (req,res) => {
 
     const { params:{ id } , body:{ fileWillBeDeleted } }  = req ; 
@@ -384,7 +408,7 @@ module.exports.sendForm = async ( req , res , next )=>{
 
     const token =  await jwt.sign( { ...tokenData } , process.env.SECRET_KEY , {expiresIn:'1h'} );
     
-    const tokenLink =  'http://localhost:3000/student_form?token=' + token ; 
+    const tokenLink =  'https://study-online.herokuapp.com/student_form?token=' + token ; 
 
     await Reports.updateOne({_id:tokenData.contactReportID} , {$set:{isFormSent:true}});
 
