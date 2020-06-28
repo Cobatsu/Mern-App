@@ -23,7 +23,6 @@ router.route('/confirm_student/:id').patch( auth , registerStudent.confirmStuden
 router.route('/add_paymentschedule/:id').post( auth , registerStudent.addPaymentSchedule)
 
 
-
 router.route('/student/:id')
 .all(auth)
 .get(registerStudent.getOneStudent)

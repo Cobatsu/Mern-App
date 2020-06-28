@@ -101,6 +101,8 @@ module.exports.updateStudent = async (req,res) => {
 
 module.exports.uploadDocuments = async (req,res) =>{
 
+    console.log('hey')
+
     const token =  req.header("Authorization").split(' ')[1];
    
     try {
