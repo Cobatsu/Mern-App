@@ -609,9 +609,7 @@ const StudentInformations  = ( { match , ...rest } )=>{
                                                         paymentRequest ? <Circle Load  height={25} width={25} position='static' marginTop={2} marginBot={2} />   : 
                                                         
                                                         <React.Fragment>
-
-                                                            <input type="file" name="myfile" accept=".png, .jpg, .jpeg , .pdf" ref={inputRef} onChange={uploadFileHandler}  style={{display:'none'}}  />
-            
+      
                                                             Sözleşmeyi Tamamla  <i style={{marginLeft:7}} className="fas fa-file-signature"></i>
 
                                                         </React.Fragment>    
@@ -642,7 +640,7 @@ const StudentInformations  = ( { match , ...rest } )=>{
 
                                                 <FileListElement key = {fileName} isDeleted = { deletedFile === index }  >
 
-                                                    <InnerLink className='responsiveLink' style={{textDecoration:'none' , color:'#00909e' }}   href={'http://localhost:3001/api/' + fileName} target="_blank" > 
+                                                    <InnerLink className='responsiveLink' style={{textDecoration:'none' , color:'#00909e' }}   href={'https://study-online.herokuapp.com/api/' + fileName} target="_blank" > 
                                                     
                                                         { ImageFields[index] || fileName.split('_')[2].split('.')[0] } 
                                                     
