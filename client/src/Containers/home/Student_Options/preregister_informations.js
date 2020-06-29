@@ -449,19 +449,6 @@ const StudentInformations  = ( { match , ...rest } )=>{
         makePaymentScheduleRequest( 'post' , id , { paymentSchedule , paymentType }  , setStudent  ,  setPaymentRequest  )
 
     }
-
-
-    useEffect(()=>{
-
-        if(paymentType && paymentType === 'Peşin' && student._id && student.paymentSchedule.length ===  0 ) {
-                
-
-            setPaymentSchedule( [  { amount:null , date:null } ] )
-  
-        }
-
-    },[ paymentType , student._id ])
-
  
    if(paymentType) {
 
