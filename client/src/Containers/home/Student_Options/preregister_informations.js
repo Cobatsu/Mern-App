@@ -405,6 +405,24 @@ const StudentInformations  = ( { match , ...rest } )=>{
         setPaymentSchedule(copyPayment);
     }
 
+    const setPaymentTypeFunc = (e)=>{
+
+        var value = e.target.value ; 
+        
+        if(value === 'Peşin') {
+
+            setPaymentSchedule( { date:null , amount:null } ); 
+
+        } else {
+
+            setPaymentSchedule( [] ) ;
+
+        }
+
+        setPaymentType( value );
+        
+    }
+
 
     const paymentScheduleRequest=()=>{
 
@@ -572,7 +590,7 @@ const StudentInformations  = ( { match , ...rest } )=>{
 
                                         <FileListElement style={{boxShadow:'none'  , justifyContent:'center' , alignItems:'center' , marginBottom:50}} >
                                                             
-                                                        <TextField  style={{minWidth:'30%',padding:'10px 0' , marginRight:15}}   onChange={ (e)=>setPaymentType(e.target.value) }  id="select" label="Ödeme Şekli" value={paymentType}  select >
+                                                        <TextField  style={{minWidth:'30%',padding:'10px 0' , marginRight:15}}   onChange={ setPaymentTypeFunc }  id="select" label="Ödeme Şekli" value={paymentType}  select >
                                                             
                                                             <MenuItem value='Peşin' > Peşin </MenuItem>
                                                             <MenuItem value='Taksit' > Taksit </MenuItem>
