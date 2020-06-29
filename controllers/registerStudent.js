@@ -31,6 +31,7 @@ module.exports.add = async (req,res,next)=>{
 
                 if( updatedReport.owner._id != tokenData.owner ||  !updatedReport ||  updatedReport.isFormFilled) {
 
+                        console.log('heyy')
                         return res.json( { result:'Error' } ) ; 
 
                 }
@@ -43,7 +44,7 @@ module.exports.add = async (req,res,next)=>{
                     service: 'gmail',
                     auth: {
                       user: 'huze.ozr@gmail.com',
-                      pass: 'Huzeyfe123..'
+                      pass: '22312231a'
                     }
                   });
                   
@@ -51,14 +52,15 @@ module.exports.add = async (req,res,next)=>{
                     from: 'huze.ozr@gmail.com',
                     to: tokenData.e_mail,
                     subject: 'StudyOnlineInCanada Döküman Bilgilendirme',
-                    html: `<a href =${'http://localhost:3000/upload?token=' + signedToken} > HELLO ERCÜMENT </a>`
+                    html: `<a href =${'https://study-online.herokuapp.com/upload?token=' + signedToken} > On Kayıt Formunuzu Doldurmak Icın Lutfen Tıklayın  </a>`
                   };
                   
                   transporter.sendMail(mailOptions, function(error, info){
 
                     if (error) {
-
-                        res.json({result:'Error'});
+                         
+                   
+                        res.json({result:'Error' , error});
 
                     } else {
               
@@ -71,7 +73,8 @@ module.exports.add = async (req,res,next)=>{
          }
          catch (error)  {
             
-                 res.json({result:'Error'});
+              
+                 res.json({result:'Error' , error});
          }
     
 
@@ -100,6 +103,8 @@ module.exports.updateStudent = async (req,res) => {
 
 
 module.exports.uploadDocuments = async (req,res) =>{
+
+    console.log('hey')
 
     const token =  req.header("Authorization").split(' ')[1];
    
@@ -408,7 +413,7 @@ module.exports.sendForm = async ( req , res , next )=>{
 
     const token =  await jwt.sign( { ...tokenData } , process.env.SECRET_KEY , {expiresIn:'1h'} );
     
-    const tokenLink =  'http://localhost:3000/student_form?token=' + token ; 
+    const tokenLink =  'https://study-online.herokuapp.com/student_form?token=' + token ; 
 
     await Reports.updateOne({_id:tokenData.contactReportID} , {$set:{isFormSent:true}});
 

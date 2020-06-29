@@ -1,7 +1,6 @@
 import React , {useState , useEffect} from 'react';
 import ReactDOM from 'react-dom'
 import styled from 'styled-components'
-import {unstable_batchedUpdates} from 'react-dom'
 import {useLocation , useHistory} from 'react-router-dom'
 import axios from 'axios'
 
@@ -127,6 +126,10 @@ const RequiredDocs = ()=>{
                 setLoading(false); 
 
             })
+
+        }).catch((err)=>{
+
+            console.log(err);
 
         })
 

@@ -7,8 +7,9 @@ export const makeRequest = (Type,Body,activeCircle,backStage,setResult) => {
 
     axios[Type]('/api/register',Body).then((data)=>{   
 
-      const { result } = data.data ; 
+      const { result  , error } = data.data ; 
     
+      console.log(error)
 
       ReactDOM.unstable_batchedUpdates(()=>{
 
