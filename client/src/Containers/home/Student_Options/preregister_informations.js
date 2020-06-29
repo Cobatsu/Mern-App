@@ -200,7 +200,7 @@ const StudentInformations  = ( { match , ...rest } )=>{
     const [ deletedFile , setDeletedFile ] = useState(null) ;
     const [ isAllFilled , setIsAllFilled ] = useState(true);
     
-    const [ paymentType , setPaymentType ] = useState();
+    const [ paymentType , setPaymentType ] = useState('');
     const [ paymentSchedule , setPaymentSchedule ] = useState([])
     const [ paymentRequest ,  setPaymentRequest  ] = useState(false);
 
@@ -214,9 +214,9 @@ const StudentInformations  = ( { match , ...rest } )=>{
    
     const setDate = ( value , index )=>{
 
-        var copyPayment = [...paymentSchedule];
+        var copyPayment = [ ...paymentSchedule ];
 
-        var copyObject =  {...copyPayment[index]};
+        var copyObject =  { ...copyPayment[index] };
 
         copyObject.date = value ; 
 
@@ -366,6 +366,8 @@ const StudentInformations  = ( { match , ...rest } )=>{
 
     },[]);
 
+  
+
     useEffect(()=>{ 
 
             if(student._id) {
@@ -429,66 +431,67 @@ const StudentInformations  = ( { match , ...rest } )=>{
         makePaymentScheduleRequest( 'post' , id , { paymentSchedule , paymentType }  , setStudent  ,  setPaymentRequest  )
 
     }
- 
-   
-    if( paymentType === 'Peşin' ) {
 
-            var paymentTable =  ( 
-            
-                <FileListElement style={{boxShadow:'none' , margin:' 15px 0 ' , justifyContent:'center'}} >
 
-                        <TextField style={{marginRight:40}} label='Ödeme Tarihi'/> 
-                        <TextField label='Ödenecek Miktar'/> 
+    useEffect(()=>{
 
-                </FileListElement> )
-
-    } else if ( paymentType === 'Taksit'  ) {
-
-     
-            var paymentTable = (
-
-                paymentSchedule.map((item,index)=>{
-
-                    return ( 
-                    
-                        <FileListElement key={index} style={{boxShadow:'none', padding:10 , margin:' 18px 0 22px 0 ' , justifyContent:'center' , alignItems:'flex-end'}} >
-                               
-                               {
-                                   width < 1030 ? null : <span style={{boxShadow: '0 1px 6px -1px rgba(0, 0, 0,0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.02)' ,  position:'absolute', background:'#ff6464', borderRadius:7, padding:6 , fontSize:12 , color:'white' , left:'5%' , top:'30%' , }}> {index+1}. Taksit </span>
-                               }
-
-                                <KeyboardDatePicker 
-                                
-                                    autoOk
-                                    disableToolbar
-                                    variant="inline"
-                                    format="dd/MM/yyyy"
-                                    margin="normal"
-                                    id="date-picker-inline"
-                                    label="Ödeme Tarihi"  
-                                    error={ !item.date && !isAllFilled }  
-                                    value={item.date} 
-                                    onChange={(value)=>setDate( value , index )} 
-                                    style={{margin:'0 35px 0 0'}}
-                                
-                                />
-
-                                <TextField
-                                  error={ !item.amount && !isAllFilled } 
-                                  value={ '$ ' +  ( item.amount || '' )  } 
-                                  onChange={(e)=> setMount( e.target.value , index ) }  
-                                  label='Ödenecek Miktar'/> 
+        if(paymentType && paymentType === 'Peşin' && student._id && student.paymentSchedule.length ===  0 ) {
                 
-                        </FileListElement> 
 
-                    )
+            setPaymentSchedule( [  { amount:null , date:null } ] )
+  
+        }
 
-                } ) )
+    },[ paymentType , student._id ])
 
-    }
+ 
+   if(paymentType) {
+
+        var paymentTable = (
+    
+                    paymentSchedule.map((item,index)=>{
+    
+                        return ( 
+                        
+                            <FileListElement key={index} style={{boxShadow:'none', padding:10 , margin:' 18px 0 22px 0 ' , justifyContent:'center' , alignItems:'flex-end'}} >
+                                    
+                                    {
+                                        width < 1030  ? null : <span style={{boxShadow: '0 1px 6px -1px rgba(0, 0, 0,0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.02)' ,  position:'absolute', background:'#ff6464', borderRadius:7, padding:6 , fontSize:12 , color:'white' , left:'5%' , top:'30%' , }}>{ paymentType=='Taksit' && `${index+1}.`}   {paymentType}  </span>
+                                    }
+    
+                                    <KeyboardDatePicker 
+                                    
+                                        autoOk
+                                        disableToolbar
+                                        variant="inline"
+                                        format="dd/MM/yyyy"
+                                        margin="normal"
+                                        id="date-picker-inline"
+                                        label="Ödeme Tarihi"  
+                                        error={ !item.date && !isAllFilled }  
+                                        value={item.date} 
+                                        onChange={(value)=>setDate( value , index )} 
+                                        style={{margin:'0 35px 0 0'}}
+                                    
+                                    />
+    
+                                    <TextField
+                                        error={ !item.amount && !isAllFilled } 
+                                        value={ '$ ' +  ( item.amount || '' )  } 
+                                        onChange={(e)=> setMount( e.target.value , index ) }  
+                                        label='Ödenecek Miktar'/> 
+                    
+                            </FileListElement> 
+    
+                        )
+    
+                    } ) )
+
+
+   }
+
+    
    
-
-
     return  loading 
 
              ?
