@@ -439,9 +439,9 @@ const StudentInformations  = ( { match , ...rest } )=>{
             }            
 
         })
-        
 
-        setIsAllFilled(result)
+
+        setIsAllFilled(result);
 
         if ( !result ) { return ;   }
 
