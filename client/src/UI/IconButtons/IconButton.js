@@ -61,7 +61,7 @@ export const IconSendForm  = ( { handler } ) =>(
    <Icon 
         style={ { background:'#e16262' } } 
         onClick = {handler} > Ön Kayıt Formu Gönder 
-        <i class="fas fa-file-signature"></i>  
+        <i style={{marginLeft:6}}  class="fas fa-file-signature"></i>  
   </Icon> 
 )
 

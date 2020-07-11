@@ -222,7 +222,7 @@ const StudentInformations  = ( { match , ...rest } )=>{
 
         copyPayment[index] = copyObject;
 
-        setPaymentSchedule(copyPayment);
+        setPaymentSchedule(copyPayment); 
 
     }
 
@@ -411,7 +411,7 @@ const StudentInformations  = ( { match , ...rest } )=>{
         
         if(value === 'Peşin') {
 
-            setPaymentSchedule( { date:null , amount:null } ); 
+            setPaymentSchedule( [ { date:null , amount:null } ]  ); 
 
         } else {
 

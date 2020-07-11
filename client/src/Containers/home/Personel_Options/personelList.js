@@ -37,7 +37,7 @@ box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.03
 const PersonelList  = ( { isOnlySubBranch } )=>{
 
   const [ personels,setPersonels ] = useState([]);
-  const [ loading , setLoading ] = useState(false);
+  
   const [ backStage, setBackstage ] = useState(false);
   const [ isModalOpen, setIsModalOpen ] = useState(false);
   const [ subPagesCount, setSubPagesCount ] = useState(0);
@@ -47,6 +47,8 @@ const PersonelList  = ( { isOnlySubBranch } )=>{
 
   const location = useLocation() ; 
   const searchData = queryString.parse(location.search.slice(1)) ; 
+
+  const [ loading , setLoading ] = useState( Object.keys( searchData ).length  > 0 );
 
   const closeModal_1 = () => {
     setIsModalOpen(false);

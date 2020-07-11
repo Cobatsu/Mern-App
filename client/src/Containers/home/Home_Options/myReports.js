@@ -50,7 +50,7 @@ padding:6px;
 const Student = (props) => {
 
   const [reports, setReports] = useState([]);
-  const [loading, setLoading] = useState(false);
+ 
   const [backStage, setBackstage] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [subPagesCount, setSubPagesCount] = useState(0);
@@ -61,6 +61,8 @@ const Student = (props) => {
   const location = useLocation() ; 
   const searchData = queryString.parse(location.search.slice(1)) ; 
  
+
+  const [loading, setLoading] = useState( Object.keys( searchData ).length > 0   );
 
 
   const closeModal_1 = () => {
