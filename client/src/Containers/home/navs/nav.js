@@ -45,7 +45,7 @@ export const Nav = ()=>{
        
     const logoutHandler = ()=>{
         
-        const token = localStorage.getItem('auth_token');
+        const token = localStorage.removeItem('auth_token');
 
         isLoggedinf(false);
 
