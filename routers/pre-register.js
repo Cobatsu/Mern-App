@@ -8,9 +8,9 @@ const {auth}  = require('../controllers/verify');
 router.post('/',registerStudent.add);
 router.post('/uploadDocuments' , uploadMulter.upload.array('imgCollection',4), registerStudent.uploadDocuments);
 
-router.route('/sendForm').post(auth,registerStudent.sendForm);
+router.route('/sendForm').post( auth,registerStudent.sendForm);
 
-router.route('/get_students').post(auth,registerStudent.studentSearch);
+router.route('/get_students').post( auth,registerStudent.studentSearch);
 
 router.route('/send_confirmation/:id').patch(auth,registerStudent.sendConfirmation);
 
@@ -21,6 +21,8 @@ router.route('/delete_file/:id').post( auth , registerStudent.deleteFile);
 router.route('/confirm_student/:id').patch( auth , registerStudent.confirmStudent);
 
 router.route('/add_paymentschedule/:id').post( auth , registerStudent.addPaymentSchedule)
+
+router.route('/addNewStudent').post( auth , registerStudent.addNewStudent )
 
 
 router.route('/student/:id')

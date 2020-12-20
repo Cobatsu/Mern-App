@@ -6,8 +6,9 @@ const Reports = require('../models/reports');
 const mongoose = require('mongoose')
  
 module.exports.add = async (req,res,next)=>{
+
     try {
-          
+      
       const { token , ...studentInformations } = req.body ; 
       const tokenData  = await jwt.verify( token , process.env.SECRET_KEY ) ; 
 
@@ -44,7 +45,7 @@ module.exports.add = async (req,res,next)=>{
                     service: 'gmail',
                     auth: {
                       user: 'huze.ozr@gmail.com',
-                      pass: '22312231a'
+                      pass: '22312231aa'
                     }
                   });
                   
@@ -407,6 +408,91 @@ module.exports.deleteStudent = async (req,res) => {
 
 }
 
+module.exports.addNewStudent = async ( req ,res , next ) => {
+
+    const { user , body } = req;
+
+    try {
+
+        const newStudent =  new Student({
+
+            StudentInfo:{
+    
+                name:body.studentName,
+                surname:body.studentSurname,
+                date_of_birth:body.studentBirthDate,
+                phone_number:body.studentPhoneNumber,
+                eMail:body.studentMail,
+                parenEmailAdress:body.studentParentMail,
+                currentor_last_attended_school_name:body.studentSchoolName,
+                
+                Images:[],
+     
+            },
+      
+            owner:user._id,
+            allowedToSee: user.relatedAgencyID ? [ user._id , user.relatedAgencyID ] : [ user._id ], 
+                
+        });
+    
+        let newAdded = await newStudent.save();
+    
+        const tokenData = {
+    
+            owner : user._id ,
+            stundentID:newAdded._id, 
+            studentMail:body.studentMail,
+    
+        }
+    
+        const token =  await jwt.sign( { ...tokenData } , process.env.SECRET_KEY , {expiresIn:'1h'} );
+        const tokenLink =  'http://localhost:3000/student_form?token=' + token + 
+        `&name=${body.studentName}` +
+        `&surname=${body.studentSurname}` +
+        `&e_mail=${body.studentMail}`+
+        `&parent_guardian_e_mail_address=${body.studentParentMail}` +
+        `&currentor_last_attended_school_name=${body.studentSchoolName}` +
+        `&phone_number=${body.studentPhoneNumber}` ; 
+    
+        var transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+              user: 'huze.ozr@gmail.com',
+              pass: '22312231aa'
+            }
+          });
+          
+          var mailOptions = {
+            from: 'huze.ozr@gmail.com',
+            to: body.studentMail,
+            subject: 'StudyOnlineInCanada Döküman Bilgilendirme',
+            html: `<a href =${tokenLink} > On Kayıt Formunuzu Doldurmak Icın Lutfen Tıklayın  </a>`
+          };
+          
+           transporter.sendMail(mailOptions, function(error, info) {
+    
+            if (error) {
+                
+                return res.json({result:'Error' , error});
+    
+            } else {
+      
+                return res.json({result:'Success'});
+    
+            } } )
+
+    } catch (error) { 
+
+            console.log(error);
+
+            return res.json({error:error});
+
+    }
+
+   
+
+}
+
 module.exports.sendForm = async ( req , res , next )=>{
 
     const { tokenData , requestType } = req.body ;
@@ -423,7 +509,7 @@ module.exports.sendForm = async ( req , res , next )=>{
             service: 'gmail',
             auth: {
               user: 'huze.ozr@gmail.com',
-              pass: 'Huzeyfe123..'
+              pass: '22312231aa'
             }
           });
           

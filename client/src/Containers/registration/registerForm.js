@@ -9,6 +9,9 @@ import PrevSchoolInfo from './sections/Prevıous-school-information';
 import Submit from './sections/Submit';
 import Header from './sections/Header';
 import styled from 'styled-components';
+import { Link , useLocation , useRouteMatch , useHistory } from 'react-router-dom'
+import queryString from 'querystring'
+
 
 const initialState = {
   name:'',
@@ -65,8 +68,14 @@ class RegisterForm extends React.Component{
     constructor(props) {
 
       super(props);
+      
+      const queryObject = queryString.parse(props.location.search.slice(1));
+      
+      const { token, ...allStudentData } = queryObject;
 
-      this.state = { studentInformations:props.student || initialState , ...additionState , origin:props.student ? 'DETAIL' : 'REGİSTER' }
+      console.log( queryObject )
+
+      this.state = { studentInformations:props.student || { ...initialState, ...allStudentData } , ...additionState , origin:props.student ? 'DETAIL' : 'REGİSTER' }
 
       this.token =  new URLSearchParams(this.props.location.search).get('token') ; 
 
@@ -194,9 +203,10 @@ class RegisterForm extends React.Component{
          <div className='Container'>
 
               
-
                 {
-                  origin === 'REGİSTER' &&  <Header origin={origin} backStage={this.state.backStage} result={this.state.result} warning={this.state.warningModal}/>
+
+                   origin === 'REGİSTER' &&  <Header origin={origin} backStage={this.state.backStage} result={this.state.result} warning={this.state.warningModal}/>
+
                 }
                 
               

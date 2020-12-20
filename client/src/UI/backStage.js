@@ -23,13 +23,15 @@ const BackStage  = React.memo(({backStage,close,loading})=>{
     } else if(backStage && loading) {
 
        var BackStage = <React.Fragment>
+
         <Stage/>
         <Circle top={40} Load={loading} position='fixed' />
+
       </React.Fragment>
 
     } else {
 
-       var BackStage=null;
+       var BackStage = null;
 
     }
 

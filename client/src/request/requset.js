@@ -780,8 +780,38 @@ export const makePaymentScheduleRequest = ( Type  , id , data  , setUpdatedStude
 
 }
 
+export const makeAddNewStudentRequest = ( Type , data ,  setBackStageLoading , setModalType ) => {
+  
+      
+   axios[Type]('/api/register/addNewStudent', data , { headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}} )
 
-export const makeSpecificStudentRequest = ( Type , id ,  setLoading , setStudent ) =>{
+      .then(( response )=>{
+
+         const { result , error } = response.data ;
+         console.log( result );
+
+         if( result === 'Success' && !error ) {
+
+          
+            setBackStageLoading(false);
+            setModalType('ADD_NEW_STUDENT');
+
+         } else {
+
+            console.log(error);
+
+         }
+
+      })
+      .catch((err)=>{
+
+        console.log(err); 
+
+      })
+
+}
+
+export const makeSpecificStudentRequest = ( Type , id ,  setLoading , setStudent ) => {
 
   axios[Type]('/api/register/student/'+ id ,  { headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}}).then( (res) => {
  

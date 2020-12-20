@@ -32,7 +32,7 @@ class  Home extends React.Component {
 
               
              <Route 
-                path = {'/home/ön_kayıt'}  
+                path = {'/home/ön_kayıt_liste'}  
                 exact  
                 render = { (props)=> (
 
@@ -46,7 +46,7 @@ class  Home extends React.Component {
 
 
               <Route 
-                path = {'/home/yeni_öğrenci'}  
+                path = {'/home/ön_kayıt_ekle'}  
                 exact  
                 render = { (props)=> (
 

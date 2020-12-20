@@ -85,6 +85,7 @@ ADD_PERSONEL:'Yeni Personel Başarıyla Eklenmiştir.',
 STUDENT_UPDATED:'Öğrenci Başarıyla Güncellenmiştir',
 CONFİRMATİON_SENT:'Öğrenci Başarıyla Onaya Gönderilmiştir',
 CONFİRMED_STUDENT:'Öğrenci Başarıyla Onaylanmıştır' , 
+ADD_NEW_STUDENT:'Öğrenci Ön Kayıta Eklenmiştir',
 FILE_UPLOADED:'Dosyanız Başarıyla Eklenmiştir.'
 }
 
@@ -159,15 +160,14 @@ const SentModal = React.memo(({backStage, type, closeModal, handler , formSent ,
       };
   }
 
-  if(Object.keys(completedModalTexts).includes(type))
-  {
+  if(Object.keys(completedModalTexts).includes(type)) {
 
     return <Modal display={modalY.display}><i style={{ fontSize: 50,color: '#52de97'}} className="far fa-check-circle"></i>
     <h2 style={{textAlign: 'center',fontSize: 15,color: '#52de97',fontWeight: 'bolder'}}> {completedModalTexts[type]}  </h2>
     <CloseButton onClick={closeModal}>KAPAT</CloseButton>
     </Modal>
 
-  } else if(Object.keys(deletedModalTexts).includes(type)) {
+  } else if( Object.keys(deletedModalTexts).includes(type) ) {
     
     return <Modal display={modalY.display}>
 

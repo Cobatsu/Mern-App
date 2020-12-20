@@ -11,6 +11,16 @@ width:100%;
 justify-content:space-between;
 box-shadow: 0 10px 6px -6px #dcd6f7;
 min-height:45px;
+position:fixed;
+z-index:2;
+top:0;
+left:0;
+`
+const InvisibleStatic = styled.div`
+
+width:100%;
+min-height:45px;
+
 `
 
 const Item = styled.div`
@@ -135,7 +145,9 @@ const NotResponsiveNav = ({logoutHandler,subMenu,user,setSubLeave,setSubEnter,ma
      const [ isFirstItem , setIsFirstItem ] = useState(null);
 
 
-     return <NavWrapper>
+     return <React.Fragment>
+         <InvisibleStatic/>
+      <NavWrapper>
 
      <Item style={{flex:0.16 , alignItems:'stretch',justifyContent:'flex-start'}}>
 
@@ -241,6 +253,7 @@ const NotResponsiveNav = ({logoutHandler,subMenu,user,setSubLeave,setSubEnter,ma
 
                      </Item>
   </NavWrapper>
+  </React.Fragment>
 
 }
 
