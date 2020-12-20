@@ -7,12 +7,13 @@ import PersonelList from './Personel_Options/personelList'
 import AddPerson from './Home_Options/addPerson'
 import Profile from './Home_Options/Profile_Options/profile'
 import Personel_options from './Personel_Options/personel_options'
-import  AddReport  from './Home_Options/addReport';
+import AddReport  from './Home_Options/addReport';
 import MyReports from './Home_Options/myReports';
 import ReportDetail from './Home_Options/reportDetail';
 import NotFoundPage from '../../Components/NotFoundPage'
 import ErrorBoundary from "../ErrorWrapper/ErrorBoundary";
 import StudentInformation from "../home/Student_Options/preregister_informations"
+import NewStudent from "../home/Home_Options/addNewStudent"
 
 class  Home extends React.Component {
 
@@ -41,6 +42,19 @@ class  Home extends React.Component {
 
                 ) }
               
+              /> 
+
+
+              <Route 
+                path = {'/home/yeni_öğrenci'}  
+                exact  
+                render = { (props)=> (
+
+                     <ErrorBoundary {...props}> 
+                        <NewStudent {...props}/>
+                     </ErrorBoundary> 
+
+                ) }
               /> 
 
              <Route
