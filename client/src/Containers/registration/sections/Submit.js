@@ -1,11 +1,11 @@
 import React from 'react'
 import Circle from '../../../UI/Circle';
 
-const Submit = ( { circle , origin , disabled , setDisabled } )=> <div  style={{width:'100%',display:'flex' , justifyContent:'flex-end',padding:30}}>     
+const Submit = ( { circle , origin , disabled , setDisabled , student } )=> <div  style={{width:'100%',display:'flex' , justifyContent:'flex-end',padding:30}}>     
 
 
     {
-         ( origin === 'DETAIL' &&  !disabled )   && <button onClick={ setDisabled } type='button'  style={{marginRight:8 , background:'#fa744f', opacity: circle ? '0.5' : '1' ,border:'none', color:'white',width:120 , height:50,position:'relative'}} >
+         ( origin === 'UPDATE' &&  !disabled && student)   && <button onClick={ setDisabled } type='button'  style={{marginRight:8 , background:'#fa744f', opacity: circle ? '0.5' : '1' ,border:'none', color:'white',width:120 , height:50,position:'relative'}} >
 
               VAZGEÇ
 
@@ -23,7 +23,7 @@ const Submit = ( { circle , origin , disabled , setDisabled } )=> <div  style={{
 
               circle ?  <Circle Load  height={30} width={30} position='static' marginTop={7} /> :
               
-              origin === 'DETAIL' ?  'GÜNCELLE ' : 'SUBMİT'
+              origin === 'UPDATE' && student ?  'GÜNCELLE ' : 'SUBMİT'
 
           }
 

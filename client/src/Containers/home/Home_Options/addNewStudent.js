@@ -78,6 +78,36 @@ const initialState ={
 
 }
 
+const initialStudent = {
+
+  name:'',
+  surname:'',
+  phone_number:'',
+  e_mail:'',
+  date_of_birth:new Date(),
+  gender:'Male',
+  street:'',
+  apartment_and_number:'',
+  town:'',
+  city:'',
+  postal_code:'',
+  country_of_birth:'',
+  country_of_citizenship:'',
+  first_date_of_grade_9:new Date(),
+  native_language:'',
+  parent_guardian_first_name:'',
+  parent_guardian_last_name:'',
+  relationship_to_student:'Father',
+  parent_guardian_e_mail_address:'',
+  parent_guardian_mobile_phone_number:'',
+  currently_attending_a_high_school:'Yes',
+  currentor_last_attended_school_name:'',
+  english_language_proficiency:'TOEFL',
+  look_forward_to_study_at_rosedale:'Grade 10',
+  desired_university_studies:'Engineering &  Physics',
+
+}
+
 const CheckMailAndNumber = ( mails = [] , numbers = [] )=>{
  
 
@@ -98,16 +128,12 @@ const CheckMailAndNumber = ( mails = [] , numbers = [] )=>{
 }
 
 
-
 const Test = ()=> {
     
-
     const [ state , setState ] = useState( initialState );
     const [ isSubmitted , setIsSubmitted ] = useState( false );
     const [ modalType , setModalType ] = useState(null);
     const [ backStageLoading , setBackStageLoading ] = useState(false);   
-
-
 
     const closeModal = ()=>{  setModalType(null) ; }
 
@@ -135,6 +161,7 @@ const Test = ()=> {
 
     setModalType(null);
    
+    let payload = {...state};
 
     let lastResult = CheckMailAndNumber ( [ state['studentMail'], state['studentParentMail']  ] , [ state['studentPhoneNumber'] ]  )
 
@@ -146,14 +173,29 @@ const Test = ()=> {
           
         if( !element ) {
 
-          return setModalType('EMPTY_FİELD') ;
+           return setModalType('EMPTY_FİELD') ;
 
-        } 
+        }  else {
+
+            payload[key] = typeof payload[key] === 'string' ?  payload[key].trim() : payload[key]
+          
+        }
       
       }
 
       setBackStageLoading(true);
-      makeAddNewStudentRequest( 'post' , state , setBackStageLoading , setModalType )
+      makeAddNewStudentRequest( 'post' , payload  , setBackStageLoading , setModalType , initialStudent )
+      .then((data)=>{
+
+        setState(initialState);
+        setIsSubmitted(false);
+
+      })
+      .catch((err)=>{
+
+        console.log(err);
+
+      })
 
    }
 

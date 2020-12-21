@@ -6,6 +6,7 @@ const uploadMulter = require('../multer/multer')
 const {auth}  = require('../controllers/verify');
 
 router.post('/',registerStudent.add);
+
 router.post('/uploadDocuments' , uploadMulter.upload.array('imgCollection',4), registerStudent.uploadDocuments);
 
 router.route('/sendForm').post( auth,registerStudent.sendForm);
@@ -23,6 +24,8 @@ router.route('/confirm_student/:id').patch( auth , registerStudent.confirmStuden
 router.route('/add_paymentschedule/:id').post( auth , registerStudent.addPaymentSchedule)
 
 router.route('/addNewStudent').post( auth , registerStudent.addNewStudent )
+
+router.route('/updateNewAddedStudent').post(  registerStudent.updateNewAddedStudent );
 
 
 router.route('/student/:id')

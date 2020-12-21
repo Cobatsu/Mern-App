@@ -1,6 +1,6 @@
 import React from 'react';
 
-const parentInformation =({parentFirstName,parentLastName,parenEmailAdress,parentPhoneNumber,warning,warning_text,changeHandler,disabled})=><div className='Item'>
+const parentInformation =({parentFirstName,parentLastName,parenEmailAdress,parentPhoneNumber,warning,relative,warning_text,changeHandler,disabled,student,origin})=><div className='Item'>
 <h1>4.PARENT INFORMATION</h1>
 <div className='Fields'>
 
@@ -22,7 +22,7 @@ const parentInformation =({parentFirstName,parentLastName,parenEmailAdress,paren
 
    <div>
      <label>Relationship to Student</label>
-     <select disabled={disabled} onClick={changeHandler('relationship_to_student')}>
+     <select disabled={disabled} onChange={changeHandler('relationship_to_student')} value={relative}>
           <option>Father</option>
           <option>Mother</option>
           <option>Other</option>
@@ -34,7 +34,7 @@ const parentInformation =({parentFirstName,parentLastName,parenEmailAdress,paren
      {
          parenEmailAdress  ? null  :warning  
      } 
-     <input disabled={disabled} value={parenEmailAdress} type='text' className={parenEmailAdress ? null : warning_text}  onChange={changeHandler('parent_guardian_e_mail_address')}/>
+     <input disabled={ !student && origin === 'UPDATE'   ? true : disabled  } value={parenEmailAdress} type='text' className={parenEmailAdress ? null : warning_text}  onChange={changeHandler('parent_guardian_e_mail_address')}/>
    </div>
    
    <div style={{width:'98%'}}>

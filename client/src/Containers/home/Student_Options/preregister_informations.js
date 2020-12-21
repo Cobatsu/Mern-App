@@ -649,7 +649,7 @@ const StudentInformations  = ( { match , ...rest } )=>{
 
                                                 <FileListElement key = {fileName} isDeleted = { deletedFile === index }  >
 
-                                                    <InnerLink className='responsiveLink' style={{textDecoration:'none' , color:'#00909e' }}   href={'https://study-online.herokuapp.com/api/' + fileName} target="_blank" > 
+                                                    <InnerLink className='responsiveLink' style={{textDecoration:'none' , color:'#00909e' }}   href={'http://localhost:3000/api/' + fileName} target="_blank" > 
                                                     
                                                         { ImageFields[index] || fileName.split('_')[2].split('.')[0] } 
                                                     

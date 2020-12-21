@@ -160,6 +160,8 @@ const SentModal = React.memo(({backStage, type, closeModal, handler , formSent ,
       };
   }
 
+  console.log('HEYY1')
+
   if(Object.keys(completedModalTexts).includes(type)) {
 
     return <Modal display={modalY.display}><i style={{ fontSize: 50,color: '#52de97'}} className="far fa-check-circle"></i>
@@ -294,6 +296,7 @@ const SentModal = React.memo(({backStage, type, closeModal, handler , formSent ,
 
     if ( result === 'Success' ) {
 
+        
       
         return <Modal  display={modalY.display} >
 

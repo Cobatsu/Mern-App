@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-const registeringStudent =({country_of_birth,country_of_citizenship,native_language,changeHandler,warning,warning_text,first9Date})=><div className='Item'>
+const registeringStudent =({country_of_birth,country_of_citizenship,native_language,changeHandler,warning,warning_text,first9Date,disabled})=><div className='Item'>
 <h1>3. ABOUT REGISTERING STUDENT</h1>
 <div className='Fields'>
 
@@ -9,7 +9,7 @@ const registeringStudent =({country_of_birth,country_of_citizenship,native_langu
      {
         country_of_birth ? null  :warning  
      }  
-     <input value={country_of_birth } type='text' id='6' className={country_of_birth ? null : warning_text}  onChange={changeHandler('country_of_birth')}/>
+     <input value={country_of_birth } type='text' id='6' className={country_of_birth ? null : warning_text}  disabled={disabled} onChange={changeHandler('country_of_birth')}/>
    </div>
 
    <div>
@@ -17,12 +17,12 @@ const registeringStudent =({country_of_birth,country_of_citizenship,native_langu
      {
          country_of_citizenship  ? null  :warning  
      }  
-     <input value={country_of_citizenship} type='text' className={country_of_citizenship ? null : warning_text}  onChange={changeHandler('country_of_citizenship')}/>
+     <input value={country_of_citizenship} type='text' className={country_of_citizenship ? null : warning_text} disabled={disabled}  onChange={changeHandler('country_of_citizenship')}/>
    </div>
 
    <div>
      <label>First Date of Grade 9</label>
-     <input type='date' value = { new Date(first9Date).toISOString().substring(0, 10) }  onChange={changeHandler('first_date_of_grade_9')}/>
+     <input type='date' disabled={disabled} value = { new Date(first9Date).toISOString().substring(0, 10) }  onChange={changeHandler('first_date_of_grade_9')}/>
    </div>
 
    <div>
@@ -30,7 +30,7 @@ const registeringStudent =({country_of_birth,country_of_citizenship,native_langu
      {
          native_language  ? null  :warning  
      }
-     <input value = {native_language} type='text' className={native_language ? null : warning_text}  onChange={changeHandler('native_language')}/>
+     <input disabled={disabled} value = {native_language} type='text' className={native_language ? null : warning_text}  onChange={changeHandler('native_language')}/>
    </div>
    
 </div>

@@ -780,15 +780,14 @@ export const makePaymentScheduleRequest = ( Type  , id , data  , setUpdatedStude
 
 }
 
-export const makeAddNewStudentRequest = ( Type , data ,  setBackStageLoading , setModalType ) => {
+export const makeAddNewStudentRequest = ( Type , mainData ,  setBackStageLoading , setModalType , studentModel ) => {
   
       
-   axios[Type]('/api/register/addNewStudent', data , { headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}} )
+   return axios[Type]('/api/register/addNewStudent', { mainData , studentModel } , { headers: {"Authorization": `Bearer ${localStorage.getItem("auth_token")}`}} )
 
       .then(( response )=>{
 
          const { result , error } = response.data ;
-         console.log( result );
 
          if( result === 'Success' && !error ) {
 
@@ -803,11 +802,30 @@ export const makeAddNewStudentRequest = ( Type , data ,  setBackStageLoading , s
          }
 
       })
-      .catch((err)=>{
+    
+}
 
-        console.log(err); 
 
-      })
+export const makeUpdateNewAddedStudentRequest = (Type,Body,activeCircle,backStage,setResult) => {
+
+  activeCircle(true);
+
+  axios[Type]('/api/register/updateNewAddedStudent',Body ).then((data)=>{   
+
+    const { error , result } = data.data ; 
+  
+    ReactDOM.unstable_batchedUpdates(()=>{
+
+      setResult(result);
+
+      backStage(true);
+
+      activeCircle(false);
+         
+    })
+       
+  })
+  .catch((err)=>{ console.log(err) })    
 
 }
 

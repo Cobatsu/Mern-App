@@ -26,16 +26,16 @@ module.exports.add = async (req,res,next)=>{
            
      });
  
-                const updatedReport = await Reports.findOneAndUpdate ( { _id:tokenData.contactReportID } , { $set: { isFormFilled:true } } ).populate('owner') ; 
+                const updatedReport = await Reports.findOne ( { _id:tokenData.contactReportID } ).populate('owner') ; 
 
            
-
                 if( updatedReport.owner._id != tokenData.owner ||  !updatedReport ||  updatedReport.isFormFilled) {
 
-                        console.log('heyy')
                         return res.json( { result:'Error' } ) ; 
 
                 }
+
+                 const updated = await Reports.updateOne( { _id:tokenData.contactReportID }  , { $set: { isFormFilled:true } } )
 
                  const saved = await  newStudent.save();
 
@@ -53,14 +53,13 @@ module.exports.add = async (req,res,next)=>{
                     from: 'huze.ozr@gmail.com',
                     to: tokenData.e_mail,
                     subject: 'StudyOnlineInCanada Döküman Bilgilendirme',
-                    html: `<a href =${'https://study-online.herokuapp.com/upload?token=' + signedToken} > On Kayıt Formunuzu Doldurmak Icın Lutfen Tıklayın  </a>`
+                    html: `<a href =${'http://localhost:3000/upload?token=' + signedToken} > Rosedale Gerekli Belgeleri Yüklemek İçin Lütfen Tıklayınız. </a>`
                   };
                   
                   transporter.sendMail(mailOptions, function(error, info){
 
                     if (error) {
-                         
-                   
+                                          
                         res.json({result:'Error' , error});
 
                     } else {
@@ -95,7 +94,7 @@ module.exports.updateStudent = async (req,res) => {
         
     } catch (error) {
 
-        res,json({error});
+        res.json({error});
         
     }
 
@@ -104,8 +103,6 @@ module.exports.updateStudent = async (req,res) => {
 
 
 module.exports.uploadDocuments = async (req,res) =>{
-
-    console.log('hey')
 
     const token =  req.header("Authorization").split(' ')[1];
    
@@ -410,26 +407,29 @@ module.exports.deleteStudent = async (req,res) => {
 
 module.exports.addNewStudent = async ( req ,res , next ) => {
 
-    const { user , body } = req;
+    const { user , body:{ mainData , studentModel } } = req;
 
     try {
 
         const newStudent =  new Student({
 
             StudentInfo:{
-    
-                name:body.studentName,
-                surname:body.studentSurname,
-                date_of_birth:body.studentBirthDate,
-                phone_number:body.studentPhoneNumber,
-                eMail:body.studentMail,
-                parenEmailAdress:body.studentParentMail,
-                currentor_last_attended_school_name:body.studentSchoolName,
+
+                ...studentModel,
+                name:mainData.studentName,
+                surname:mainData.studentSurname,
+                date_of_birth:mainData.studentBirthDate,
+                phone_number:mainData.studentPhoneNumber,
+                e_mail:mainData.studentMail,
+                parent_guardian_e_mail_address:mainData.studentParentMail,
+                currentor_last_attended_school_name:mainData.studentSchoolName,
                 
                 Images:[],
+              
      
             },
-      
+            
+            isFilled:false,
             owner:user._id,
             allowedToSee: user.relatedAgencyID ? [ user._id , user.relatedAgencyID ] : [ user._id ], 
                 
@@ -441,18 +441,19 @@ module.exports.addNewStudent = async ( req ,res , next ) => {
     
             owner : user._id ,
             stundentID:newAdded._id, 
-            studentMail:body.studentMail,
+            studentMail:mainData.studentMail,
     
         }
     
         const token =  await jwt.sign( { ...tokenData } , process.env.SECRET_KEY , {expiresIn:'1h'} );
         const tokenLink =  'http://localhost:3000/student_form?token=' + token + 
-        `&name=${body.studentName}` +
-        `&surname=${body.studentSurname}` +
-        `&e_mail=${body.studentMail}`+
-        `&parent_guardian_e_mail_address=${body.studentParentMail}` +
-        `&currentor_last_attended_school_name=${body.studentSchoolName}` +
-        `&phone_number=${body.studentPhoneNumber}` ; 
+        `&name=${mainData.studentName}` +
+        `&surname=${mainData.studentSurname}` +
+        `&e_mail=${mainData.studentMail}`+
+        `&parent_guardian_e_mail_address=${mainData.studentParentMail}` +
+        `&currentor_last_attended_school_name=${mainData.studentSchoolName}` +
+        `&phone_number=${mainData.studentPhoneNumber.split(" ").join("_")}` + 
+        `&origin=UPDATE`; 
     
         var transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -464,7 +465,7 @@ module.exports.addNewStudent = async ( req ,res , next ) => {
           
           var mailOptions = {
             from: 'huze.ozr@gmail.com',
-            to: body.studentMail,
+            to: mainData.studentMail,
             subject: 'StudyOnlineInCanada Döküman Bilgilendirme',
             html: `<a href =${tokenLink} > On Kayıt Formunuzu Doldurmak Icın Lutfen Tıklayın  </a>`
           };
@@ -489,7 +490,85 @@ module.exports.addNewStudent = async ( req ,res , next ) => {
 
     }
 
-   
+}
+
+module.exports.updateStudent = async (req,res) => {
+
+    const { params:{id} , body }  = req ; 
+
+    try {
+
+        await Student.updateOne({_id:id} , {$set:{StudentInfo:body}});
+        
+        const updatedStudent = await Student.findOne({_id:id});
+        
+        res.json({updatedStudent});
+        
+    } catch (error) {
+
+        res.json({error});
+        
+    }
+
+}
+
+module.exports.updateNewAddedStudent = async ( req , res , next )=>{
+
+    try {
+        
+        const { token , ...studentInformations } = req.body ; 
+
+        const tokenPayload  = await jwt.verify( token , process.env.SECRET_KEY ) ; 
+    
+        const willBeUpdated =  await Student.findOne( {_id:tokenPayload.stundentID} ).populate('owner');
+
+        if ( willBeUpdated.owner._id ==  tokenPayload.owner && willBeUpdated && tokenPayload.studentMail == willBeUpdated.StudentInfo.e_mail && !willBeUpdated.isFilled ) {
+
+           await Student.updateOne( {_id:tokenPayload.stundentID} , {$set:{StudentInfo:{ ...studentInformations , Images:willBeUpdated.StudentInfo.Images || [] } }, isFilled:true } )
+
+        } else {
+
+            return res.json({ error: 'Error'}) ;
+
+        }
+
+        const signedToken =  await jwt.sign({ studentID:tokenPayload.stundentID , owner:tokenPayload.owner , e_mail:tokenPayload.studentMail  } , process.env.SECRET_KEY);
+
+        var transporter = nodemailer.createTransport({
+           service: 'gmail',
+           auth: {
+             user: 'huze.ozr@gmail.com',
+             pass: '22312231aa'
+           }
+         });
+         
+         var mailOptions = {
+           from: 'huze.ozr@gmail.com',
+           to: tokenPayload.studentMail,
+           subject: 'StudyOnlineInCanada Döküman Bilgilendirme',
+           html: `<a href =${'http://localhost:3000/upload?token=' + signedToken} > Rosedale Gerekli Belgeleri Yüklemek İçin Lütfen Tıklayınız. </a>`
+         };
+         
+         transporter.sendMail(mailOptions, function(error, info) {
+
+           if (error) {
+                                 
+               return res.json({result:'Error'});
+
+           } else {
+     
+               return res.json({result:'Success'});
+
+           }
+
+         });
+
+    
+    } catch (error) {
+        
+        return res.json({ error: 'Error' })
+
+    }
 
 }
 
@@ -499,11 +578,11 @@ module.exports.sendForm = async ( req , res , next )=>{
 
     const token =  await jwt.sign( { ...tokenData } , process.env.SECRET_KEY , {expiresIn:'1h'} );
     
-    const tokenLink =  'https://study-online.herokuapp.com/student_form?token=' + token ; 
+    const tokenLink =  'http://localhost:3000/student_form?token=' + token + `&origin=REGISTER`; 
 
     await Reports.updateOne({_id:tokenData.contactReportID} , {$set:{isFormSent:true}});
 
-    if(requestType === 'MAİL') {
+    if ( requestType === 'MAİL' ) {
         
         var transporter = nodemailer.createTransport({
             service: 'gmail',

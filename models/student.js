@@ -9,6 +9,11 @@ const Student = mongoose.Schema({
 
     },
 
+    isFilled:{
+        type:Boolean,
+        required:true,
+    },
+
     owner:{
 
         type:mongoose.Schema.Types.ObjectId,

@@ -31,24 +31,28 @@ max-width:${({width})=> width ? width+'px' : '950px'};
  box-shadow: 0 10px 6px -6px #758184;
 `
 
-const StudentListItem = styled.li`
-width:200%;
-display:flex;
-transition:280ms;
-justify-content:space-between;
-
-`
 
 const SwitchButton  = styled.div`
 &:hover{
   cursor:pointer;
 }
+
 border-radius:50%;
 color:white;
 position:absolute;
 text-align:center;
 box-sizing:border-box;
 `
+
+const StudentListItem = styled.li`
+width:200%;
+display:flex;
+transition:280ms;
+justify-content:space-between;
+
+
+`
+
 
 const StudentListItemInnerWrapper = styled.div`
 display:flex;
