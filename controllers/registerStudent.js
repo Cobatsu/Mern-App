@@ -53,7 +53,7 @@ module.exports.add = async (req,res,next)=>{
                     from: 'huze.ozr@gmail.com',
                     to: tokenData.e_mail,
                     subject: 'StudyOnlineInCanada Döküman Bilgilendirme',
-                    html: `<a href =${'http://localhost:3000/upload?token=' + signedToken} > Rosedale Gerekli Belgeleri Yüklemek İçin Lütfen Tıklayınız. </a>`
+                    html: `<a href =${'https://study-online.herokuapp.com/upload?token=' + signedToken} > Rosedale Gerekli Belgeleri Yüklemek İçin Lütfen Tıklayınız. </a>`
                   };
                   
                   transporter.sendMail(mailOptions, function(error, info){
@@ -403,7 +403,7 @@ module.exports.deleteStudent = async (req,res) => {
     }
 
 
-}
+} //
 
 module.exports.addNewStudent = async ( req ,res , next ) => {
 
@@ -428,7 +428,7 @@ module.exports.addNewStudent = async ( req ,res , next ) => {
               
      
             },
-            
+
             isFilled:false,
             owner:user._id,
             allowedToSee: user.relatedAgencyID ? [ user._id , user.relatedAgencyID ] : [ user._id ], 
@@ -446,7 +446,7 @@ module.exports.addNewStudent = async ( req ,res , next ) => {
         }
     
         const token =  await jwt.sign( { ...tokenData } , process.env.SECRET_KEY , {expiresIn:'1h'} );
-        const tokenLink =  'http://localhost:3000/student_form?token=' + token + 
+        const tokenLink =  'https://study-online.herokuapp.com/student_form?token=' + token + 
         `&name=${mainData.studentName}` +
         `&surname=${mainData.studentSurname}` +
         `&e_mail=${mainData.studentMail}`+
@@ -546,7 +546,7 @@ module.exports.updateNewAddedStudent = async ( req , res , next )=>{
            from: 'huze.ozr@gmail.com',
            to: tokenPayload.studentMail,
            subject: 'StudyOnlineInCanada Döküman Bilgilendirme',
-           html: `<a href =${'http://localhost:3000/upload?token=' + signedToken} > Rosedale Gerekli Belgeleri Yüklemek İçin Lütfen Tıklayınız. </a>`
+           html: `<a href =${'https://study-online.herokuapp.com/upload?token=' + signedToken} > Rosedale Gerekli Belgeleri Yüklemek İçin Lütfen Tıklayınız. </a>`
          };
          
          transporter.sendMail(mailOptions, function(error, info) {
@@ -578,7 +578,7 @@ module.exports.sendForm = async ( req , res , next )=>{
 
     const token =  await jwt.sign( { ...tokenData } , process.env.SECRET_KEY , {expiresIn:'1h'} );
     
-    const tokenLink =  'http://localhost:3000/student_form?token=' + token + `&origin=REGISTER`; 
+    const tokenLink =  'https://study-online.herokuapp.com/student_form?token=' + token + `&origin=REGISTER`; 
 
     await Reports.updateOne({_id:tokenData.contactReportID} , {$set:{isFormSent:true}});
 
