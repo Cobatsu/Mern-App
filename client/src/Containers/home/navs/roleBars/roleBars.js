@@ -1,4 +1,4 @@
-export const Admin = ()=>{
+export const Admin = (link)=>{
     return [
         {type:'Personel',props:['Personel Listesi','Personel Ekle']},
         {type:'Rapor',props:['Raporlar'] },
@@ -6,6 +6,9 @@ export const Admin = ()=>{
     ]
 
 }
+
+
+
 
 export const Bayi = ()=>{
     return [
